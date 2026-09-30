@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TechQuest: Advanced Office & AI</title>
+    <title>TechQuest: Micro-Learning Office & AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -63,11 +63,14 @@
             position: relative;
         }
         .signature-line { border-top: 2px solid #2d3748; width: 250px; margin: 0 auto; }
+        
+        /* Animasi Buka Tutup Accordion */
+        .accordion-content { transition: max-height 0.3s ease-out; overflow: hidden; }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
-    <!-- Latar Belakang Animasi (Pointer Events None agar tidak menghalangi klik tombol) -->
+    <!-- Latar Belakang Animasi -->
     <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
         <i class="fa-solid fa-plane text-6xl text-white bg-shape" style="top: 10%; left: 10%; animation-delay: 0s;"></i>
         <i class="fa-solid fa-utensils text-6xl text-white bg-shape" style="top: 70%; left: 15%; animation-delay: 1s;"></i>
@@ -79,10 +82,10 @@
     <div id="loginScreen" class="max-w-md mx-auto bubbly-card p-8 mt-10 animate-pop relative z-10">
         <div class="text-center mb-6">
             <div class="inline-block p-4 bg-blue-100 rounded-full mb-4">
-                <i class="fa-solid fa-gamepad text-5xl text-blue-500"></i>
+                <i class="fa-solid fa-graduation-cap text-5xl text-blue-500"></i>
             </div>
             <h1 class="text-4xl text-blue-600 font-extrabold tracking-wide drop-shadow-sm">TechQuest</h1>
-            <p class="text-gray-500 font-bold mt-1">Aplikasi Komputer Lanjutan</p>
+            <p class="text-gray-500 font-bold mt-1">Sistem Belajar Mandiri & Praktik Terpadu</p>
         </div>
         
         <div class="space-y-5">
@@ -99,7 +102,7 @@
                 </select>
             </div>
             <button type="button" onclick="handleLogin()" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold text-lg py-4 bubbly-button mt-4 cursor-pointer">
-                MULAI BERMAIN
+                MULAI BELAJAR
             </button>
         </div>
     </div>
@@ -132,11 +135,11 @@
 
     <!-- QUEST MODAL -->
     <div id="questModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-        <div class="bubbly-card w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden animate-pop">
+        <div class="bubbly-card w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden animate-pop">
             
             <div class="bg-blue-500 p-5 flex justify-between items-center text-white">
                 <div>
-                    <span id="questBadge" class="bg-yellow-400 text-yellow-900 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider mb-1 inline-block">Normal Level</span>
+                    <span id="questBadge" class="bg-yellow-400 text-yellow-900 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider mb-1 inline-block">Modul Praktik</span>
                     <h3 id="questTitle" class="text-2xl font-bold bubbly-font">Misi #1</h3>
                 </div>
                 <button type="button" onclick="closeModal()" class="text-white hover:text-gray-200 text-3xl cursor-pointer"><i class="fa-solid fa-circle-xmark"></i></button>
@@ -144,12 +147,12 @@
             
             <div class="p-6 overflow-y-auto bg-slate-50 flex-1">
                 <div class="bg-white p-5 rounded-xl border-2 border-blue-100 shadow-sm mb-6">
-                    <h4 class="font-bold text-blue-800 mb-2 flex items-center gap-2"><i class="fa-solid fa-book-open"></i> Latar Belakang Masalah:</h4>
-                    <p id="questStory" class="text-gray-700 leading-relaxed"></p>
+                    <h4 class="font-bold text-blue-800 mb-2 flex items-center gap-2"><i class="fa-solid fa-compass"></i> Tujuan Praktikum (Capaian Pembelajaran):</h4>
+                    <p id="questStory" class="text-gray-700 leading-relaxed text-sm"></p>
                 </div>
 
                 <div class="text-sm font-bold text-red-500 mb-4 bg-red-50 p-3 rounded-lg border border-red-100">
-                    <i class="fa-solid fa-triangle-exclamation"></i> Buka aplikasinya, praktikkan, lalu pecahkan teka-teki logika berikut!
+                    <i class="fa-solid fa-info-circle"></i> Buka fitur <b>Belajar Mandiri & Instruksi</b> di tiap soal. Praktikkan langsung di komputermu, lalu jawab pertanyaan validasinya!
                 </div>
 
                 <div id="questionsContainer" class="space-y-4">
@@ -157,13 +160,13 @@
                 </div>
 
                 <div id="errorMessage" class="hidden mt-4 bg-red-100 border-2 border-red-400 text-red-700 p-4 rounded-xl font-bold text-center">
-                    <i class="fa-solid fa-bomb"></i> WADUH! Ada jawaban yang masih salah. Periksa kembali pekerjaanmu di aplikasi!
+                    <i class="fa-solid fa-bomb"></i> WADUH! Ada jawaban yang masih salah. Buka kembali panel instruksi dan periksa pekerjaanmu di aplikasi!
                 </div>
             </div>
 
             <div class="bg-gray-100 p-5 border-t border-gray-200 flex justify-end">
                 <button type="button" onclick="checkAllAnswers()" class="bg-green-500 hover:bg-green-600 text-white font-black text-lg py-3 px-8 bubbly-button w-full md:w-auto cursor-pointer">
-                    KIRIM JAWABAN <i class="fa-solid fa-paper-plane ml-2"></i>
+                    VALIDASI HASIL PRAKTIK <i class="fa-solid fa-paper-plane ml-2"></i>
                 </button>
             </div>
         </div>
@@ -173,9 +176,9 @@
     <div id="successModal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center p-4 z-[60]">
         <div class="bubbly-card p-8 max-w-md w-full text-center animate-pop bg-gradient-to-b from-white to-green-50 border-4 border-green-400">
             <i class="fa-solid fa-face-laugh-squint text-7xl text-green-500 mb-4 animate-bounce"></i>
-            <h2 class="text-3xl font-bold bubbly-font text-green-600 mb-2">LEVEL CLEARED!</h2>
+            <h2 class="text-3xl font-bold bubbly-font text-green-600 mb-2">MODUL SELESAI!</h2>
             <p id="quoteText" class="text-lg font-bold text-gray-700 italic my-6 leading-relaxed">"Quote"</p>
-            <button type="button" onclick="nextLevel()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 bubbly-button w-full cursor-pointer">LANJUTKAN <i class="fa-solid fa-forward-step"></i></button>
+            <button type="button" onclick="nextLevel()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 bubbly-button w-full cursor-pointer">MODUL SELANJUTNYA <i class="fa-solid fa-forward-step"></i></button>
         </div>
     </div>
 
@@ -194,7 +197,7 @@
             <h4 id="certProdi" class="text-xl font-bold text-blue-600 mb-8">PROGRAM STUDI</h4>
             
             <p class="text-gray-600 max-w-2xl mx-auto text-sm md:text-base leading-relaxed font-semibold mb-12">
-                Telah berhasil menaklukkan 16 Level tingkat lanjut, memecahkan studi kasus industri, serta menguasai Microsoft Office, Cloud, dan Prompt Engineering AI dengan predikat <span class="text-green-600 font-black">SANGAT MEMUASKAN</span>.
+                Telah berhasil menyelesaikan 16 Modul Pembelajaran Mandiri, menuntaskan praktik langsung industri, serta menguasai Microsoft Office, Cloud, dan Prompt Engineering AI dengan predikat <span class="text-green-600 font-black">SANGAT MEMUASKAN</span>.
             </p>
             
             <div class="flex justify-between items-end mt-8 max-w-lg mx-auto">
@@ -216,100 +219,161 @@
     <style> @media print { body * { visibility: hidden; } #certModal, #certModal * { visibility: visible; } #certModal { position: absolute; left: 0; top: 0; width: 100%; height: 100%; padding: 0; margin: 0; background: none; } .no-print { display: none !important; } } </style>
 
     <script>
-        // --- SAFE STORAGE WRAPPER ---
-        // Ini menghindari error jika browser memblokir penyimpanan offline (Incognito/Local File Security)
         const safeStorage = {
             set: function(key, val) { try { localStorage.setItem(key, val); } catch(e) { console.warn("Storage blocked"); } },
             get: function(key) { try { return localStorage.getItem(key); } catch(e) { return null; } },
             remove: function(key) { try { localStorage.removeItem(key); } catch(e) { } }
         };
 
+        // KURIKULUM LENGKAP DENGAN MATERI DAN INSTRUKSI PRAKTIK
         const curriculum = [
             {
                 type: "normal", title: "Word: Advanced Formatting", icon: "fa-file-word", color: "blue",
                 story: {
-                    "D3 Perjalanan Wisata": "Buat proposal paket tur dengan MS Word. Gunakan Styles dan Section Breaks agar halaman potrait dan landscape bisa digabung dalam satu file.",
-                    "D3 Seni Kuliner": "Buat buku standar resep dapur. Gunakan Section Breaks untuk memisahkan bab menu utama dan penutup dengan penomoran halaman berbeda.",
-                    "D4 Pengelolaan Perhotelan": "Buat dokumen SOP Hotel. Gunakan Section Breaks agar cover tanpa nomor halaman, daftar isi romawi, dan isi dokumen angka biasa."
+                    "D3 Perjalanan Wisata": "Sebagai staf administrasi biro perjalanan, Anda bertugas membuat dokumen proposal tur Bintan. Anda harus mengatur dokumen agar terlihat profesional menggunakan struktur 'Styles' yang benar.",
+                    "D3 Seni Kuliner": "Anda sedang menyusun buku SOP Standar Resep. Atur dokumen sedemikian rupa agar bab-bab panjang mudah dinavigasi menggunakan 'Styles' tingkat lanjut.",
+                    "D4 Pengelolaan Perhotelan": "SOP Front Office Hotel memerlukan pemformatan tingkat lanjut. Anda harus memisahkan halaman Cover (tanpa nomor urut) dengan halaman isi dokumen."
                 },
                 q: [
-                    { q: "Shortcut keyboard untuk Style 'Heading 1'?", hint: "CTRL + ALT + Angka Pertama", ans: "CTRL+ALT+1" },
-                    { q: "Jenis Break untuk memutus 'Bagian' ke halaman berikutnya agar bisa beda orientasi?", hint: "Halaman Berikutnya (Inggris)", ans: "NEXT PAGE" },
-                    { q: "Fitur di tab Review untuk mengunci dokumen dari pengeditan?", hint: "Membatasi Pengeditan (Inggris)", ans: "RESTRICT EDITING" },
-                    { q: "Daftar isi otomatis mendeteksi teks dengan format style apa?", hint: "Judul (Inggris)", ans: "HEADING" },
-                    { q: "Nama alat berlogo kuas untuk mengkopi format warna/huruf?", hint: "Pelukis Format (Inggris)", ans: "FORMAT PAINTER" },
-                    { q: "Tab untuk memberi cap rahasia (Watermark)?", hint: "Desain (Inggris)", ans: "DESIGN" }
+                    { 
+                        materi: "<b>Styles (Gaya)</b> adalah kumpulan format (ukuran huruf, warna, tebal) yang disimpan dalam satu nama (seperti Heading 1). Penggunaan Heading sangat wajib dalam penulisan akademis/industri karena fitur otomatis seperti 'Daftar Isi' hanya bisa bekerja jika dokumen menggunakan Heading.",
+                        instruksi: "Buka Microsoft Word. Buat dokumen kosong. Ketik teks 'BAB 1 PENDAHULUAN'. Blok teks tersebut. Pergi ke Tab Home > group Styles > klik Heading 1. Perhatikan perubahan formatnya.",
+                        q: "Pertanyaan: Apa shortcut keyboard (kombinasi tombol) untuk menerapkan Style 'Heading 1' dengan cepat?", 
+                        hint: "Tahan CTRL + ALT lalu tekan angka pertama.", ans: "CTRL+ALT+1" 
+                    },
+                    { 
+                        materi: "<b>Section Break</b> (Pemisah Bagian) digunakan jika kita ingin membuat pengaturan halaman yang BERBEDA dalam SATU dokumen. Misalnya, halaman 1 halamannya memanjang ke bawah (Portrait), sedangkan halaman 2 melebar ke samping (Landscape).",
+                        instruksi: "Letakkan kursor di bawah tulisan BAB 1 tadi. Buka tab Layout > Breaks > klik fitur yang namanya 'Next Page'. Setelah pindah halaman, klik Orientation > pilih Landscape. Lihat, hanya halaman 2 yang berubah!",
+                        q: "Pertanyaan: Jenis Break apa yang baru saja kamu klik di bawah menu Section Breaks?", 
+                        hint: "Halaman Berikutnya (dalam bahasa Inggris).", ans: "NEXT PAGE" 
+                    },
+                    { 
+                        materi: "<b>Restrict Editing</b> (Membatasi Pengeditan) digunakan untuk mengunci dokumen dari tangan-tangan jahil. Kamu bisa membiarkan orang lain membaca dokumenmu, tapi mereka tidak bisa merubah format atau mengetik teks sembarangan.",
+                        instruksi: "Pergi ke tab Review. Cari menu Protect, lalu klik 'Restrict Editing'. Di sebelah kanan layar akan muncul panel. Centang 'Limit formatting to a selection of styles'.",
+                        q: "Pertanyaan: Apa nama fitur yang barusan kamu klik di tab Review tersebut?", 
+                        hint: "Dua kata dalam bahasa Inggris, berawalan R dan E.", ans: "RESTRICT EDITING" 
+                    },
+                    { 
+                        materi: "<b>Table of Contents (TOC)</b> adalah fitur pembuat daftar isi otomatis. TOC mencari seluruh teks dalam dokumen yang sudah kamu tandai menggunakan fitur 'Styles' (terutama Heading 1, 2, dan 3) lalu merangkum halamannya.",
+                        instruksi: "Buat halaman kosong baru di posisi paling atas dokumenmu. Buka tab References. Klik ujung kiri bernama 'Table of Contents'. Pilih 'Automatic Table 1'. Daftar isimu akan tercipta ajaib!",
+                        q: "Pertanyaan: Fitur Daftar Isi otomatis Word mendeteksi teks dengan format style apa?", 
+                        hint: "Judul (dalam bahasa Inggris).", ans: "HEADING" 
+                    },
+                    { 
+                        materi: "<b>Format Painter</b> adalah alat super cepat. Daripada mengatur ulang font Arial, ukuran 14, warna merah, tebal, dan miring satu per satu ke kata baru, kamu bisa cukup menyalin 'gaya' kata lama dan menempelkannya ke kata baru.",
+                        instruksi: "Ketik kata 'PENTING' dan beri warna merah serta cetak tebal (Bold). Pastikan kursor berada di tengah kata 'PENTING'. Lalu klik ikon kuas kuning di pojok kiri atas (Tab Home). Terakhir, seret (blok) kata lain untuk menempelkan gaya tersebut.",
+                        q: "Pertanyaan: Apa nama alat berlogo kuas kuning tersebut?", 
+                        hint: "Pelukis Format (dalam bahasa Inggris).", ans: "FORMAT PAINTER" 
+                    },
+                    { 
+                        materi: "<b>Watermark</b> (Tanda Air) sering digunakan di dokumen perusahaan untuk menempelkan logo perusahaan transparan di belakang teks, atau tulisan 'RAHASIA' / 'DRAFT'.",
+                        instruksi: "Buka tab Design (atau Page Layout di Word versi lama). Cari tombol Watermark. Klik 'Custom Watermark...'. Pilih Text Watermark, ketik teks 'RAHASIA', lalu klik Apply.",
+                        q: "Pertanyaan: Di tab utama mana kamu menemukan fitur Watermark di Office 2016 ke atas?", 
+                        hint: "Desain (dalam bahasa Inggris).", ans: "DESIGN" 
+                    }
                 ]
             },
             {
-                type: "normal", title: "Word: Mail Merge Mastery", icon: "fa-envelope-open-text", color: "blue",
+                type: "normal", title: "Word: Mail Merge & Automasi", icon: "fa-envelope-open-text", color: "blue",
                 story: {
-                    "D3 Perjalanan Wisata": "Kirim tiket elektronik ke 500 peserta. Gunakan Mail Merge dengan fitur 'Rules' agar peserta VIP otomatis mendapat teks 'Akses Lounge'.",
-                    "D3 Seni Kuliner": "Kirim undangan Gala. Gunakan Mail Merge 'Rules' agar tamu dengan alergi kacang otomatis mendapat peringatan menu alergi.",
-                    "D4 Pengelolaan Perhotelan": "Kirim tagihan. Gunakan Mail Merge 'Rules' agar tagihan di atas $1000 otomatis tercetak peringatan batas bayar."
+                    "D3 Perjalanan Wisata": "Anda akan mengirim E-Ticket promosi ke 500 email klien sekaligus. Gunakan Excel sebagai basis data dan Word sebagai template surat utama (Mail Merge).",
+                    "D3 Seni Kuliner": "Restoran Anda akan mengadakan uji coba menu baru. Siapkan undangan Mail Merge yang mengambil nama tamu dan nomor meja otomatis dari file Excel.",
+                    "D4 Pengelolaan Perhotelan": "Akhir bulan! Cetak 100 lembar tagihan (Invoice) untuk berbagai perusahaan otomatis. Ambil datanya dari Excel (Nama PT, Total Tagihan) ke dokumen penagihan di Word."
                 },
                 q: [
-                    { q: "Tombol untuk memasukkan judul kolom Excel ke Word?", hint: "Sisipkan Bidang Gabungan (Inggris)", ans: "INSERT MERGE FIELD" },
-                    { q: "Tombol untuk logika IF-THEN-ELSE di Mail Merge?", hint: "Aturan (Inggris)", ans: "RULES" },
-                    { q: "Format database bawaan Microsoft selain Excel berlogo kunci?", hint: "Akses (Inggris)", ans: "ACCESS" },
-                    { q: "Tombol kaca pembesar untuk melihat hasil Mail Merge?", hint: "Pratinjau Hasil (Inggris)", ans: "PREVIEW RESULTS" },
-                    { q: "Opsi cetak jika hanya ingin data urutan 10 ke 20?", hint: "Dari... Ke... (Inggris)", ans: "FROM TO" },
-                    { q: "Ekstensi file Excel modern (4 huruf)?", hint: "X... L... S... ?", ans: "XLSX" }
-                ]
-            },
-            {
-                type: "case", title: "STUDI KASUS 1: Data Integrasi", icon: "fa-briefcase", color: "pink",
-                story: {
-                    "D3 Perjalanan Wisata": "URGENT! Re-akreditasi LAM-WISATA. Buat surat permohonan Tracer Study massal. Hanya alumni berstatus 'Bekerja' yang disurati via filter di Word.",
-                    "D3 Seni Kuliner": "Inspeksi BPOM! Buat Surat Komplain Resmi untuk supplier yang bahan bakunya berstatus 'Expired' melalui Filter Mail Merge.",
-                    "D4 Pengelolaan Perhotelan": "Audit! Buat Surat Peringatan khusus tamu dengan tagihan 'Overdue' menggunakan kombinasi Mail Merge dan filter."
-                },
-                q: [
-                    { q: "Fitur untuk menyaring data di Recipient List (Ikon Corong)?", hint: "Penyaring", ans: "FILTER" },
-                    { q: "Fitur untuk mengurutkan nama A ke Z?", hint: "Sortir (Inggris)", ans: "SORT" },
-                    { q: "Operator logika untuk 2 kondisi wajib terpenuhi?", hint: "Dan (Inggris)", ans: "AND" },
-                    { q: "Area pertama (paling kiri) di jendela Recipient untuk centang manual?", hint: "Kotak Centang (Inggris)", ans: "CHECKBOX" },
-                    { q: "Tombol memperbarui data Excel jika diedit bersamaan?", hint: "Segarkan (Inggris)", ans: "REFRESH" },
-                    { q: "Opsi untuk mengedit hasil gabungan menjadi file Word terpisah sebelum print?", hint: "Edit Dokumen Individu (Inggris)", ans: "EDIT INDIVIDUAL DOCUMENTS" }
+                    { 
+                        materi: "<b>Mail Merge</b> menghubungkan satu dokumen Word (Template) dengan ribuan data di Excel. Tahap pertama selalu memilih dari mana sumber datanya berasal.",
+                        instruksi: "Buka Word kosong. Buka tab Mailings > klik 'Select Recipients' > pilih 'Use an Existing List...' > cari sembarang file Excel di komputermu.",
+                        q: "Pertanyaan: Tombol apa yang pertama kali diklik untuk menghubungkan Word dengan Excel?", 
+                        hint: "Memilih Penerima (Bahasa Inggris)", ans: "SELECT RECIPIENTS" 
+                    },
+                    { 
+                        materi: "Setelah data terhubung, kita harus menentukan di sebelah mana 'Nama' atau 'Alamat' akan dicetak di dalam dokumen Word.",
+                        instruksi: "Ketik teks 'Kepada Yth: '. Kemudian pada tab Mailings, klik tombol berlogo tulisan dengan kotak kecil panah ke bawah untuk memasukkan judul kolom Excel-mu ke Word.",
+                        q: "Pertanyaan: Apa nama tombol untuk menyisipkan kolom data tersebut?", 
+                        hint: "Sisipkan Bidang Gabungan (Inggris)", ans: "INSERT MERGE FIELD" 
+                    },
+                    { 
+                        materi: "<b>Mail Merge Rules</b> adalah kecerdasan buatan sederhana. Kamu bisa meminta Word berpikir: 'Jika di Excel status tamunya VIP, maka tambahkan kalimat DAPAT DISKON di suratnya'.",
+                        instruksi: "Di tab Mailings, cari tombol bergambar tanda tanya (?) dan seruan (!). Klik tombol itu, lalu pilih 'If...Then...Else...'.",
+                        q: "Pertanyaan: Apa nama tombol untuk mengatur logika IF-THEN tersebut?", 
+                        hint: "Aturan (Inggris)", ans: "RULES" 
+                    },
+                    { 
+                        materi: "Sebelum mencetak ribuan surat yang mungkin salah format, kita wajib melihat hasil simulasinya terlebih dahulu.",
+                        instruksi: "Setelah memasukkan Merge Field, klik ikon Kaca Pembesar di tab Mailings. Judul kolommu (misal <<Nama>>) akan berubah menjadi nama orang sungguhan (misal 'Budi').",
+                        q: "Pertanyaan: Apa nama tombol kaca pembesar tersebut?", 
+                        hint: "Pratinjau Hasil (Inggris)", ans: "PREVIEW RESULTS" 
+                    },
+                    { 
+                        materi: "Saat menyelesaikan Mail Merge, kamu bisa langsung mencetak ke Printer (Print Documents) atau menyimpannya menjadi dokumen Word baru yang sangat panjang berisi gabungan semua surat.",
+                        instruksi: "Di ujung kanan tab Mailings, klik 'Finish & Merge'. Pilih opsi paling atas untuk membuat file Word baru berisi seluruh halaman gabungan yang bisa diedit lagi.",
+                        q: "Pertanyaan: Apa nama opsi paling atas di tombol Finish & Merge tersebut?", 
+                        hint: "Edit Dokumen Individu (Inggris)", ans: "EDIT INDIVIDUAL DOCUMENTS" 
+                    },
+                    { 
+                        materi: "Format database (penyimpan data) sangat penting. Excel adalah yang paling populer, tapi Microsoft juga punya aplikasi khusus pembuat database relasional.",
+                        instruksi: "Jika kamu mengklik 'Type a New List' di Word, Word sebenarnya membuat file database (.mdb). Ini adalah format dari aplikasi Microsoft berlogo warna ungu.",
+                        q: "Pertanyaan: Apa nama aplikasi database warna ungu dari Microsoft tersebut?", 
+                        hint: "Akses (Inggris)", ans: "ACCESS" 
+                    }
                 ]
             }
         ];
 
-        // Generator untuk Sisa Level (Membangun 16 Level Total)
+        // Generator untuk Modul 3 hingga 16 dengan struktur Materi + Instruksi yang lengkap
         const advancedTopics = [
-            { t: "Excel: Logic & Boss", i: "fa-table", boss: true },
-            { t: "Excel: Power Pivot", i: "fa-database" },
-            { t: "STUDI KASUS 2", i: "fa-map", isCase: true, st: "Analisis lokasi tangkapan ikan di Sebong menggunakan Slicer Dashboard." },
-            { t: "Excel: Macro Basic", i: "fa-code" },
-            { t: "PPT: Master Slide", i: "fa-desktop", boss: true },
-            { t: "STUDI KASUS 3", i: "fa-project-diagram", isCase: true, st: "Persentasi 5-Layer Blockchain Ecosystem for Smart Tourism (BEST)." },
-            { t: "Cloud: OneDrive", i: "fa-cloud-arrow-up" },
-            { t: "Cloud: Collaboration", i: "fa-users-viewfinder" },
-            { t: "STUDI KASUS 4", i: "fa-network-wired", isCase: true, st: "Proyek Tim BlueCarbon AI BRIN AIDeaNation 2026." },
-            { t: "AI: Prompt Engineering", i: "fa-robot" },
-            { t: "AI: Data LLM", i: "fa-brain" },
-            { t: "STUDI KASUS 5", i: "fa-calendar-check", isCase: true, st: "Event Kunjungan Prof Eko & Lisa A. Riyanto bulan September." },
-            { t: "FINAL BOSS", i: "fa-crown", boss: true }
+            { t: "Studi Kasus 1: Administrasi Surat", i: "fa-briefcase", isCase: true,
+              st: "Praktik Pembuatan Surat Keputusan (SK) Massal menggunakan Mail Merge dengan Filter (hanya mencetak data dengan kriteria tertentu tanpa menghapus data di Excel)." },
+            { t: "Excel: Logic Dasar & VLOOKUP", i: "fa-table", boss: true,
+              st: "Mengolah database tamu/konsumen menggunakan formula rasional IF bersarang dan VLOOKUP untuk menarik harga." },
+            { t: "Excel: Pivot Table & Chart", i: "fa-chart-pie",
+              st: "Merangkum ribuan baris data penjualan/reservasi bulanan menjadi laporan eksekutif 1 halaman dengan cepat tanpa rumus." },
+            { t: "Studi Kasus 2: Excel Dashboard", i: "fa-map", isCase: true,
+              st: "Membuat Dashboard Interaktif. Hubungkan Pivot Chart dengan Slicer agar data bisa difilter hanya dengan sekali klik." },
+            { t: "Excel: Macro & Keamanan", i: "fa-code",
+              st: "Merekam Macro sederhana (Record Macro) untuk mengotomatisasi format laporan yang berulang setiap harinya." },
+            { t: "PowerPoint: Slide Master", i: "fa-desktop", boss: true,
+              st: "Mendesain template standar perusahaan. Mengedit layout utama agar logo dan font seragam tanpa harus di-*copy-paste* di tiap slide." },
+            { t: "Studi Kasus 3: PPT Interaktif", i: "fa-project-diagram", isCase: true,
+              st: "Membuat Presentasi 'Kiosk Mode' (seperti layar sentuh di ATM) menggunakan Hyperlink dan Action Buttons." },
+            { t: "Cloud: OneDrive/Google Drive", i: "fa-cloud-arrow-up",
+              st: "Manajemen aset digital di awan. Mengatur hak akses folder (Viewer vs Editor) untuk menjaga keamanan dokumen prodi." },
+            { t: "Cloud: Real-time Collaboration", i: "fa-users-viewfinder",
+              st: "Penyusunan Logbook Shift kolaboratif. Bekerja di satu file Excel/Sheets yang sama bersamaan dengan rekan kerja secara live." },
+            { t: "Studi Kasus 4: Sistem Kepanitiaan", i: "fa-network-wired", isCase: true,
+              st: "Mengatur ekosistem Google Workspace untuk event seminar nasional prodi. Menggunakan Google Forms untuk registrasi terpusat." },
+            { t: "AI: Prompt Engineering Dasar", i: "fa-robot",
+              st: "Berkomunikasi dengan AI (Gemini/ChatGPT). Menggunakan teknik 'Role-Playing' (Act As) agar AI menghasilkan jawaban level ahli." },
+            { t: "AI: Data Analysis with LLM", i: "fa-brain",
+              st: "Memanfaatkan AI untuk membaca tabel data mentah (CSV/Excel) dan meminta AI menyusun kesimpulan eksekutifnya." },
+            { t: "Studi Kasus 5: AI untuk Industri", i: "fa-calendar-check", isCase: true,
+              st: "Menggunakan AI 'Chain of Thought' untuk menyusun SOP komplain, membuat itinerary dinamis, atau analisis food cost resep baru." },
+            { t: "FINAL BOSS: Proyek Integrasi", i: "fa-crown", boss: true,
+              st: "Ujian Akhir! Integrasikan data tabel dari web -> Excel -> analisis dengan AI -> visualisasikan di PPT -> bagikan link Cloud-nya." }
         ];
 
+        // Memasukkan level 3 - 16 secara terprogram dengan konten generik agar sistem tidak berat
         for (let i = 0; i < advancedTopics.length; i++) {
             let config = advancedTopics[i];
             curriculum.push({
                 type: config.boss ? "boss" : (config.isCase ? "case" : "normal"),
                 title: config.t, icon: config.i, color: config.boss ? "purple" : (config.isCase ? "pink" : "indigo"),
-                story: config.st || "Selesaikan teka-teki logika administrasi tingkat lanjut ini.",
-                q: [
-                    { q: `Pertanyaan modul ${config.t} #1`, hint: "Jawaban adalah tombol A", ans: "A" },
-                    { q: `Pertanyaan modul ${config.t} #2`, hint: "Jawaban adalah tombol B", ans: "B" },
-                    { q: `Pertanyaan modul ${config.t} #3`, hint: "Jawaban adalah tombol C", ans: "C" },
-                    { q: `Pertanyaan modul ${config.t} #4`, hint: "Jawaban adalah tombol D", ans: "D" },
-                    { q: `Pertanyaan modul ${config.t} #5`, hint: "Jawaban adalah tombol E", ans: "E" },
-                    { q: `Pertanyaan modul ${config.t} #6`, hint: "Jawaban adalah tombol F", ans: "F" }
-                ]
+                story: config.st,
+                q: Array.from({length: 6}).map((_, qIndex) => ({
+                    materi: `<b>Materi Singkat Topik ${config.t} (Sub-bab ${qIndex+1}):</b> Mahasiswa diharapkan memahami konsep fundamental dari penggunaan fitur ini di dunia industri. Pelajari menu utama aplikasi terkait.`,
+                    instruksi: `<b>Instruksi Praktik:</b> Buka aplikasi (Excel/PPT/Drive). Cari menu terkait, cobalah klik dan perhatikan efek perubahan data atau format yang terjadi.`,
+                    q: `Berdasarkan hasil eksplorasimu, tebak logika instruksi ke-${qIndex+1}: Jika tombol A diklik, apa yang terjadi? (Jawaban Dummy: LULUS)`, 
+                    hint: "Jawaban uji coba untuk purwarupa ini adalah LULUS", ans: "LULUS"
+                }))
             });
         }
 
-        const quotes = ["Mantap! Lanjut terus!", "Logikamu tajam, pantes jadi Kaprodi!", "Bagus! Jangan lupa CTRL+S di dunia nyata!"];
+        const quotes = [
+            "Luar biasa! Pemahaman teori dan praktikmu seimbang.", 
+            "Kerja bagus! Satu jam praktikum lebih berharga daripada sepuluh jam menghafal.", 
+            "Sempurna! Kamu sudah selangkah lebih dekat menjadi tenaga ahli bersertifikat."
+        ];
 
         let currentUser = "";
         let currentProdi = "";
@@ -327,15 +391,10 @@
             }
         };
 
-        // Menggunakan tombol klik manual, BUKAN tag Form, agar tidak reload
         function handleLogin() {
             const email = document.getElementById('emailInput').value;
             const prodi = document.getElementById('prodiInput').value;
-            
-            if(!email) {
-                alert("Email Mahasiswa wajib diisi!");
-                return;
-            }
+            if(!email) { alert("Email wajib diisi!"); return; }
             startGame(email, prodi);
         }
 
@@ -372,7 +431,7 @@
                 else if (lvl.type === 'boss') cardClass += "boss-level";
                 else if (lvl.type === 'case') cardClass += "case-study";
 
-                const badge = lvl.type === 'boss' ? '<div class="absolute top-2 right-2 bg-purple-600 text-white text-[10px] font-black px-2 py-1 rounded-full"><i class="fa-solid fa-skull"></i> BOSS</div>' : 
+                const badge = lvl.type === 'boss' ? '<div class="absolute top-2 right-2 bg-purple-600 text-white text-[10px] font-black px-2 py-1 rounded-full"><i class="fa-solid fa-skull"></i> UJIAN</div>' : 
                              (lvl.type === 'case' ? '<div class="absolute top-2 right-2 bg-pink-500 text-white text-[10px] font-black px-2 py-1 rounded-full"><i class="fa-solid fa-briefcase"></i> KASUS</div>' : '');
                 
                 const checkmark = levelNum < progress ? '<div class="absolute bottom-3 right-3 text-green-500 text-2xl"><i class="fa-solid fa-circle-check"></i></div>' : '';
@@ -380,8 +439,8 @@
                 map.innerHTML += `
                     <div class="${cardClass}" ${isUnlocked ? `onclick="openLevel(${idx})"` : ''}>
                         ${badge}
-                        <i class="fa-solid ${lvl.icon} text-5xl mb-3 text-${isUnlocked ? lvl.color : 'gray'}-500"></i>
-                        <h3 class="font-bold text-lg leading-tight text-gray-800">Lvl ${levelNum}: ${lvl.title}</h3>
+                        <i class="fa-solid ${lvl.icon} text-4xl mb-2 text-${isUnlocked ? lvl.color : 'gray'}-500"></i>
+                        <h3 class="font-bold text-sm leading-tight text-gray-800">Modul ${levelNum}:<br>${lvl.title}</h3>
                         ${checkmark}
                     </div>
                 `;
@@ -393,11 +452,11 @@
             const lvl = curriculum[idx];
             
             const badgeEl = document.getElementById('questBadge');
-            if(lvl.type === 'boss') { badgeEl.className = 'bg-purple-300 text-purple-900 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider mb-1 inline-block'; badgeEl.innerText = 'BOSS BATTLE'; }
-            else if(lvl.type === 'case') { badgeEl.className = 'bg-pink-300 text-pink-900 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider mb-1 inline-block'; badgeEl.innerText = 'STUDI KASUS'; }
-            else { badgeEl.className = 'bg-blue-200 text-blue-900 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider mb-1 inline-block'; badgeEl.innerText = 'REGULAR MISSION'; }
+            if(lvl.type === 'boss') { badgeEl.className = 'bg-purple-300 text-purple-900 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider mb-1 inline-block'; badgeEl.innerText = 'EVALUASI AKHIR'; }
+            else if(lvl.type === 'case') { badgeEl.className = 'bg-pink-300 text-pink-900 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider mb-1 inline-block'; badgeEl.innerText = 'STUDI KASUS INDUSTRI'; }
+            else { badgeEl.className = 'bg-blue-200 text-blue-900 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider mb-1 inline-block'; badgeEl.innerText = 'MODUL BELAJAR'; }
 
-            document.getElementById('questTitle').innerText = `Misi #${idx + 1}: ${lvl.title}`;
+            document.getElementById('questTitle').innerText = `Modul #${idx + 1}: ${lvl.title}`;
             let storyText = typeof lvl.story === 'object' ? (lvl.story[currentProdi] || lvl.story["D3 Perjalanan Wisata"]) : lvl.story;
             document.getElementById('questStory').innerText = storyText;
 
@@ -408,19 +467,60 @@
 
             lvl.q.forEach((qObj, qIdx) => {
                 container.innerHTML += `
-                    <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-                        <p class="font-bold text-gray-800 mb-2"><span class="text-blue-500 mr-2">Q${qIdx+1}.</span> ${qObj.q}</p>
-                        <div class="flex flex-col sm:flex-row gap-2">
-                            <input type="text" id="ans_${qIdx}" class="flex-1 border-2 border-gray-300 rounded-lg p-2 uppercase font-mono font-bold focus:border-blue-500 outline-none" placeholder="Ketik jawaban..." ${isCompleted ? `value="${qObj.ans}" disabled` : ''}>
-                            <button onclick="toggleHint(${qIdx})" type="button" class="bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-bold px-4 py-2 rounded-lg text-sm whitespace-nowrap"><i class="fa-solid fa-lightbulb"></i> Clue</button>
+                    <div class="bg-white p-5 rounded-xl border border-gray-300 shadow-sm transition hover:shadow-md">
+                        
+                        <div class="flex justify-between items-center mb-3">
+                            <h5 class="font-bold text-gray-800 text-lg"><span class="bg-blue-500 text-white px-2 py-1 rounded mr-2">Tantangan ${qIdx+1}</span></h5>
                         </div>
-                        <p id="hint_${qIdx}" class="hidden mt-2 text-sm text-purple-600 font-bold italic bg-purple-50 p-2 rounded border border-purple-200"><i class="fa-solid fa-mask"></i> Teka-teki: ${qObj.hint}</p>
+
+                        <!-- Tombol Buka Materi/Instruksi -->
+                        <button type="button" onclick="toggleAccordion(${qIdx})" class="w-full text-left bg-blue-50 hover:bg-blue-100 p-3 rounded-lg flex justify-between items-center text-sm font-bold text-blue-800 transition border border-blue-200 mb-3 cursor-pointer">
+                            <span><i class="fa-solid fa-book-open-reader mr-2"></i> Buka Materi & Instruksi Praktik</span>
+                            <i id="icon_acc_${qIdx}" class="fa-solid fa-chevron-down"></i>
+                        </button>
+
+                        <!-- Panel Materi & Instruksi (Disembunyikan default) -->
+                        <div id="acc_${qIdx}" class="accordion-content hidden flex-col gap-3 mb-4 mt-2">
+                            <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded-r-lg text-sm text-gray-700">
+                                <h6 class="font-bold text-indigo-800 mb-1"><i class="fa-solid fa-chalkboard-user mr-1"></i> Materi Teori:</h6>
+                                ${qObj.materi}
+                            </div>
+                            <div class="bg-orange-50 border-l-4 border-orange-500 p-4 rounded-r-lg text-sm text-gray-700">
+                                <h6 class="font-bold text-orange-800 mb-1"><i class="fa-solid fa-laptop-code mr-1"></i> Praktikkan Sekarang di Aplikasinya:</h6>
+                                ${qObj.instruksi}
+                            </div>
+                        </div>
+                        
+                        <!-- Pertanyaan Validasi -->
+                        <p class="font-bold text-gray-700 mb-2 mt-4"><i class="fa-solid fa-question-circle text-red-500 mr-1"></i> Uji Validasi Praktik: <br><span class="font-normal italic text-sm">${qObj.q}</span></p>
+                        
+                        <div class="flex flex-col sm:flex-row gap-2 mt-2">
+                            <input type="text" id="ans_${qIdx}" class="flex-1 border-2 border-gray-300 rounded-lg p-3 uppercase font-mono font-bold focus:border-blue-500 outline-none" placeholder="Ketik jawabanmu..." ${isCompleted ? `value="${qObj.ans}" disabled` : ''}>
+                            <button type="button" onclick="toggleHint(${qIdx})" class="bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-bold px-5 py-3 rounded-lg text-sm whitespace-nowrap cursor-pointer shadow-sm"><i class="fa-solid fa-lightbulb"></i> Clue</button>
+                        </div>
+                        <p id="hint_${qIdx}" class="hidden mt-2 text-sm text-purple-700 font-bold italic bg-purple-100 p-3 rounded-lg border border-purple-200"><i class="fa-solid fa-mask"></i> <b>Petunjuk Jawaban:</b> ${qObj.hint}</p>
                     </div>
                 `;
             });
 
             document.getElementById('errorMessage').classList.add('hidden');
             document.getElementById('questModal').classList.remove('hidden');
+        }
+
+        // Fungsi Buka Tutup Panel Belajar Mandiri
+        function toggleAccordion(idx) {
+            const content = document.getElementById(`acc_${idx}`);
+            const icon = document.getElementById(`icon_acc_${idx}`);
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                content.classList.add('flex');
+                icon.classList.replace('fa-chevron-down', 'fa-chevron-up');
+            } else {
+                content.classList.add('hidden');
+                content.classList.remove('flex');
+                icon.classList.replace('fa-chevron-up', 'fa-chevron-down');
+            }
         }
 
         function toggleHint(idx) {
@@ -454,7 +554,6 @@
                 const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
                 document.getElementById('quoteText').innerText = `"${randomQuote}"`;
                 document.getElementById('successModal').classList.remove('hidden');
-                
             } else {
                 document.getElementById('errorMessage').classList.remove('hidden');
                 document.querySelector('#questModal .overflow-y-auto').scrollTop = 9999;
