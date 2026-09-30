@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechQuest: Office & Cloud Master</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@400;500;600;700&display=swap');
+        
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background-color: #0f172a; 
+            color: white; 
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        .game-title { 
+            font-family: 'Press Start 2P', cursive; 
+            text-shadow: 3px 3px 0px #3b82f6, -1px -1px 0 #1e3a8a; 
+            letter-spacing: 2px;
+            line-height: 1.5;
+        }
+        .game-font { font-family: 'Press Start 2P', cursive; }
+        
+        /* Card Hover Effects */
+        .level-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .level-card:hover:not(.locked) { 
+            transform: translateY(-5px) scale(1.02); 
+            box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.6); 
+        }
+        .locked { opacity: 0.5; cursor: not-allowed; filter: grayscale(100%); }
+        
+        /* Certificate Styles */
+        .cert-bg { 
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); 
+            position: relative;
+            overflow: hidden;
+        }
+        .cert-pattern {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px; pointer-events: none;
+        }
+        
+        /* Retro Scanlines */
+        .scanlines {
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
+            background-size: 100% 4px;
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none; z-index: 10; opacity: 0.4;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #2563eb; }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        .animate-shake { animation: shake 0.5s ease-in-out; }
+        .animate-pulse-slow { animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    </style>
+</head>
+<body class="flex flex-col relative">
+    <div class="scanlines"></div>
+
+    <div id="loginScreen" class="flex-1 flex items-center justify-center p-4 relative z-20 min-h-screen">
+        <div class="bg-slate-800/90 backdrop-blur-md p-8 rounded-2xl shadow-[0_0_40px_rgba(59,130,246,0.2)] border border-blue-500/30 w-full max-w-md">
+            <div class="text-center mb-8">
+                <i class="fa-solid fa-gamepad text-6xl text-blue-500 mb-6 drop-shadow-[0_0_15px_rgba(59,130,246,0.6)]"></i>
+                <h1 class="text-2xl md:text-3xl font-bold game-title text-blue-400 mb-2">TechQuest</h1>
+                <p class="text-[10px] text-blue-300 game-font mt-2 uppercase">LMS Politeknik Bintan Cakrawala</p>
+                <div class="h-1 w-16 bg-blue-500 mx-auto mt-5 rounded-full"></div>
+            </div>
+            
+            <form id="loginForm" class="space-y-5">
+                <div>
+                    <label class="block text-xs text-blue-300 game-font mb-2 uppercase">Email Mahasiswa</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-envelope absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
+                        <input type="email" id="emailInput" required class="w-full bg-slate-900/80 border border-slate-600 rounded-lg py-3 pl-11 pr-4 text-white placeholder-slate-500 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition" placeholder="nama@mhs.pbc.ac.id">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs text-blue-300 game-font mb-2 uppercase">Program Studi</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-graduation-cap absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
+                        <select id="prodiInput" required class="w-full bg-slate-900/80 border border-slate-600 rounded-lg py-3 pl-11 pr-4 text-white focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition appearance-none">
+                            <option value="D3 Perjalanan Wisata">D3 Perjalanan Wisata</option>
+                            <option value="D3 Seni Kuliner">D3 Seni Kuliner</option>
+                            <option value="D4 Pengelolaan Perhotelan">D4 Pengelolaan Perhotelan</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400 pointer-events-none"></i>
+                    </div>
+                </div>
+                
+                <div id="loginStatus" class="hidden text-center text-sm text-yellow-400 py-2 font-medium">
+                    <i class="fa-solid fa-spinner fa-spin mr-2"></i> Menghubungkan ke Server...
+                </div>
+
+                <button type="submit" id="startBtn" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white py-4 px-4 rounded-lg shadow-lg transform transition active:scale-95 game-font text-xs mt-4 disabled:opacity-50 disabled:cursor-not-allowed">
+                    START GAME <i class="fa-solid fa-play ml-2"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="gameScreen" class="hidden flex-1 flex flex-col p-4 md:p-8 max-w-7xl mx-auto w-full relative z-20 min-h-screen">
+        <!-- Header -->
+        <div class="flex flex-col lg:flex-row justify-between items-center bg-slate-800/80 backdrop-blur-md p-5 rounded-2xl shadow-lg border border-slate-700 mb-8 gap-4">
+            <div class="flex items-center gap-4 w-full lg:w-auto">
+                <div class="bg-blue-600 p-3 rounded-full shadow-[0_0_15px_rgba(59,130,246,0.5)]">
+                    <i class="fa-solid fa-user-astronaut text-2xl"></i>
+                </div>
+                <div class="overflow-hidden">
+                    <h2 class="text-base md:text-lg font-bold text-blue-400 truncate">Player: <span id="playerName" class="text-white"></span></h2>
+                    <p class="text-xs md:text-sm text-slate-300 truncate">Prodi: <span id="playerProdi" class="text-yellow-400 font-semibold"></span></p>
+                </div>
+            </div>
+            
+            <div class="flex items-center justify-between w-full lg:w-auto gap-4 md:gap-6">
+                <div id="saveIndicator" class="text-green-400 text-xs md:text-sm flex items-center gap-2 opacity-0 transition-opacity">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> <span>Tersimpan</span>
+                </div>
+                <div class="text-center bg-slate-900 p-2 md:p-3 rounded-xl border border-slate-700 min-w-[100px] md:min-w-[120px]">
+                    <p class="text-[10px] md:text-xs text-slate-400 uppercase tracking-wider mb-1">Level</p>
+                    <p class="font-bold text-xl md:text-2xl text-white game-font"><span id="levelCounter" class="text-green-400 text-2xl md:text-3xl">1</span><span class="text-base md:text-lg text-slate-500">/16</span></p>
+                </div>
+                <button onclick="logout()" class="bg-slate-700 hover:bg-red-600 px-4 py-3 md:py-4 rounded-xl font-semibold text-xs md:text-sm transition shadow-md border border-slate-600 flex items-center gap-2">
+                    <i class="fa-solid fa-power-off"></i> <span class="hidden sm:inline">Keluar</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Levels Grid -->
+        <div id="levelMap" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 pb-10">
+            <!-- Levels generated by JS -->
+        </div>
+    </div>
+
+    <div id="questModal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4 z-50">
+        <div class="bg-slate-800 rounded-2xl shadow-2xl border-2 border-blue-500 w-full max-w-3xl overflow-hidden flex flex-col max-h-[95vh] transform scale-95 opacity-0 transition-all duration-300" id="questModalContent">
+            
+            <div class="bg-gradient-to-r from-blue-700 to-indigo-800 p-5 flex justify-between items-center relative overflow-hidden shrink-0">
+                <div class="absolute -right-10 -top-10 opacity-20"><i class="fa-solid fa-burst text-9xl"></i></div>
+                <div class="flex items-center gap-4 relative z-10">
+                    <div id="questIconBg" class="w-12 h-12 rounded-xl flex items-center justify-center backdrop-blur-sm bg-white/20">
+                        <i id="questIcon" class="fa-solid fa-star text-2xl text-white"></i>
+                    </div>
+                    <div>
+                        <h3 id="questTitle" class="font-bold text-base md:text-lg game-font text-yellow-300 drop-shadow-md">Misi #1</h3>
+                        <p id="questTopic" class="text-blue-100 text-xs md:text-sm font-semibold tracking-wide truncate max-w-[200px] sm:max-w-md">Topik</p>
+                    </div>
+                </div>
+                <button onclick="closeModal()" class="text-white hover:text-red-400 transition bg-white/10 w-10 h-10 rounded-full flex items-center justify-center relative z-10"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            
+            <div class="p-5 md:p-8 overflow-y-auto bg-slate-800 flex-1">
+                <div class="mb-6 md:mb-8">
+                    <h4 class="text-[10px] md:text-xs uppercase tracking-widest text-slate-400 mb-2 font-bold"><i class="fa-solid fa-briefcase text-blue-400 mr-2"></i> Studi Kasus Industri</h4>
+                    <p id="questStory" class="text-slate-200 leading-relaxed text-sm md:text-base bg-slate-900/50 p-4 md:p-5 rounded-xl border border-slate-700/50 italic shadow-inner"></p>
+                </div>
+                
+                <div class="bg-gradient-to-br from-slate-900 to-slate-800 p-4 md:p-5 rounded-xl border-l-4 border-yellow-500 shadow-lg mb-6 md:mb-8 relative overflow-hidden">
+                    <div class="absolute right-0 top-0 opacity-10"><i class="fa-solid fa-triangle-exclamation text-6xl"></i></div>
+                    <h4 class="font-bold text-yellow-400 mb-3 text-xs md:text-sm uppercase flex items-center gap-2 relative z-10">
+                        <i class="fa-solid fa-bolt animate-pulse"></i> Praktik & Validasi
+                    </h4>
+                    <p id="questAction" class="text-sm text-slate-300 font-medium relative z-10"></p>
+                </div>
+
+                <div class="bg-slate-900 p-4 md:p-5 rounded-xl border border-slate-700">
+                    <label class="block text-xs md:text-sm font-semibold mb-3 text-blue-300">Masukkan Kode Validasi / Jawaban:</label>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <input type="text" id="answerInput" class="flex-1 bg-slate-800 border-2 border-slate-600 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none uppercase font-mono tracking-widest transition shadow-inner" placeholder="KETIK JAWABAN...">
+                        <button onclick="checkAnswer()" id="submitAnswerBtn" class="bg-green-600 hover:bg-green-500 text-white px-6 md:px-8 py-3 rounded-lg font-bold transition shadow-lg flex items-center justify-center gap-2 text-sm md:text-base">
+                            KIRIM <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    
+                    <div id="successMessage" class="hidden mt-3 bg-green-900/50 border border-green-500 text-green-400 p-3 rounded-lg text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-xl"></i> <span>Akses Diberikan! Level selesai.</span>
+                    </div>
+                    <div id="errorMessage" class="hidden mt-3 bg-red-900/50 border border-red-500 text-red-400 p-3 rounded-lg text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-circle-xmark text-xl"></i> <span>Jawaban salah. Coba praktikkan lagi di aplikasinya!</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="certModal" class="hidden fixed inset-0 bg-slate-950/95 flex items-center justify-center p-4 z-50 overflow-y-auto">
+        <div class="cert-bg border-4 border-yellow-500 p-8 md:p-12 rounded-2xl max-w-4xl w-full text-center relative shadow-[0_0_60px_rgba(234,179,8,0.4)] my-8 bg-white">
+            <div class="cert-pattern"></div>
+            
+            <!-- Ornate Corners -->
+            <div class="absolute top-4 left-4 w-12 h-12 border-t-4 border-l-4 border-yellow-500"></div>
+            <div class="absolute top-4 right-4 w-12 h-12 border-t-4 border-r-4 border-yellow-500"></div>
+            <div class="absolute bottom-4 left-4 w-12 h-12 border-b-4 border-l-4 border-yellow-500"></div>
+            <div class="absolute bottom-4 right-4 w-12 h-12 border-b-4 border-r-4 border-yellow-500"></div>
+
+            <div class="relative z-10 flex flex-col items-center">
+                <i class="fa-solid fa-award text-6xl md:text-8xl text-yellow-400 mb-6 drop-shadow-[0_0_15px_rgba(234,179,8,0.8)]"></i>
+                
+                <h1 class="text-2xl md:text-4xl font-serif text-yellow-400 mb-1 font-bold tracking-wider uppercase">Certificate of Completion</h1>
+                <h2 class="text-sm md:text-base text-slate-300 tracking-widest uppercase mb-6">Politeknik Bintan Cakrawala</h2>
+                
+                <div class="h-1 w-32 bg-gradient-to-r from-transparent via-yellow-400 to-transparent mx-auto my-4"></div>
+                
+                <p class="text-sm md:text-lg text-slate-300 italic mb-2">Diberikan secara membanggakan kepada:</p>
+                <h3 id="certName" class="text-2xl md:text-5xl font-bold text-white my-4 uppercase tracking-wider text-shadow-md border-b-2 border-slate-600 pb-2 inline-block px-8">Nama Mahasiswa</h3>
+                
+                <p class="text-sm md:text-lg text-slate-300 italic mt-4 mb-2">Telah menyelesaikan pelatihan gamifikasi Aplikasi Komputer Lanjutan pada Program Studi:</p>
+                <h4 id="certProdi" class="text-xl md:text-3xl font-semibold text-blue-300 my-2">Nama Program Studi</h4>
+                
+                <p class="text-slate-400 mt-8 max-w-2xl mx-auto text-xs md:text-sm leading-relaxed pt-4 px-4">
+                    Memiliki kompetensi dan kemampuan praktikal dalam penggunaan Microsoft Word, Advanced Excel (Logical & Data Analysis), PowerPoint Animation, dasar-dasar Cloud Computing, dan pemanfaatan Artificial Intelligence (AI) terapan.
+                </p>
+                
+                <!-- Signatures -->
+                <div class="mt-12 w-full flex justify-between px-4 md:px-16 items-end">
+                    <div class="text-center w-40">
+                        <p class="text-[10px] md:text-xs text-slate-400 mb-10">Tervalidasi Sistem</p>
+                        <div class="border-t border-slate-500 pt-2">
+                            <p class="font-bold text-sm text-slate-200">TechQuest LMS</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Official Signature requested by user -->
+                    <div class="text-center w-48 relative">
+                        <i class="fa-solid fa-signature absolute text-blue-500/30 text-5xl -top-6 left-1/2 transform -translate-x-1/2"></i>
+                        <p class="text-[10px] md:text-xs text-slate-400 mb-10">Pjs. Kaprodi</p>
+                        <div class="border-t border-slate-500 pt-2 relative z-10">
+                            <p class="font-bold text-sm text-slate-200 uppercase">Dodi Setiawan</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-12 flex flex-col sm:flex-row justify-center gap-4 w-full md:w-auto">
+                    <button onclick="window.print()" class="bg-gradient-to-r from-yellow-600 to-yellow-500 hover:from-yellow-500 hover:to-yellow-400 text-slate-900 px-8 py-3 rounded-lg font-bold shadow-lg flex items-center justify-center gap-2 transition w-full sm:w-auto">
+                        <i class="fa-solid fa-print"></i> Cetak / Simpan PDF
+                    </button>
+                    <button onclick="closeCert()" class="bg-slate-700 hover:bg-slate-600 text-white px-8 py-3 rounded-lg font-bold transition border border-slate-600 w-full sm:w-auto">
+                        Tutup
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase Globals injected by Immersive Environment
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'techquest-lms-pbc';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        let app, auth, db;
+        let currentUserUid = null;
+        let isFirebaseReady = false;
+
+        // Initialize App State
+        let state = {
+            email: "",
+            prodi: "",
+            currentLevel: 1
+        };
+        let activeLevelModalIndex = -1;
+
+        async function initFirebase() {
+            if (!firebaseConfig) {
+                console.warn("Firebase config not found. Running in local mode.");
+                return;
+            }
+            try {
+                app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+
+                // MANDATORY RULE 3: Auth Before Queries
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        currentUserUid = user.uid;
+                        isFirebaseReady = true;
+                        
+                        // If user is stuck on loading screen (they already submitted form), process login
+                        const loginBtn = document.getElementById('startBtn');
+                        const loadingDiv = document.getElementById('loginStatus');
+                        if (loginBtn.classList.contains('hidden') && state.email) {
+                            processLoginToDashboard();
+                        }
+                    }
+                });
+            } catch (e) {
+                console.error("Firebase Initialization Error:", e);
+                // Graceful degradation handled locally
+            }
+        }
+
+        // Curriculums specific to Diploma 3 Perjalanan Wisata, D3 Seni Kuliner, D4 Pengelolaan Perhotelan
+        const curriculum = [
+            {
+                topic: "Word: Document Formatting & Styles",
+                story: {
+                    "D3 Perjalanan Wisata": "Sebagai perancang tur, kamu harus merapikan dokumen Proposal Paket Tur Bintan. Proposal yang berantakan tidak akan disetujui klien.",
+                    "D3 Seni Kuliner": "Chef Eksekutif memintamu merapikan buku kumpulan Resep Nusantara. Format yang konsisten sangat penting untuk SOP dapur.",
+                    "D4 Pengelolaan Perhotelan": "General Manager memintamu membuat SOP Departemen Front Office yang terstruktur agar mudah dibaca oleh seluruh staf."
+                },
+                action: "Buka MS Word. Buat dokumen baru dengan beberapa teks. Gunakan fitur 'Heading 1' di tab Home untuk membuat judul utama. Pertanyaan: Apa kombinasi tombol keyboard (shortcut) untuk membuat tulisan menjadi TEBAL (Bold)?",
+                answer: "CTRL+B",
+                icon: "fa-file-word", color: "blue"
+            },
+            {
+                topic: "Word: Mail Merge",
+                story: {
+                    "D3 Perjalanan Wisata": "Ada 50 turis yang akan berangkat besok. Kirimkan surat konfirmasi tiket secara massal tanpa mengetik nama mereka satu-persatu.",
+                    "D3 Seni Kuliner": "Kamu akan mengadakan Gala Dinner. Buat surat undangan yang dipersonalisasi untuk 50 tamu VIP yang datanya ada di Excel.",
+                    "D4 Pengelolaan Perhotelan": "Sebarkan Welcome Letter ke 50 tamu VIP di kamar masing-masing menggunakan data dari sistem reservasi (Excel)."
+                },
+                action: "Praktikkan konsep Mail Merge. Buka tab 'Mailings' di Word. Tombol apa yang harus diklik untuk mengambil sumber data dari file Excel? (Ketik 2 kata bahasa Inggris di menunya)",
+                answer: "SELECT RECIPIENTS",
+                icon: "fa-envelope-open-text", color: "blue"
+            },
+            {
+                topic: "Word: Track Changes",
+                story: "Dosen Pembimbing atau Manajermu mengembalikan proposalmu dengan banyak coretan merah (revisi). Kamu harus memeriksa dan menyetujui revisi tersebut.",
+                action: "Buka tab 'Review' di Word. Untuk menyetujui sebuah revisi dan menghilangkan coretan merahnya secara permanen, tombol apa yang diklik?",
+                answer: "ACCEPT",
+                icon: "fa-pen-to-square", color: "blue"
+            },
+            {
+                topic: "Excel: Conditional Formatting",
+                story: {
+                    "D3 Perjalanan Wisata": "Lihat data 500 calon wisatawan. Tandai otomatis baris data wisatawan lanjut usia (>60 tahun) dengan warna merah muda agar tim medis bersiap.",
+                    "D3 Seni Kuliner": "Periksa database inventaris dapur. Buat agar Excel otomatis memberi warna merah pada bahan baku yang expired-nya kurang dari 3 hari.",
+                    "D4 Pengelolaan Perhotelan": "Buka data reservasi hotel. Buat agar kolom status yang bertuliskan 'Unpaid' (Belum Lunas) otomatis menjadi warna merah."
+                },
+                action: "Buka Excel, ketik data. Untuk mewarnai cell secara otomatis sesuai aturan tertentu, fitur apa di tab Home yang dipakai?",
+                answer: "CONDITIONAL FORMATTING",
+                icon: "fa-table-cells", color: "green"
+            },
+            {
+                topic: "Excel: Fungsi Logika Dasar (IF)",
+                story: {
+                    "D3 Perjalanan Wisata": "Jika jumlah pax grup > 30, maka alokasikan 'Bus Besar', jika tidak maka 'Minibus'.",
+                    "D3 Seni Kuliner": "Evaluasi resep harian. Jika Food Cost (FC) di bawah 30%, maka 'Aman', jika melebihi itu maka statusnya 'Overbudget'.",
+                    "D4 Pengelolaan Perhotelan": "Jika tamu menginap lebih dari 3 malam, berikan status 'Diskon 10%', jika tidak, status 'Normal'."
+                },
+                action: "Di Excel, ketik angka 50 di cell A1. Di B1 masukkan rumus: =IF(A1>30,\"LULUS\",\"GAGAL\"). Apa hasil teks yang keluar di B1?",
+                answer: "LULUS",
+                icon: "fa-calculator", color: "green"
+            },
+            {
+                topic: "Excel: VLOOKUP Data Retrieval",
+                story: "Kita punya Master Tabel Harga di Sheet terpisah. Jangan ketik ulang harganya satu per satu (risiko *human error*). Tarik datanya otomatis dengan VLOOKUP.",
+                action: "Rumus VLOOKUP punya 4 bagian: =VLOOKUP(nilai_dicari, tabel_referensi, nomor_kolom, [range_lookup]). Untuk mencari data yang HARUS SAMA PERSIS (Exact Match), kata apa yang diketik di bagian ke-4?",
+                answer: "FALSE",
+                icon: "fa-magnifying-glass-chart", color: "green"
+            },
+            {
+                topic: "Excel: Analisis Data Pivot Table",
+                story: "Kamu diberi data mentah berisi ribuan baris transaksi. Direktur meminta laporan instan: Berapa total pendapatan kita per bulan? Waktumu 5 menit.",
+                action: "Di Excel, masuk ke tab Insert > PivotTable. Di area pengaturan Pivot sebelah kanan, ke dalam kotak (area) manakah field berjenis angka seperti 'Harga/Revenue' ditarik (drag) agar bisa dijumlahkan?",
+                answer: "VALUES",
+                icon: "fa-table-list", color: "green"
+            },
+            {
+                topic: "Excel: Mid-Term Dashboard",
+                story: "Ujian Praktik Mid-Semester! Gabungkan VLOOKUP, IF, dan Pivot Table untuk membangun sebuah Dashboard Interaktif yang canggih untuk presentasi manajemen.",
+                action: "Untuk membuat grafik/chart dinamis yang otomatis terhubung dan berubah sesuai PivotTable, jenis grafik apa di Excel yang digunakan?",
+                answer: "PIVOTCHART",
+                icon: "fa-chart-pie", color: "green"
+            },
+            {
+                topic: "PowerPoint: Master Slide",
+                story: "Presentasi di kampus/hotel menuntut keseragaman *template* logo. Jangan edit manual di 50 slide! Gunakan Master Slide agar sekali edit, semua berubah.",
+                action: "Buka PowerPoint. Di tab menu manakah kamu bisa menemukan tombol untuk membuka tampilan 'Slide Master'?",
+                answer: "VIEW",
+                icon: "fa-file-powerpoint", color: "orange"
+            },
+            {
+                topic: "PowerPoint: Transisi Morph",
+                story: "Buat presentasimu memukau dan tidak kaku! Gunakan transisi Morph agar elemen atau gambar di slide pertama bergerak mulus pindah posisi ke slide kedua.",
+                action: "Syarat Morph berjalan sempurna adalah slide ke-2 merupakan hasil salinan slide ke-1. Apa shortcut keyboard untuk menduplikasi (Duplicate) sebuah slide?",
+                answer: "CTRL+D",
+                icon: "fa-wand-magic-sparkles", color: "orange"
+            },
+            {
+                topic: "PowerPoint: Interaktivitas Hyperlink",
+                story: "Ubah slide presentasimu menjadi sistem layar sentuh ala Kiosk! Saat ikon diklik, presentasi tidak bergeser ke halaman selanjutnya, melainkan melompat ke bab tertentu.",
+                action: "Untuk membuat sebuah kotak (Shape) mengarah/melompat ke Slide 5 jika diklik, fitur apa yang disisipkan? (Pilih: MORPH / LINK / ANIMATE)",
+                answer: "LINK",
+                icon: "fa-link", color: "orange"
+            },
+            {
+                topic: "Cloud: Manajemen Akses File",
+                story: "Data di flashdisk sangat rawan virus. Mulai sekarang, amankan dokumenmu di Google Drive atau OneDrive dan bagikan tautannya (link) dengan benar.",
+                action: "Kamu membagikan link GDrive. Jika kamu ingin orang lain hanya bisa BACA dokumen tanpa bisa MENGHAPUS/EDIT, peran (role) akses apa yang kamu berikan?",
+                answer: "VIEWER",
+                icon: "fa-cloud-arrow-up", color: "cyan"
+            },
+            {
+                topic: "Cloud: Kolaborasi Real-Time",
+                story: "Kerjakan laporan kerja kelompok (Google Docs/Sheets) bersama-sama dari tempat berbeda di waktu yang sama, tanpa perlu saling kirim file lewat email.",
+                action: "Di Google Docs, jika kamu memberikan Komentar (Comment) dan ingin memberi notifikasi tugas khusus (Assign) kepada temanmu, simbol apa yang diketik sebelum email/namanya?",
+                answer: "@",
+                icon: "fa-users", color: "cyan"
+            },
+            {
+                topic: "AI: Prompt Engineering Role-Play",
+                story: {
+                    "D3 Perjalanan Wisata": "Gunakan AI (Gemini/ChatGPT) untuk menyusun *itinerary* detail perjalanan ke Desa Wisata Ekang Anculai yang menarik bagi wisman.",
+                    "D3 Seni Kuliner": "Perintahkan AI untuk menciptakan resep fusion makanan laut Bintan dengan teknik plating ala Prancis, beserta HPP-nya.",
+                    "D4 Pengelolaan Perhotelan": "Gunakan AI untuk merancang percakapan Bahasa Inggris standar operasional penanganan tamu yang marah akibat AC kamar rusak."
+                },
+                action: "Untuk hasil maksimal, berikan peran pada AI. Contoh: 'Bertindaklah sebagai Pakar Pariwisata...'. Teknik memberikan peran pada prompt AI disebut apa? (Pilih: ACT AS / SEARCH / FORMAT)",
+                answer: "ACT AS",
+                icon: "fa-robot", color: "indigo"
+            },
+            {
+                topic: "AI: Analisis Data Instan",
+                story: "Manajer melempar data excel acak. Daripada pusing, kamu mengunggah (upload) data mentah tersebut ke AI dan menyuruh AI membacakan tren serta kesimpulannya.",
+                action: "File data spreadsheet yang ringan, dipisahkan oleh tanda koma, dan paling disukai oleh mesin AI/Data Science memiliki ekstensi (akhiran) file apa?",
+                answer: "CSV",
+                icon: "fa-brain", color: "indigo"
+            },
+            {
+                topic: "Final Boss: Ujian Kompetensi Akhir",
+                story: "Ini adalah tes final. Buat laporan komprehensif menggunakan Word Mail Merge dari data Excel, buat rangkuman Pivot, presentasikan secara interaktif via PowerPoint, simpan di Cloud, dan asah tulisanmu memakai AI.",
+                action: "Kamu telah menyelesaikan seluruh simulasi Aplikasi Komputer Lanjutan. Untuk mencetak sertifikatmu, ketik kata sandi ini: SAYA SIAP LULUS",
+                answer: "SAYA SIAP LULUS",
+                icon: "fa-trophy", color: "yellow"
+            }
+        ];
+
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('emailInput').value.trim();
+            const prodi = document.getElementById('prodiInput').value;
+            
+            if (!email) return;
+
+            document.getElementById('startBtn').classList.add('hidden');
+            document.getElementById('loginStatus').classList.remove('hidden');
+
+            state.email = email;
+            state.prodi = prodi;
+
+            if (isFirebaseReady) {
+                processLoginToDashboard();
+            } else {
+                // Wait for firebase or fallback if it fails completely
+                setTimeout(() => {
+                    if (!isFirebaseReady) {
+                        console.log("Firebase timeout. Using local storage.");
+                        processLoginToDashboard(true);
+                    }
+                }, 3000);
+            }
+        });
+
+        async function processLoginToDashboard(useLocal = false) {
+            if (!useLocal) {
+                await loadProgressFromCloud();
+            } else {
+                const localData = localStorage.getItem(`tq_${state.email}`);
+                if (localData) state.currentLevel = parseInt(localData);
+            }
+            
+            // Switch UI
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('gameScreen').classList.remove('hidden');
+            
+            document.getElementById('playerName').innerText = state.email.split('@')[0];
+            document.getElementById('playerProdi').innerText = state.prodi;
+            
+            updateLevelCounter();
+            window.renderMap();
+
+            if (state.currentLevel > 16) {
+                window.showCertificate();
+            }
+        }
+
+        async function loadProgressFromCloud() {
+            if (!db || !currentUserUid) return;
+            
+            try {
+                // MANDATORY RULE 1: Strict Paths -> /artifacts/{appId}/users/{userId}/{collectionName}
+                const docRef = doc(db, 'artifacts', appId, 'users', currentUserUid, 'gamedata', state.email);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    state.currentLevel = data.level || 1;
+                } else {
+                    state.currentLevel = 1;
+                    await saveProgressToCloud();
+                }
+            } catch (error) {
+                console.error("Fetch error, fallback local:", error);
+                const localData = localStorage.getItem(`tq_${state.email}`);
+                if (localData) state.currentLevel = parseInt(localData);
+            }
+        }
+
+        async function saveProgressToCloud() {
+            // Local save is always performed as backup
+            localStorage.setItem(`tq_${state.email}`, state.currentLevel);
+
+            if (!db || !currentUserUid) return;
+            
+            const indicator = document.getElementById('saveIndicator');
+            indicator.style.opacity = '1';
+            
+            try {
+                const docRef = doc(db, 'artifacts', appId, 'users', currentUserUid, 'gamedata', state.email);
+                await setDoc(docRef, {
+                    email: state.email,
+                    prodi: state.prodi,
+                    level: state.currentLevel,
+                    updatedAt: new Date().toISOString()
+                });
+                
+                setTimeout(() => { indicator.style.opacity = '0'; }, 2000);
+            } catch (error) {
+                console.error("Save error:", error);
+            }
+        }
+
+        function getColors(color) {
+            const map = {
+                blue: { border: 'border-blue-500', text: 'text-blue-400', bg: 'bg-blue-600' },
+                green: { border: 'border-green-500', text: 'text-green-400', bg: 'bg-green-600' },
+                orange: { border: 'border-orange-500', text: 'text-orange-400', bg: 'bg-orange-600' },
+                cyan: { border: 'border-cyan-500', text: 'text-cyan-400', bg: 'bg-cyan-600' },
+                indigo: { border: 'border-indigo-500', text: 'text-indigo-400', bg: 'bg-indigo-600' },
+                yellow: { border: 'border-yellow-500', text: 'text-yellow-400', bg: 'bg-yellow-600' }
+            };
+            return map[color] || map.blue;
+        }
+
+        window.renderMap = function() {
+            const container = document.getElementById('levelMap');
+            container.innerHTML = '';
+
+            curriculum.forEach((level, index) => {
+                const levelNum = index + 1;
+                const isUnlocked = levelNum <= state.currentLevel;
+                const isCompleted = levelNum < state.currentLevel;
+                const isCurrent = levelNum === state.currentLevel;
+                
+                const theme = getColors(level.color);
+                
+                const card = document.createElement('div');
+                card.className = `level-card bg-slate-800 p-5 md:p-6 rounded-2xl border-2 flex flex-col items-center justify-center text-center relative overflow-hidden min-h-[160px] md:min-h-[180px] 
+                    ${isUnlocked ? theme.border + ' cursor-pointer shadow-lg' : 'border-slate-700 locked'}
+                    ${isCurrent ? 'ring-4 ring-' + level.color + '-500/30 animate-pulse-slow' : ''}`;
+                
+                if(isUnlocked) card.onclick = () => window.openLevel(index);
+
+                // Badges and Icons
+                let badge = '';
+                if (isCompleted) {
+                    badge = `<div class="absolute top-3 right-3 bg-green-500/20 text-green-400 w-6 h-6 rounded-full flex items-center justify-center border border-green-500/50"><i class="fa-solid fa-check text-xs"></i></div>`;
+                } else if (isCurrent) {
+                    badge = `<div class="absolute top-3 right-3 bg-yellow-500 text-slate-900 text-[9px] font-bold px-2 py-1 rounded-full uppercase tracking-wider animate-pulse shadow-lg">Active</div>`;
+                }
+
+                card.innerHTML = `
+                    <div class="absolute -bottom-4 -right-4 w-24 h-24 rounded-full ${isUnlocked ? theme.bg : 'bg-slate-700'} opacity-10 blur-2xl"></div>
+                    ${badge}
+                    <i class="fa-solid ${isUnlocked ? level.icon : 'fa-lock'} text-3xl md:text-4xl mb-4 ${isUnlocked ? theme.text : 'text-slate-500'} z-10 transition-transform ${isCurrent ? 'scale-110' : ''}"></i>
+                    <h3 class="font-bold game-font text-xs md:text-sm mb-2 text-white z-10 tracking-widest">LVL ${levelNum}</h3>
+                    <p class="text-[10px] md:text-xs text-slate-300 font-medium line-clamp-2 px-1 z-10 h-8">${isUnlocked ? level.topic : 'Restricted Area'}</p>
+                `;
+                container.appendChild(card);
+            });
+        };
+
+        window.openLevel = function(index) {
+            activeLevelModalIndex = index;
+            const levelData = curriculum[index];
+            const theme = getColors(levelData.color);
+            
+            // Dynamic Story based on Prodi
+            let storyText = typeof levelData.story === 'object' 
+                ? (levelData.story[state.prodi] || levelData.story["D3 Perjalanan Wisata"]) 
+                : levelData.story;
+
+            // Update DOM
+            document.getElementById('questTitle').innerText = `Level ${index + 1}`;
+            document.getElementById('questTopic').innerText = levelData.topic;
+            document.getElementById('questStory').innerText = storyText;
+            document.getElementById('questAction').innerText = levelData.action;
+            
+            document.getElementById('questIcon').className = `fa-solid ${levelData.icon} text-2xl text-white`;
+            document.getElementById('questIconBg').className = `w-12 h-12 rounded-xl flex items-center justify-center backdrop-blur-sm shadow-inner ${theme.bg}`;
+
+            // Handle Input State
+            const input = document.getElementById('answerInput');
+            const submitBtn = document.getElementById('submitAnswerBtn');
+            const errDiv = document.getElementById('errorMessage');
+            const succDiv = document.getElementById('successMessage');
+            
+            input.value = '';
+            input.classList.remove('border-green-500', 'border-red-500');
+            errDiv.classList.add('hidden');
+            succDiv.classList.add('hidden');
+            
+            if (index < state.currentLevel - 1) {
+                input.value = levelData.answer;
+                input.disabled = true;
+                input.classList.add('opacity-70', 'cursor-not-allowed', 'border-green-500');
+                submitBtn.style.display = 'none';
+                succDiv.classList.remove('hidden');
+            } else {
+                input.disabled = false;
+                input.classList.remove('opacity-70', 'cursor-not-allowed');
+                submitBtn.style.display = 'flex';
+                submitBtn.innerHTML = 'KIRIM <i class="fa-solid fa-paper-plane"></i>';
+            }
+
+            // Animate Modal In
+            const modal = document.getElementById('questModal');
+            const content = document.getElementById('questModalContent');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+                if(!input.disabled) input.focus();
+            }, 10);
+        };
+
+        window.closeModal = function() {
+            const modal = document.getElementById('questModal');
+            const content = document.getElementById('questModalContent');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        };
+
+        window.checkAnswer = async function() {
+            const input = document.getElementById('answerInput');
+            const val = input.value.trim().toUpperCase();
+            const correctAns = curriculum[activeLevelModalIndex].answer.toUpperCase();
+            
+            const errDiv = document.getElementById('errorMessage');
+            const succDiv = document.getElementById('successMessage');
+            const submitBtn = document.getElementById('submitAnswerBtn');
+
+            if (val === correctAns) {
+                // Success
+                errDiv.classList.add('hidden');
+                succDiv.classList.remove('hidden');
+                input.classList.remove('border-slate-600', 'border-red-500');
+                input.classList.add('border-green-500', 'bg-green-900/30');
+                submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+                input.disabled = true;
+                
+                if (activeLevelModalIndex + 1 === state.currentLevel) {
+                    state.currentLevel++;
+                    await saveProgressToCloud();
+                    updateLevelCounter();
+                }
+
+                setTimeout(() => {
+                    window.closeModal();
+                    window.renderMap();
+                    if (state.currentLevel > 16) setTimeout(() => window.showCertificate(), 500);
+                }, 1200);
+                
+            } else {
+                // Failure
+                succDiv.classList.add('hidden');
+                errDiv.classList.remove('hidden');
+                input.classList.remove('border-slate-600');
+                input.classList.add('border-red-500');
+                
+                const content = document.getElementById('questModalContent');
+                content.classList.add('animate-shake');
+                setTimeout(() => content.classList.remove('animate-shake'), 500);
+            }
+        };
+
+        document.getElementById('answerInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !this.disabled) window.checkAnswer();
+        });
+
+        function updateLevelCounter() {
+            const counter = document.getElementById('levelCounter');
+            counter.innerText = state.currentLevel > 16 ? 16 : state.currentLevel;
+        }
+
+        window.showCertificate = function() {
+            const nameParts = state.email.split('@')[0].split(/[._]/);
+            const formattedName = nameParts.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
+            
+            document.getElementById('certName').innerText = formattedName;
+            document.getElementById('certProdi').innerText = state.prodi;
+            document.getElementById('certModal').classList.remove('hidden');
+        };
+
+        window.closeCert = function() {
+            document.getElementById('certModal').classList.add('hidden');
+        };
+
+        window.logout = function() {
+            state = { email: "", prodi: "", currentLevel: 1 };
+            document.getElementById('gameScreen').classList.add('hidden');
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('startBtn').classList.remove('hidden');
+            document.getElementById('loginStatus').classList.add('hidden');
+        };
+
+        initFirebase();
+    </script>
+</body>
+</html>
