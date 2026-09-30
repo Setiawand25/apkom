@@ -3,337 +3,331 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TechQuest: Fun Academy</title>
+    <title>TechQuest: Bubbly Academy</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;800&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
     <style>
         body { 
-            font-family: 'Nunito', sans-serif; 
-            background-color: #fdf4ff; /* soft pink/purple pastel */
-            color: #4c1d95; /* deep purple text for contrast */
+            font-family: 'Quicksand', sans-serif; 
+            background: linear-gradient(135deg, #fdf4ff 0%, #e0e7ff 100%);
+            color: #4c1d95; 
             overflow-x: hidden;
             min-height: 100vh;
         }
-        h1, h2, h3, h4, .font-bubbly {
-            font-family: 'Baloo 2', cursive;
-        }
+        h1, h2, h3, h4, h5, .font-bubbly { font-family: 'Baloo 2', cursive; }
         
-        /* Floating Background */
+        /* Floating Background Element Container */
         #floating-bg {
             position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
         }
         .float-icon {
-            position: absolute;
-            color: rgba(236, 72, 153, 0.15); /* light pink default */
+            position: absolute; 
+            color: rgba(255, 255, 255, 0.6); 
             animation: floatUp linear infinite;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05));
         }
         @keyframes floatUp {
             0% { transform: translateY(110vh) rotate(0deg) scale(0.8); opacity: 0; }
             10% { opacity: 1; }
             90% { opacity: 1; }
-            100% { transform: translateY(-10vh) rotate(360deg) scale(1.2); opacity: 0; }
+            100% { transform: translateY(-20vh) rotate(360deg) scale(1.5); opacity: 0; }
         }
 
-        /* Playful Buttons */
-        .btn-playful {
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        /* 3D Bubbly Buttons */
+        .btn-bubbly {
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); 
             border-bottom-width: 6px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
-        .btn-playful:active:not(:disabled) {
-            transform: translateY(4px);
-            border-bottom-width: 2px;
-            margin-top: 4px;
+        .btn-bubbly:active:not(:disabled) {
+            transform: translateY(6px); 
+            border-bottom-width: 0px; 
+            margin-top: 6px;
+            box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.1);
         }
-        .btn-playful:disabled { opacity: 0.6; cursor: not-allowed; }
+        .btn-bubbly:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
         /* Level Cards */
         .level-card { 
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); 
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); 
             border-bottom-width: 8px;
+            transform-origin: center bottom;
         }
         .level-card:hover:not(.locked) { 
-            transform: translateY(-8px) scale(1.05) rotate(2deg); 
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transform: translateY(-10px) scale(1.03); 
+            box-shadow: 0 25px 30px -10px rgba(99, 102, 241, 0.3);
         }
-        .locked { 
-            opacity: 0.5; 
-            cursor: not-allowed; 
-            filter: grayscale(80%); 
-            border-bottom-width: 4px;
-        }
+        .locked { opacity: 0.6; cursor: not-allowed; filter: grayscale(90%); border-bottom-width: 4px; }
         
-        /* Boss Level Styling */
-        .boss-card {
-            background: linear-gradient(135deg, #fde047 0%, #f97316 100%);
-            border-color: #c2410c;
-            color: white;
-            animation: bossFloat 3s ease-in-out infinite;
+        /* Card Types styling applied via Tailwind JS classes, but specific anims here */
+        .case-study {
+            animation: gentleFloat 4s ease-in-out infinite;
         }
-        .boss-card.locked { animation: none; background: #e5e7eb; border-color: #9ca3af; }
-        @keyframes bossFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); box-shadow: 0 15px 25px rgba(249, 115, 22, 0.4); }
+        .final-boss {
+            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+            color: white; border-color: #c51b3d;
+            animation: intenseFloat 2s infinite, pulseGlow 2s infinite;
         }
+        .final-boss.locked { animation: none; background: #e5e7eb; border-color: #9ca3af; color: #6b7280;}
 
-        /* Specific Animations */
-        @keyframes wiggle {
-            0%, 100% { transform: rotate(-10deg); }
-            50% { transform: rotate(10deg); }
-        }
-        .animate-wiggle { animation: wiggle 1s ease-in-out infinite; }
+        @keyframes gentleFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        @keyframes intenseFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+        @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 20px rgba(255, 65, 108, 0.4); } 50% { box-shadow: 0 0 40px rgba(255, 65, 108, 0.8); } }
         
+        /* Modals & Popups */
         @keyframes popIn {
-            0% { opacity: 0; transform: scale(0.5); }
-            70% { transform: scale(1.1); }
-            100% { opacity: 1; transform: scale(1); }
+            0% { opacity: 0; transform: scale(0.6) translateY(20px); }
+            70% { transform: scale(1.05) translateY(-5px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
         }
-        .animate-popIn { animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-5px); }
-            40%, 80% { transform: translateX(5px); }
+        .animate-popIn { animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        
+        @keyframes errorShake {
+            0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-8px); } 40%, 80% { transform: translateX(8px); }
         }
-        .animate-shake { animation: shake 0.4s ease-in-out; }
+        .animate-errorShake { animation: errorShake 0.5s ease-in-out; }
 
-        /* Certificate specific */
+        /* Certificate */
         .cert-bg {
-            background-color: #fffbeb;
-            background-image: radial-gradient(#fde68a 2px, transparent 2px);
-            background-size: 30px 30px;
-            border: 8px solid #f59e0b;
-            border-radius: 2rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            background-color: #fdf8f5; 
+            background-image: 
+                radial-gradient(circle at 100% 100%, #ffecd2 0, #ffecd2 6px, transparent 6px), 
+                radial-gradient(circle at 0 0, #fcb69f 0, #fcb69f 6px, transparent 6px);
+            background-size: 40px 40px;
+            border: 12px solid #fbbf24; 
+            border-radius: 3rem; 
+            box-shadow: inset 0 0 40px rgba(251, 191, 36, 0.3), 0 30px 60px -15px rgba(0, 0, 0, 0.4);
         }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 10px; }
-        ::-webkit-scrollbar-track { background: #fdf4ff; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background: #f472b6; border-radius: 10px; border: 2px solid #fdf4ff; }
-        ::-webkit-scrollbar-thumb:hover { background: #db2777; }
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 12px; }
+        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.5); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #c084fc; border-radius: 10px; border: 3px solid #fdf4ff; }
+        ::-webkit-scrollbar-thumb:hover { background: #9333ea; }
     </style>
 </head>
 <body class="relative flex flex-col">
     <div id="floating-bg"></div>
 
-    <!-- LOGIN SCREEN -->
+    <!-- 1. LOGIN SCREEN -->
     <div id="loginScreen" class="flex-1 flex items-center justify-center p-4 relative z-20 min-h-screen">
-        <div class="bg-white p-8 rounded-3xl shadow-2xl border-4 border-pink-200 w-full max-w-md relative overflow-hidden animate-popIn">
-            
-            <div class="absolute -top-10 -right-10 w-32 h-32 bg-yellow-200 rounded-full opacity-50 blur-2xl"></div>
-            <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-blue-200 rounded-full opacity-50 blur-2xl"></div>
+        <div class="bg-white/90 backdrop-blur-md p-8 md:p-10 rounded-[3rem] shadow-2xl border-8 border-white w-full max-w-md relative overflow-hidden animate-popIn">
+            <!-- Decorative Blobs -->
+            <div class="absolute -top-16 -right-16 w-40 h-40 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
+            <div class="absolute -bottom-16 -left-16 w-40 h-40 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse" style="animation-delay: 1s;"></div>
             
             <div class="text-center mb-8 relative z-10">
-                <div class="inline-block bg-pink-100 p-4 rounded-full mb-4 border-4 border-pink-300 shadow-sm animate-bounce">
-                    <i class="fa-solid fa-gamepad text-5xl text-pink-500"></i>
+                <div class="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-[2rem] shadow-lg mb-6 transform rotate-3 hover:rotate-6 transition-transform">
+                    <i class="fa-solid fa-graduation-cap text-5xl text-white"></i>
                 </div>
-                <h1 class="text-4xl font-bubbly font-bold text-pink-600 drop-shadow-sm leading-tight">TechQuest</h1>
-                <p class="text-sm font-bold text-purple-400 uppercase tracking-widest bg-purple-50 inline-block px-3 py-1 rounded-full mt-2">Fun Academy</p>
+                <h1 class="text-4xl md:text-5xl font-bubbly font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500 drop-shadow-sm leading-tight tracking-wide">TechQuest</h1>
+                <p class="text-sm font-bold text-indigo-500 uppercase tracking-[0.2em] bg-indigo-50 inline-block px-4 py-2 rounded-full mt-3 border-2 border-indigo-100">Bubbly Academy</p>
             </div>
             
-            <form id="loginForm" class="space-y-5 relative z-10">
-                <div>
-                    <label class="block text-sm font-bold text-purple-600 mb-2">Email Mahasiswa 📧</label>
-                    <input type="email" id="emailInput" required class="w-full bg-purple-50 border-2 border-purple-200 rounded-2xl py-3 px-4 text-purple-900 focus:outline-none focus:border-pink-400 focus:ring-4 focus:ring-pink-100 transition-all font-bold placeholder-purple-300" placeholder="nama@kampus.edu">
+            <form id="loginForm" class="space-y-6 relative z-10">
+                <div class="space-y-2">
+                    <label class="block text-sm font-bold text-purple-700 ml-2">Email Mahasiswa 📧</label>
+                    <input type="email" id="emailInput" required class="w-full bg-purple-50/50 border-4 border-purple-100 rounded-2xl py-4 px-5 text-purple-900 focus:outline-none focus:border-pink-400 focus:ring-4 focus:ring-pink-100 transition-all font-bold placeholder-purple-300 shadow-inner" placeholder="nama@mahasiswa.ac.id">
                 </div>
-                <div>
-                    <label class="block text-sm font-bold text-purple-600 mb-2">Program Studi 🎓</label>
-                    <select id="prodiInput" required class="w-full bg-purple-50 border-2 border-purple-200 rounded-2xl py-3 px-4 text-purple-900 focus:outline-none focus:border-pink-400 focus:ring-4 focus:ring-pink-100 transition-all font-bold cursor-pointer appearance-none">
+                <div class="space-y-2">
+                    <label class="block text-sm font-bold text-purple-700 ml-2">Program Studi 🎓</label>
+                    <select id="prodiInput" required class="w-full bg-purple-50/50 border-4 border-purple-100 rounded-2xl py-4 px-5 text-purple-900 focus:outline-none focus:border-pink-400 focus:ring-4 focus:ring-pink-100 transition-all font-bold cursor-pointer appearance-none shadow-inner">
                         <option value="D3 Perjalanan Wisata">✈️ D3 Perjalanan Wisata</option>
                         <option value="D3 Seni Kuliner">🍳 D3 Seni Kuliner</option>
                         <option value="D4 Pengelolaan Perhotelan">🛎️ D4 Pengelolaan Perhotelan</option>
                     </select>
                 </div>
                 
-                <div id="loginStatus" class="hidden text-center text-sm font-bold text-pink-500 py-2 animate-pulse">
-                    <i class="fa-solid fa-spinner fa-spin mr-2"></i> Menyiapkan petualanganmu...
+                <div id="loginStatus" class="hidden text-center text-sm font-bold text-pink-500 py-3 bg-pink-50 rounded-xl border-2 border-pink-100">
+                    <i class="fa-solid fa-meteor fa-spin mr-2 text-xl"></i> Menyiapkan petualanganmu...
                 </div>
 
-                <button type="submit" id="startBtn" class="w-full btn-playful bg-pink-500 hover:bg-pink-400 border-pink-700 text-white font-bubbly text-xl py-3 px-4 rounded-2xl mt-4 shadow-lg flex justify-center items-center gap-2">
-                    Mulai Main! <i class="fa-solid fa-play"></i>
+                <button type="submit" id="startBtn" class="w-full btn-bubbly bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-400 hover:to-purple-400 border-purple-700 text-white font-bubbly text-2xl py-4 rounded-2xl mt-4 flex justify-center items-center gap-3">
+                    Gass Main! <i class="fa-solid fa-rocket"></i>
                 </button>
             </form>
         </div>
     </div>
 
-    <!-- GAME DASHBOARD -->
-    <div id="gameScreen" class="hidden flex-1 flex flex-col p-4 md:p-8 max-w-6xl mx-auto w-full relative z-20 min-h-screen">
-        <!-- Header -->
-        <div class="flex flex-col md:flex-row justify-between items-center bg-white p-4 md:p-6 rounded-3xl shadow-xl border-4 border-purple-100 mb-8 gap-4">
-            <div class="flex items-center gap-4 w-full md:w-auto">
-                <!-- Dynamic Mascot Container -->
-                <div id="dashboardMascot" class="w-16 h-16 bg-blue-100 rounded-full border-4 border-blue-300 flex items-center justify-center shadow-inner flex-shrink-0">
-                    <!-- Icon injected by JS -->
-                </div>
+    <!-- 2. GAME DASHBOARD -->
+    <div id="gameScreen" class="hidden flex-1 flex flex-col p-4 md:p-8 max-w-7xl mx-auto w-full relative z-20 min-h-screen">
+        
+        <!-- Header Profile -->
+        <div class="flex flex-col md:flex-row justify-between items-center bg-white/80 backdrop-blur-xl p-5 md:p-6 rounded-[2.5rem] shadow-xl border-4 border-white mb-10 gap-6">
+            <div class="flex items-center gap-5 w-full md:w-auto">
+                <div id="dashboardMascot" class="w-20 h-20 bg-gradient-to-br from-yellow-100 to-orange-100 rounded-[1.5rem] border-4 border-yellow-300 flex items-center justify-center shadow-lg flex-shrink-0 transform -rotate-3"></div>
                 <div class="overflow-hidden">
-                    <p class="text-xs font-bold text-purple-400 uppercase tracking-widest mb-1">Pemain Aktif</p>
-                    <h2 class="text-xl font-bubbly font-bold text-purple-700 truncate" id="playerName"></h2>
-                    <p class="text-sm font-bold text-pink-500 bg-pink-50 px-2 py-0.5 rounded-lg inline-block mt-1 truncate max-w-full"><span id="playerProdi"></span></p>
+                    <p class="text-xs font-bold text-purple-400 uppercase tracking-widest mb-1 flex items-center gap-2"><i class="fa-solid fa-circle text-[8px] text-green-400 animate-pulse"></i> Pemain Aktif</p>
+                    <h2 class="text-2xl font-bubbly font-bold text-purple-800 truncate" id="playerName"></h2>
+                    <p class="text-sm font-bold text-white bg-gradient-to-r from-pink-400 to-purple-400 px-3 py-1 rounded-xl inline-block mt-1 shadow-sm"><span id="playerProdi"></span></p>
                 </div>
             </div>
-            
-            <div class="flex items-center justify-between w-full md:w-auto gap-4 md:gap-6 bg-purple-50 p-3 rounded-2xl border-2 border-purple-100">
-                <div id="saveIndicator" class="text-green-500 text-xs font-bold flex items-center gap-1 opacity-0 transition-opacity">
-                    <i class="fa-solid fa-cloud-arrow-up animate-bounce"></i> <span>Tersimpan</span>
+            <div class="flex items-center justify-between w-full md:w-auto gap-4 bg-purple-50/80 p-3 rounded-[2rem] border-4 border-white shadow-inner">
+                <div id="saveIndicator" class="text-green-500 text-xs font-bold flex flex-col items-center justify-center px-4 opacity-0 transition-opacity">
+                    <i class="fa-solid fa-cloud-arrow-up text-lg mb-1 animate-bounce"></i> <span>Tersimpan</span>
                 </div>
-                <div class="text-center px-4">
-                    <p class="text-[10px] font-bold text-purple-400 uppercase tracking-widest mb-1">Level Main</p>
-                    <p class="font-bubbly font-bold text-3xl text-pink-500 leading-none"><span id="levelCounter">1</span><span class="text-lg text-purple-300">/16</span></p>
+                <div class="text-center px-6 border-l-2 border-r-2 border-purple-200">
+                    <p class="text-[10px] font-bold text-purple-400 uppercase tracking-[0.2em] mb-1">Level Main</p>
+                    <p class="font-bubbly font-bold text-4xl text-transparent bg-clip-text bg-gradient-to-br from-indigo-500 to-pink-500 leading-none drop-shadow-sm"><span id="levelCounter">1</span><span class="text-xl text-purple-300">/16</span></p>
                 </div>
-                <button onclick="logout()" class="btn-playful bg-red-100 hover:bg-red-200 border-red-300 text-red-600 w-10 h-10 rounded-xl flex items-center justify-center shadow-sm">
-                    <i class="fa-solid fa-power-off"></i>
+                <button onclick="logout()" class="btn-bubbly bg-white hover:bg-gray-50 border-gray-300 text-red-500 w-14 h-14 rounded-2xl flex items-center justify-center mx-2 text-xl">
+                    <i class="fa-solid fa-right-from-bracket"></i>
                 </button>
             </div>
         </div>
 
         <!-- Level Map Grid -->
-        <div id="levelMap" class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 pb-12">
-            <!-- Dynamically populated -->
+        <div id="levelMap" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-16">
+            <!-- JS Injection -->
         </div>
     </div>
 
-    <!-- QUEST MODAL -->
-    <div id="questModal" class="hidden fixed inset-0 bg-purple-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-[2rem] shadow-2xl border-4 border-pink-300 w-full max-w-4xl flex flex-col max-h-[90vh] relative overflow-hidden" id="questModalContent">
+    <!-- 3. QUEST MODAL -->
+    <div id="questModal" class="hidden fixed inset-0 bg-indigo-900/40 backdrop-blur-md flex items-center justify-center p-4 z-50 overflow-y-auto">
+        <div class="bg-white rounded-[3rem] shadow-2xl border-8 border-white w-full max-w-5xl flex flex-col my-auto relative overflow-hidden" id="questModalContent">
             
-            <!-- Modal Header -->
-            <div class="bg-pink-100 border-b-4 border-pink-200 p-4 md:p-6 flex justify-between items-center relative">
-                <div class="absolute -top-5 -right-5 text-pink-200 opacity-50"><i class="fa-solid fa-cloud text-6xl"></i></div>
-                <div class="flex items-center gap-4 relative z-10">
-                    <div id="questIconBg" class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm border-2">
-                        <i id="questIcon" class="fa-solid fa-star text-2xl"></i>
+            <!-- Quest Header -->
+            <div class="bg-gradient-to-r from-indigo-100 to-purple-100 p-6 md:p-8 flex justify-between items-center relative border-b-4 border-indigo-50">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 transform translate-x-1/2 -translate-y-1/2"></div>
+                <div class="flex items-center gap-5 relative z-10">
+                    <div id="questIconBg" class="w-20 h-20 rounded-[1.5rem] flex items-center justify-center shadow-lg border-4 bg-white transform -rotate-6">
+                        <i id="questIcon" class="fa-solid fa-star text-4xl"></i>
                     </div>
                     <div>
-                        <h3 id="questTitle" class="font-bubbly font-bold text-2xl text-purple-700 leading-none">Level 1</h3>
-                        <p id="questTopic" class="text-pink-500 text-sm font-bold uppercase tracking-wider mt-1 bg-white px-2 py-0.5 rounded-md inline-block">Topic Name</p>
+                        <h3 id="questTitle" class="font-bubbly font-bold text-3xl md:text-4xl text-indigo-900 leading-none drop-shadow-sm">Level 1</h3>
+                        <p id="questTopic" class="text-indigo-600 text-sm font-bold uppercase tracking-[0.2em] mt-2 bg-white/80 backdrop-blur-sm px-3 py-1 rounded-xl inline-block shadow-sm">Topic Name</p>
                     </div>
                 </div>
-                <button onclick="closeModal()" class="btn-playful bg-white text-gray-400 hover:text-red-500 w-10 h-10 rounded-full flex items-center justify-center border-2 border-gray-200 relative z-10">
-                    <i class="fa-solid fa-xmark text-xl"></i>
+                <button onclick="closeModal()" class="btn-bubbly bg-white text-indigo-300 hover:text-red-500 w-14 h-14 rounded-full flex items-center justify-center border-4 border-indigo-50 relative z-10">
+                    <i class="fa-solid fa-xmark text-2xl"></i>
                 </button>
             </div>
             
-            <!-- Modal Body -->
-            <div class="p-4 md:p-6 overflow-y-auto flex-1 bg-[#faf5ff]">
-                
-                <div class="mb-6">
-                    <div class="bg-blue-50 p-4 rounded-2xl border-2 border-blue-200 relative">
-                        <div class="absolute -top-3 left-4 bg-blue-400 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">Cerita Misi</div>
-                        <p id="questStory" class="text-blue-900 text-sm md:text-base font-semibold leading-relaxed mt-2"></p>
+            <!-- Quest Body -->
+            <div class="p-6 md:p-8 flex-1 bg-gray-50/50 relative">
+                <!-- Story Panel -->
+                <div class="mb-8">
+                    <div class="bg-white p-6 rounded-3xl border-4 border-blue-100 shadow-sm relative">
+                        <div class="absolute -top-4 left-6 bg-gradient-to-r from-blue-500 to-cyan-400 text-white text-xs font-bold px-4 py-2 rounded-2xl uppercase tracking-widest shadow-md flex items-center gap-2">
+                            <i class="fa-solid fa-map-location-dot"></i> Skenario Tantangan
+                        </div>
+                        <p id="questStory" class="text-gray-700 text-sm md:text-base font-semibold leading-relaxed mt-4 italic"></p>
                     </div>
                 </div>
                 
-                <div class="mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-clipboard-check text-green-500 text-xl"></i>
-                    <h4 class="font-bubbly text-xl text-purple-700 font-bold">Jawab 6 Pertanyaan Ini:</h4>
-                </div>
-
-                <div id="questionsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Questions injected here via JS (6 items) -->
-                </div>
-
-                <div class="mt-6 pt-4">
-                    <div id="globalError" class="hidden mb-4 p-3 bg-red-100 border-2 border-red-300 text-red-600 text-sm font-bold rounded-xl flex items-center gap-2 animate-shake">
-                        <i class="fa-solid fa-triangle-exclamation text-xl"></i> <span>Ups! Ada jawaban yang masih salah atau kosong. Coba cek lagi kotak warna merah!</span>
+                <div class="mb-6 flex items-center gap-3">
+                    <div class="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center border-2 border-pink-300">
+                        <i class="fa-solid fa-clipboard-question text-pink-500 text-xl"></i>
                     </div>
-                    
-                    <button onclick="submitAnswers()" id="submitQuestBtn" class="w-full btn-playful bg-green-400 hover:bg-green-300 border-green-600 text-green-900 py-4 rounded-2xl font-bubbly text-2xl font-bold shadow-lg flex justify-center items-center gap-2">
-                        Kirim Jawaban! <i class="fa-solid fa-paper-plane"></i>
+                    <h4 class="font-bubbly text-2xl text-purple-800 font-bold">Pecahkan 6 Teka-Teki Ini:</h4>
+                </div>
+
+                <div id="questionsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+
+                <!-- Submit Area -->
+                <div class="mt-8 pt-6 border-t-4 border-dashed border-gray-200">
+                    <div id="globalError" class="hidden mb-6 p-4 bg-red-50 border-4 border-red-200 text-red-600 text-sm md:text-base font-bold rounded-3xl flex items-center gap-4 shadow-sm animate-errorShake">
+                        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0 text-2xl">🚨</div>
+                        <span>Masih ada yang salah atau kosong! Jangan nyerah, baca petunjuk logikanya baik-baik (Klik lampu kuning!). Cek kotak merah.</span>
+                    </div>
+                    <button onclick="submitAnswers()" id="submitQuestBtn" class="w-full btn-bubbly bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 border-emerald-700 text-white py-5 rounded-3xl font-bubbly text-3xl font-bold shadow-xl flex justify-center items-center gap-4">
+                        Serahkan Jawaban! <i class="fa-solid fa-paper-plane animate-bounce"></i>
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- FUNNY SUCCESS MODAL -->
-    <div id="successQuoteModal" class="hidden fixed inset-0 bg-purple-900/80 backdrop-blur-sm flex items-center justify-center p-4 z-[60]">
-        <div class="bg-white rounded-3xl shadow-2xl border-4 border-yellow-400 w-full max-w-md flex flex-col text-center p-8 relative animate-popIn">
-            <div class="absolute -top-10 left-1/2 transform -translate-x-1/2">
-                <div class="bg-yellow-400 w-20 h-20 rounded-full border-4 border-white flex items-center justify-center shadow-lg animate-bounce">
-                    <i class="fa-solid fa-star text-4xl text-white"></i>
+    <!-- 4. FUNNY SUCCESS MODAL (Lecturer Quotes) -->
+    <div id="successQuoteModal" class="hidden fixed inset-0 bg-gray-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-[60]">
+        <div class="bg-white rounded-[3rem] shadow-2xl border-8 border-yellow-300 w-full max-w-lg flex flex-col text-center p-10 relative animate-popIn">
+            <div class="absolute -top-12 left-1/2 transform -translate-x-1/2">
+                <div class="bg-gradient-to-b from-yellow-300 to-yellow-500 w-28 h-28 rounded-full border-8 border-white flex items-center justify-center shadow-xl animate-bounce">
+                    <i class="fa-solid fa-face-grin-squint-tears text-5xl text-white"></i>
                 </div>
             </div>
+            <h3 class="font-bubbly font-bold text-4xl text-yellow-500 mt-10 mb-3">Lolos Ujian! 🎉</h3>
+            <p class="text-xs font-bold text-indigo-400 uppercase tracking-[0.3em] mb-8 bg-indigo-50 py-2 px-4 rounded-full inline-block mx-auto">Pesan Dosen Pembimbing</p>
             
-            <h3 class="font-bubbly font-bold text-3xl text-yellow-500 mt-8 mb-2">Horeee! 🎉</h3>
-            <p class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-6">Level Selesai</p>
-            
-            <div class="bg-blue-50 p-6 rounded-2xl border-2 border-blue-100 mb-8 relative">
-                <i class="fa-solid fa-quote-left absolute top-3 left-3 text-blue-200 text-2xl"></i>
-                <p id="quoteText" class="text-blue-800 text-lg font-bold font-bubbly relative z-10 leading-snug"></p>
-                <i class="fa-solid fa-quote-right absolute bottom-3 right-3 text-blue-200 text-2xl"></i>
+            <div class="bg-gray-50 p-8 rounded-[2rem] border-4 border-gray-100 mb-10 relative">
+                <i class="fa-solid fa-quote-left absolute -top-4 -left-4 text-gray-200 text-6xl"></i>
+                <p id="quoteText" class="text-gray-700 text-xl font-bold font-bubbly relative z-10 leading-snug"></p>
+                <i class="fa-solid fa-quote-right absolute -bottom-4 -right-4 text-gray-200 text-6xl"></i>
             </div>
             
-            <button onclick="closeQuoteAndProceed()" class="btn-playful bg-blue-500 hover:bg-blue-400 border-blue-700 text-white py-3 rounded-xl font-bold text-lg w-full">
-                Lanjut Main <i class="fa-solid fa-arrow-right ml-2"></i>
+            <button onclick="closeQuoteAndProceed()" class="btn-bubbly bg-indigo-500 hover:bg-indigo-400 border-indigo-700 text-white py-4 rounded-3xl font-bold text-2xl w-full font-bubbly flex items-center justify-center gap-3">
+                Gass Level Selanjutnya <i class="fa-solid fa-arrow-right"></i>
             </button>
         </div>
     </div>
 
-    <!-- CERTIFICATE MODAL -->
-    <div id="certModal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50 overflow-y-auto">
-        <div class="cert-bg p-8 md:p-12 w-full max-w-4xl text-center relative mx-auto my-8 animate-popIn">
+    <!-- 5. CERTIFICATE MODAL -->
+    <div id="certModal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 md:p-8 z-50 overflow-y-auto">
+        <div class="cert-bg p-10 md:p-16 w-full max-w-5xl text-center relative mx-auto my-auto animate-popIn flex flex-col items-center">
             
-            <!-- Confetti decorations -->
-            <div class="absolute top-4 left-4 text-pink-400 text-3xl animate-bounce"><i class="fa-solid fa-ribbon"></i></div>
-            <div class="absolute top-4 right-4 text-blue-400 text-3xl animate-[wiggle_2s_infinite]"><i class="fa-solid fa-award"></i></div>
-            <div class="absolute bottom-4 left-4 text-green-400 text-3xl animate-pulse"><i class="fa-solid fa-certificate"></i></div>
-            <div class="absolute bottom-4 right-4 text-purple-400 text-3xl animate-bounce"><i class="fa-solid fa-gift"></i></div>
+            <!-- Confetti Elements -->
+            <div class="absolute top-10 left-10 text-pink-500 text-5xl animate-bounce" style="animation-duration: 2s;"><i class="fa-solid fa-ribbon"></i></div>
+            <div class="absolute top-10 right-10 text-blue-500 text-5xl animate-pulse" style="animation-duration: 3s;"><i class="fa-solid fa-award"></i></div>
+            <div class="absolute bottom-10 left-10 text-green-500 text-5xl animate-bounce" style="animation-duration: 2.5s;"><i class="fa-solid fa-certificate"></i></div>
+            <div class="absolute bottom-10 right-10 text-purple-500 text-5xl animate-pulse" style="animation-duration: 2.2s;"><i class="fa-solid fa-gift"></i></div>
 
-            <div class="relative z-10 flex flex-col items-center">
-                <i class="fa-solid fa-trophy text-6xl md:text-8xl text-yellow-500 mb-4 drop-shadow-md"></i>
+            <div class="relative z-10 w-full flex flex-col items-center bg-white/60 backdrop-blur-sm p-10 rounded-[3rem] border-4 border-white shadow-xl">
+                <div class="w-32 h-32 bg-yellow-100 rounded-full flex items-center justify-center border-8 border-yellow-400 mb-6 shadow-inner">
+                    <i class="fa-solid fa-trophy text-6xl text-yellow-500 drop-shadow-md"></i>
+                </div>
                 
-                <h1 class="text-3xl md:text-5xl font-bubbly text-orange-500 mb-2 font-bold uppercase tracking-wide">Sertifikat Kelulusan!</h1>
-                <h2 class="text-sm md:text-base text-gray-500 font-bold uppercase tracking-[0.2em] mb-8 bg-white/50 px-4 py-1 rounded-full border border-gray-200">Politeknik Bintan Cakrawala</h2>
+                <h1 class="text-4xl md:text-6xl font-bubbly text-orange-600 mb-4 font-bold uppercase tracking-wider drop-shadow-sm">Sertifikat Sakti!</h1>
+                <h2 class="text-xs md:text-sm text-indigo-500 font-bold uppercase tracking-[0.3em] mb-10 bg-indigo-50 px-6 py-2 rounded-full border-2 border-indigo-100">Politeknik Bintan Cakrawala</h2>
                 
-                <p class="text-sm md:text-base text-gray-600 font-bold mb-2">Diberikan dengan bangga kepada:</p>
-                <h3 id="certName" class="text-3xl md:text-5xl font-bubbly font-bold text-blue-600 mb-6 border-b-4 border-blue-200 pb-2 inline-block px-8">Nama Pemain</h3>
+                <p class="text-sm md:text-base text-gray-600 font-bold mb-3 uppercase tracking-widest">Dianugerahkan kepada Master:</p>
+                <h3 id="certName" class="text-4xl md:text-5xl font-bubbly font-bold text-purple-700 mb-8 border-b-4 border-dashed border-purple-200 pb-4 inline-block px-10">Nama Pemain</h3>
                 
-                <p class="text-sm md:text-base text-gray-600 font-bold mb-2">Telah menamatkan petualangan di program studi:</p>
-                <h4 id="certProdi" class="text-xl md:text-3xl font-bubbly font-bold text-pink-500 mb-8 bg-pink-50 px-6 py-2 rounded-2xl border-2 border-pink-200 inline-block">Program Studi</h4>
+                <p class="text-sm md:text-base text-gray-600 font-bold mb-3">Telah selamat dari siksaan teka-teki di prodi:</p>
+                <h4 id="certProdi" class="text-xl md:text-2xl font-bubbly font-bold text-pink-600 mb-10 bg-pink-100 px-8 py-3 rounded-[2rem] border-4 border-pink-200 inline-block shadow-sm">Program Studi</h4>
                 
-                <p class="text-gray-700 max-w-2xl mx-auto text-sm md:text-base font-semibold leading-relaxed mb-10">
-                    Kamu hebat banget! Terbukti sudah jago menguasai ilmu gaib Microsoft Word, Excel tingkat dewa, presentasi PowerPoint super keren, kolaborasi Cloud, dan AI Prompt Engineering.
+                <p class="text-gray-700 max-w-3xl mx-auto text-sm md:text-lg font-bold leading-relaxed mb-12 bg-white p-6 rounded-3xl border-2 border-gray-100">
+                    Sangat membanggakan! Telah terbukti mampu menaklukkan Excel tingkat Array & Index, presentasi Kiosk tingkat dewa, ilmu awan Regex, hingga Prompt Engineering AI super sulit! Nilai A+ untukmu!
                 </p>
                 
-                <div class="w-full flex justify-between px-4 md:px-20 items-end">
-                    <div class="text-center w-32 md:w-48">
-                        <div class="w-20 h-20 mx-auto bg-green-100 rounded-full border-4 border-green-400 flex items-center justify-center mb-2">
-                            <i class="fa-solid fa-check-double text-3xl text-green-500"></i>
+                <div class="w-full max-w-3xl flex justify-between px-4 md:px-10 items-end mb-10 mt-4">
+                    <div class="text-center w-36 md:w-56">
+                        <div class="w-24 h-24 mx-auto bg-green-50 rounded-full border-4 border-green-200 flex items-center justify-center mb-4">
+                            <i class="fa-solid fa-stamp text-4xl text-green-400 opacity-50 transform -rotate-12"></i>
                         </div>
-                        <div class="border-t-2 border-gray-300 pt-2">
-                            <p class="font-bold text-xs md:text-sm text-gray-500 uppercase">Sistem TechQuest</p>
+                        <div class="border-t-4 border-gray-300 pt-3">
+                            <p class="font-bold text-[10px] md:text-xs text-gray-500 uppercase tracking-widest">Sistem TechQuest</p>
                         </div>
                     </div>
-                    
-                    <div class="text-center w-32 md:w-48 relative">
-                        <div class="absolute -top-12 left-1/2 transform -translate-x-1/2 w-full text-blue-800 text-4xl opacity-80" style="font-family: 'Brush Script MT', cursive; transform: translate(-50%, 0) rotate(-10deg);">DodiSetiawan</div>
-                        <p class="text-[10px] md:text-xs text-gray-500 font-bold mb-6 uppercase tracking-widest relative z-10 pt-4">Acting Head of Program Diploma III Perjalanan Wisata</p>
-                        <div class="border-t-2 border-gray-400 pt-2 relative z-10">
-                            <p class="font-bold text-xs md:text-sm text-gray-800 uppercase">Pjs. Dodi Setiawan, M.S.I.</p>
+                    <div class="text-center w-48 md:w-64 relative">
+                        <!-- Digital Signature representation -->
+                        <div class="absolute -top-16 left-1/2 transform -translate-x-1/2 w-full text-blue-900 text-5xl opacity-70" style="font-family: 'Brush Script MT', 'Cedarville Cursive', cursive; transform: translate(-50%, 0) rotate(-15deg);">DodiSetiawan</div>
+                        <p class="text-[9px] md:text-[10px] text-gray-500 font-bold mb-8 uppercase tracking-[0.2em] relative z-10 pt-6">Kaprodi Diploma III Perjalanan Wisata</p>
+                        <div class="border-t-4 border-gray-800 pt-3 relative z-10">
+                            <p class="font-bubbly font-bold text-sm md:text-lg text-gray-900 uppercase">Pjs. Dodi Setiawan, M.S.I.</p>
                         </div>
                     </div>
                 </div>
+            </div>
                 
-                <div class="mt-12 flex flex-col sm:flex-row justify-center gap-4 w-full md:w-auto">
-                    <button onclick="window.print()" class="btn-playful bg-yellow-400 hover:bg-yellow-300 border-yellow-600 text-yellow-900 px-8 py-3 rounded-2xl font-bold text-lg flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-print"></i> Cetak PDF
-                    </button>
-                    <button onclick="closeCert()" class="btn-playful bg-gray-200 hover:bg-gray-300 border-gray-400 text-gray-700 px-8 py-3 rounded-2xl font-bold text-lg">
-                        Tutup
-                    </button>
-                </div>
+            <div class="mt-10 flex flex-col sm:flex-row justify-center gap-6 w-full z-20">
+                <button onclick="window.print()" class="btn-bubbly bg-yellow-400 hover:bg-yellow-300 border-yellow-600 text-yellow-900 px-10 py-5 rounded-[2rem] font-bubbly font-bold text-2xl flex items-center justify-center gap-3 shadow-xl">
+                    <i class="fa-solid fa-print"></i> Simpan PDF (Bukti Nilai)
+                </button>
+                <button onclick="closeCert()" class="btn-bubbly bg-white hover:bg-gray-100 border-gray-300 text-gray-700 px-10 py-5 rounded-[2rem] font-bubbly font-bold text-2xl">
+                    Tutup
+                </button>
             </div>
         </div>
     </div>
 
+    <!-- SCRIPT (Data & Logic) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Global Setup
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'techquest-fun-lms';
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'techquest-bubbly-lms';
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
@@ -343,7 +337,7 @@
         let activeLevelIndex = -1;
 
         async function initFirebase() {
-            if (!firebaseConfig) { console.warn("No Firebase Config. Operating offline."); return; }
+            if (!firebaseConfig) return;
             try {
                 app = initializeApp(firebaseConfig);
                 auth = getAuth(app);
@@ -356,321 +350,257 @@
                     if (user) {
                         currentUserUid = user.uid;
                         isFirebaseReady = true;
+                        // Auto proceed if form was submitted before auth ready
                         if (document.getElementById('startBtn').classList.contains('hidden') && state.email) {
                             processDashboardLogin();
                         }
                     }
                 });
-            } catch (e) { console.error("Auth Failure:", e); }
+            } catch (e) { console.error("Auth Failure", e); }
         }
 
         const funnyQuotes = [
-            "Wahahaha jago juga kamu! Pasti semalam suntuk ngerjain tugas kampus ya?",
-            "Luar biasa! Skill Office-mu makin pro, semoga nanti skripsinya nggak cuma copas dari Wikipedia ya!",
-            "GGWP! Dosen pembimbingmu pasti menangis terharu melihat kerapian margin dokumenmu nanti.",
-            "Cieee bener semua! Fix kamu yang bakal dijadiin tumbal temen-temen buat ngerjain tugas kelompok.",
-            "Mantul! Sekarang kamu udah pantes buka jasa fotokopi dan pengetikan depan kampus.",
-            "Level beres! Jangan lupa ngopi biar matanya nggak sekalian ikut ke-format.",
-            "Kece abis! Ingat, dengan skill mengetik yang hebat, datang revisi yang hebat pula.",
-            "Lolos! Tapi awas, dunia kerja sesungguhnya lebih horor dari error #REF! di Excel."
+            "Luar biasa! Tingkat kepintaranmu naik 1%, sisanya 99% hasil menebak teka-teki saya kan?",
+            "Jago juga! Dosen pembimbing pasti menangis terharu kalau lihat ini. Ingat, ujian aslinya lebih kejam!",
+            "Cieee bener semua! Jangan sombong dulu, ilmu yang sebenarnya adalah saat komputer bosmu mendadak blank.",
+            "Tumben encer otaknya hari ini? Pasti semalaman nggak tidur buat belajar rumus Array ya?",
+            "Lolos! Kamu sudah pantas buka jasa 'Biro Pemecah Kutukan Excel' di depan kampus.",
+            "Wahahaha! Terbukti kamu makhluk digital sejati. Tapi awas, halusinasi AI kadang lebih seram dari dosen galak.",
+            "Mantap! Dengan skill setingkat ini, kamu sudah resmi jadi tumbal teman sekelas buat ngerjain tugas kelompok."
         ];
 
-        // Background Animation Generator
-        function generateFloatingBackground() {
-            const container = document.getElementById('floating-bg');
-            container.innerHTML = '';
-            
-            // Default icons
-            let icons = ['fa-star', 'fa-cloud', 'fa-heart', 'fa-music'];
-            
-            // Add prodi specific icons if logged in
-            if (state.prodi.includes('Wisata')) icons.push('fa-plane', 'fa-map-location-dot', 'fa-passport');
-            if (state.prodi.includes('Kuliner')) icons.push('fa-utensils', 'fa-burger', 'fa-mug-hot');
-            if (state.prodi.includes('Perhotelan')) icons.push('fa-bell-concierge', 'fa-bed', 'fa-key');
-
-            const colors = ['text-pink-300', 'text-blue-300', 'text-yellow-300', 'text-purple-300', 'text-green-300'];
-
-            for (let i = 0; i < 20; i++) {
-                const iconClass = icons[Math.floor(Math.random() * icons.length)];
-                const colorClass = colors[Math.floor(Math.random() * colors.length)];
-                
-                const el = document.createElement('i');
-                el.className = `fa-solid ${iconClass} float-icon ${colorClass} text-3xl md:text-5xl opacity-20`;
-                el.style.left = `${Math.random() * 100}vw`;
-                el.style.animationDuration = `${10 + Math.random() * 20}s`;
-                el.style.animationDelay = `${Math.random() * 10}s`;
-                
-                container.appendChild(el);
-            }
-        }
-        
-        // Run once on load
-        generateFloatingBackground();
-
+        // 16 Levels (Every 3rd is a Case Study, Level 16 is Final Boss). Exactly 6 Qs each. High Difficulty.
         const curriculum = [
-            // Levels 1-3: Word
+            // LEVEL 1: Word Advanced Formatting
             {
-                topic: "Word Dasar", icon: "fa-font", color: "blue", isBoss: false,
-                story: {
-                    "D3 Perjalanan Wisata": "Sebagai agen travel baru, kamu harus mengetik itinerary liburan ke Lagoi Bintan dengan super cepat tanpa sentuh mouse!",
-                    "D3 Seni Kuliner": "Chef memintamu merapikan resep sambal bajak rahasia. Gunakan shortcut keyboard agar kerjanya secepat kilat memotong bawang!",
-                    "D4 Pengelolaan Perhotelan": "Tamu VIP butuh surat sambutan dalam 2 menit! Jangan lelet, pakai shortcut Word sekarang juga!"
-                },
+                topic: "Word: Formasi Lanjutan", icon: "fa-file-word", color: "blue", type: "normal",
+                story: "Kita mulai dari merapikan wujud naskah akademik berstandar industri. Dilarang merapikan secara manual!",
                 questions: [
-                    { text: "Tombol shortcut keyboard untuk menebalkan tulisan?", hint: "CTRL ditambah huruf awalan dari Bold.", answer: "CTRL+B" },
-                    { text: "Tombol shortcut keyboard untuk memiringkan tulisan?", hint: "CTRL ditambah huruf awalan dari Italic.", answer: "CTRL+I" },
-                    { text: "Tombol shortcut keyboard untuk memberi garis bawah?", hint: "CTRL ditambah huruf awalan dari Underline.", answer: "CTRL+U" },
-                    { text: "Tombol rahasia untuk membatalkan kesalahan (Undo)?", hint: "CTRL ditambah huruf terakhir di alfabet.", answer: "CTRL+Z" },
-                    { text: "Tombol cepat untuk menyimpan dokumenmu?", hint: "CTRL ditambah huruf awalan dari Save.", answer: "CTRL+S" },
-                    { text: "Tombol untuk memilih (block) semua teks di halaman?", hint: "CTRL ditambah huruf awalan dari All.", answer: "CTRL+A" }
+                    { text: "Shortcut menyelaraskan gaya judul dengan format baru yang kau seleksi?", hint: "Menyesuaikan (Update) aturan kerajaan agar sama dengan wujud rakyat biasa tanpa merombak segalanya. (Dua kata)", answer: "UPDATE STYLE" },
+                    { text: "Fitur penomoran bertingkat untuk bab dan sub-bab?", hint: "Tangga hierarki berlapis (Multi-level), tempat setiap angka 1 memiliki anak buah 1.1 dan cucu 1.1.1.", answer: "MULTILEVEL LIST" },
+                    { text: "Fitur paragraf mencegah baris terpisah halaman?", hint: "Sumpah penjaga baris (Keep Lines), agar satu paragraf utuh tak terpisah ke halaman berikutnya.", answer: "KEEP LINES TOGETHER" },
+                    { text: "Pencegah baris sebatang kara tertinggal di atas/bawah?", hint: "Pelindung baris janda dan yatim piatu, menyelamatkan yang terbuang sendirian di ujung kertas.", answer: "WIDOW/ORPHAN CONTROL" },
+                    { text: "Shortcut instan spasi 1.5 baris?", hint: "Setengah jalan menuju spasi dua, diakses lewat jalan pintas kemudi (Ctrl) dan angka sakti ganjil di tengah.", answer: "CTRL+5" },
+                    { text: "Shortcut memunculkan simbol tersembunyi (Enter/Spasi)?", hint: "Mata batin pembaca kode tak kasat mata. Kemudi, Dorongan atas (Shift), dan sebuah bintang (*).", answer: "CTRL+*" }
                 ]
             },
+            // LEVEL 2: Word Complex Layout
             {
-                topic: "Word Layout", icon: "fa-align-center", color: "blue", isBoss: false,
-                story: {
-                    "D3 Perjalanan Wisata": "Brosur paket wisata ini perataannya masih berantakan kayak kapal pecah. Tolong rapikan paragrafnya!",
-                    "D3 Seni Kuliner": "Buku menu resto terlalu padat ke kiri. Atur perataannya biar estetik dan menggugah selera pelanggan.",
-                    "D4 Pengelolaan Perhotelan": "Laporan harian Front Office wajib rapi formal. Atur margin dan perataannya sesuai standar hotel bintang 5."
-                },
+                topic: "Word: Arsitektur Halaman", icon: "fa-columns", color: "blue", type: "normal",
+                story: "Dosen memintamu membuat format halaman tegak (Portrait) dan mendatar (Landscape) DALAM SATU FILE. Siapkan arsitekturnya!",
                 questions: [
-                    { text: "Shortcut keyboard untuk membuat teks rata ke kiri?", hint: "CTRL + huruf awal dari Left.", answer: "CTRL+L" },
-                    { text: "Shortcut keyboard untuk membuat teks rata ke tengah?", hint: "CTRL + huruf E.", answer: "CTRL+E" },
-                    { text: "Shortcut keyboard untuk membuat teks rata ke kanan?", hint: "CTRL + huruf awal dari Right.", answer: "CTRL+R" },
-                    { text: "Shortcut keyboard untuk teks rata kanan-kiri (rapi)?", hint: "CTRL + huruf awal dari Justify.", answer: "CTRL+J" },
-                    { text: "Nama menu Tab untuk mengatur ukuran batas kertas?", hint: "Bahasa Inggrisnya 'tata letak'.", answer: "LAYOUT" },
-                    { text: "Fitur yang ikonnya mirip kuas cat kuning untuk copy format?", hint: "Dua kata: F_____ P______.", answer: "FORMAT PAINTER" }
+                    { text: "Pembelah halaman tanpa ganti kertas baru?", hint: "Tembok tak kasat mata (Section Break) pemisah dimensi, yang efeknya berjalan terus (Berlanjut) dalam satu halaman.", answer: "CONTINUOUS" },
+                    { text: "Menghilangkan nomor/header HANYA di halaman pertama?", hint: "Perlakuan istimewa untuk sang pendahulu (First Page). Beri dia perlakuan yang Beda.", answer: "DIFFERENT FIRST PAGE" },
+                    { text: "Memutus rantai header Bab 2 agar beda dari Bab 1?", hint: "Putuskan ikatan pusaka warisan (Link). Jangan sambungkan ia ke masa lalu (Previous).", answer: "LINK TO PREVIOUS" },
+                    { text: "Menyisipkan total halaman (Misal: Halaman 1 dari 50)?", hint: "Angka yang menyadari posisinya di alam semesta, tahu posisinya (X) dan tahu batas akhirnya (Y).", answer: "PAGE X OF Y" },
+                    { text: "Margin khusus pencetakan buku timbal-balik?", hint: "Refleksi bayangan sang kertas lipat di cermin. Bersiap untuk dijilid layaknya kitab kuno.", answer: "MIRROR MARGINS" },
+                    { text: "Shortcut pemicu pengintai revisi dokumen?", hint: "Mata-mata abadi sang editor. Kombinasi Kemudi, Dorongan, dan inisial kata 'Edit'.", answer: "CTRL+SHIFT+E" }
                 ]
             },
+            // LEVEL 3: STUDI KASUS 1 (Word Integration)
             {
-                topic: "Daftar Isi", icon: "fa-list-ol", color: "blue", isBoss: false,
+                topic: "Studi Kasus 1: Master Surat", icon: "fa-envelopes-bulk", color: "indigo", type: "case",
                 story: {
-                    "D3 Perjalanan Wisata": "Proposal tur wisata 50 halaman butuh Daftar Isi otomatis. Jangan sampai diketik manual ya, capek!",
-                    "D3 Seni Kuliner": "Buku Standar Resep dapur setebal 30 halaman harus punya navigasi bab yang jelas.",
-                    "D4 Pengelolaan Perhotelan": "Buku panduan SOP Hotel harus punya Table of Contents yang otomatis update kalau halamannya bergeser."
+                    "D3 Perjalanan Wisata": "Bos Tour memintamu mengirim Booklet Itinerary Bintan ke 50 agensi. Tiap dokumen ada sapaan 'Bapak/Ibu' sesuai gender dari Excel, dan daftar isi harus update!",
+                    "D3 Seni Kuliner": "Kirim Proposal VIP Catering ke 50 direktur. Buku menumu butuh daftar isi mutlak, dan sapaan gelar disesuaikan otomatis dari database Excel.",
+                    "D4 Pengelolaan Perhotelan": "SOP Front Office digabung dengan pengiriman Welcome Letter ke 50 tamu. Nomor kamar masuk otomatis, format header harus putus per bab!"
                 },
                 questions: [
-                    { text: "Fitur gaya tulisan di Tab Home yang WAJIB dipakai agar judul terbaca otomatis?", hint: "Gaya untuk judul utama (mulai huruf H).", answer: "HEADING 1" },
-                    { text: "Menu Tab tempat fitur 'Table of Contents' berada?", hint: "Tab untuk referensi.", answer: "REFERENCES" },
-                    { text: "Cara paksa melompat ke halaman baru (bukan enter berkali-kali)?", hint: "P___ B____", answer: "PAGE BREAK" },
-                    { text: "Teks buram/transparan di latar belakang halaman dokumen?", hint: "Terdiri dari kata Air dan Tanda (Bhs Inggris).", answer: "WATERMARK" },
-                    { text: "Catatan kecil yang selalu muncul berulang di bawah setiap halaman?", hint: "Kata dasarnya kaki (Foot).", answer: "FOOTER" },
-                    { text: "Shortcut cerdas untuk memicu Page Break?", hint: "CTRL ditambah tombol enter.", answer: "CTRL+ENTER" }
+                    { text: "Aturan Mail Merge penentu 'Jika Pria sapa Bapak, jika tidak Ibu'?", hint: "Syarat logika percabangan nasib. Tiga kata: Jika... Maka... Sebaliknya...", answer: "IF...THEN...ELSE" },
+                    { text: "Shortcut sakti menyegarkan paksa Daftar Isi (ToC)?", hint: "Tombol fungsi kesembilan (Function 9) pemanggil dewa penyegar (Update/Refresh) seluruh kalkulasi yang tertidur.", answer: "F9" },
+                    { text: "Fitur lompat internal ke tabel/gambar di bab lain?", hint: "Rujukan persilangan. Teleportasi internal yang menunjuk pada sesuatu yang bersemayam jauh di sudut dokumen.", answer: "CROSS-REFERENCE" },
+                    { text: "Fitur menjejerkan dua naskah cari beda revisinya?", hint: "Timbangan kebenaran yang membandingkan (Compare) dua jiwa dokumen yang tampak serupa tapi tak sama.", answer: "COMPARE" },
+                    { text: "Fitur gembok dokumen agar orang cuma bisa isi form?", hint: "Pasukan penjaga yang Membatasi tangan liar orang lain untuk meng-Edit mahakaryamu.", answer: "RESTRICT EDITING" },
+                    { text: "Gaya rujukan daftar pustaka favorit psikolog Amerika?", hint: "Tiga huruf sang diktator kutipan sedunia. Asosiasi Psikolog asal negeri Paman Sam.", answer: "APA" }
                 ]
             },
+            // LEVEL 4: Excel Advanced Functions
             {
-                topic: "Boss: Mail Merge", icon: "fa-envelope-open-text", color: "red", isBoss: true,
-                story: {
-                    "D3 Perjalanan Wisata": "🔥 UJIAN BOSS! Kamu harus kirim 100 tiket konfirmasi dengan nama berbeda-beda. Gabungkan surat di Word dengan database turis di Excel!",
-                    "D3 Seni Kuliner": "🔥 UJIAN BOSS! Kirim 100 surat undangan Gala Dinner khusus VIP. Otomatisasi panggilannya biar ga ngetik satu-satu!",
-                    "D4 Pengelolaan Perhotelan": "🔥 UJIAN BOSS! Cetak 100 Welcome Letter untuk kamar berbeda langsung dari sistem FO. Ayo selesaikan!"
-                },
+                topic: "Excel: Dimensi Rumus", icon: "fa-table", color: "green", type: "normal",
+                story: "Lupakan VLOOKUP! Mahasiswa pro harus bisa mencari data secara terbalik, dari kanan ke kiri, dan bermain di dalam matriks bersarang.",
                 questions: [
-                    { text: "Nama Tab menu utama untuk urusan persuratan massal?", hint: "Bahasa Inggrisnya surat-menyurat.", answer: "MAILINGS" },
-                    { text: "Tombol pertama yang diklik untuk mencari file data Excel?", hint: "Artinya 'Pilih Penerima'.", answer: "SELECT RECIPIENTS" },
-                    { text: "Pilihan untuk menggunakan file Excel yang sudah disiapkan?", hint: "U__ an E_______ L___", answer: "USE AN EXISTING LIST" },
-                    { text: "Tombol untuk menyisipkan tempat nama (variabel) di surat?", hint: "I_____ M____ F____", answer: "INSERT MERGE FIELD" },
-                    { text: "Tombol ikon kaca pembesar untuk melihat hasil pratinjau surat?", hint: "P______ R_______", answer: "PREVIEW RESULTS" },
-                    { text: "Tombol paling akhir untuk mengakhiri persuratan?", hint: "F_____ & M____", answer: "FINISH & MERGE" }
+                    { text: "Rumus penentu nilai di persimpangan baris dan kolom?", hint: "Sang peta buta (Indeks). Beri dia nomor baris dan nomor kolom, ia akan memberimu hartanya.", answer: "INDEX" },
+                    { text: "Rumus pencari posisi urutan (nomor baris) sebuah teks?", hint: "Anjing pelacak pencari kecocokan (Pencocok). Ia tak mencuri barang, hanya memberi tahu urutan ke berapa barang itu.", answer: "MATCH" },
+                    { text: "Kombinasi rumus pengganti mutlak VLOOKUP?", hint: "Buku alamat digabung sang pencari jejak. Bersama, kami bisa memandang ke kiri, hal yang ditakuti VLOOKUP. (2 kata)", answer: "INDEX MATCH" },
+                    { text: "Menulis alamat sel: Kolom A bebas, Baris 1 Terkunci?", hint: "Rantai uang (Dolar) hanya merantai leher si Angka 1, membiarkan sang Huruf A bebas terbang.", answer: "A$1" },
+                    { text: "Tiga kombinasi tombol pengeksekusi Array Formula kuno?", hint: "Tiga serangkai sakti penakluk matriks sebelum era Dinamis: Kemudi, Dorongan, dan Palu ketukan.", answer: "CTRL+SHIFT+ENTER" },
+                    { text: "Pembungkus rumus agar tak muncul tulisan error?", hint: "Perisai pemaaf. 'Jika' kau menemukan 'Kesalahan', tampilkan senyuman atau teks nol saja.", answer: "IFERROR" }
                 ]
             },
-            // Levels 5-8: Excel
+            // LEVEL 5: Excel Data Validation
             {
-                topic: "Excel Rumus", icon: "fa-table", color: "green", isBoss: false,
-                story: {
-                    "D3 Perjalanan Wisata": "Data rombongan turis masuk ke Excel. Cepat hitung total orangnya pakai rumus, kalkulator dilarang!",
-                    "D3 Seni Kuliner": "Rekap belanja sayur di pasar hari ini. Jumlahkan semuanya biar nggak dimarahi manajer keuangan.",
-                    "D4 Pengelolaan Perhotelan": "Data tamu menginap harian. Hitung rata-rata lama mereka menginap pakai rumus yang pas."
-                },
+                topic: "Excel: Validasi Ketat", icon: "fa-list-check", color: "green", type: "normal",
+                story: "Data masuk sering berantakan! Pasang satpam di sel agar tak ada yang berani mengetik sembarangan, warnai yang melanggar hukum.",
                 questions: [
-                    { text: "Rumus sakti untuk menjumlahkan angka di sel?", hint: "Tiga huruf awalan S.", answer: "SUM" },
-                    { text: "Rumus untuk mencari nilai rata-rata?", hint: "Bahasa Inggrisnya rata-rata.", answer: "AVERAGE" },
-                    { text: "Rumus untuk mencari nilai/angka tertinggi?", hint: "Tiga huruf awalan M.", answer: "MAX" },
-                    { text: "Rumus untuk mencari nilai/angka paling kecil?", hint: "Tiga huruf, awalan M.", answer: "MIN" },
-                    { text: "Rumus untuk menghitung BANYAKNYA kotak yang ada angkanya?", hint: "Bahasa Inggrisnya menghitung.", answer: "COUNT" },
-                    { text: "Simbol yang WAJIB diketik pertama kali setiap bikin rumus Excel?", hint: "Simbol sama dengan.", answer: "=" }
+                    { text: "Opsi validasi data dengan rumus logika ciptaanmu sendiri?", hint: "Penjaga gerbang kustomisasi. Memilih aturan buatanmu sendiri (Custom) ketimbang aturan pabrik.", answer: "CUSTOM" },
+                    { text: "Opsi Conditional Formatting pemicu rumus lanjutan?", hint: "Kuas bunglon yang warnanya dikendalikan dengan cara Menggunakan sebuah Formula logika mutlak.", answer: "USE A FORMULA" },
+                    { text: "Rumus penyihir teks biasa menjadi jembatan range data?", hint: "Sang wayang perantara pencipta Dropdown bergantung. Ia menunjuk sasaran secara Tak Langsung (Indirect).", answer: "INDIRECT" },
+                    { text: "Tombol instan pemusnah data ganda massal?", hint: "Sang algojo pembersih kloningan. Singkirkan yang ganda dari lautan keaslian. (Dua kata)", answer: "REMOVE DUPLICATES" },
+                    { text: "Pemecah isi 1 sel panjang ke kolom baru berdasar koma?", hint: "Pisau bedah teks. Opsi pembelahan yang dibatasi (Delimited) oleh tembok pembatas (koma/spasi).", answer: "DELIMITED" },
+                    { text: "Jendela kaca pembesar melihat rumus berjalan bertahap?", hint: "Detektif pengurai benang kusut. Mengevaluasi sang formula selangkah demi selangkah.", answer: "EVALUATE FORMULA" }
                 ]
             },
+            // LEVEL 6: STUDI KASUS 2 (Excel Dashboard)
             {
-                topic: "Warna Excel", icon: "fa-paint-roller", color: "green", isBoss: false,
+                topic: "Studi Kasus 2: Otak Dasbor", icon: "fa-chart-line", color: "teal", type: "case",
                 story: {
-                    "D3 Perjalanan Wisata": "Ribuan baris data bikin pusing. Kunci baris judulnya, lalu suruh Excel warnai otomatis baris turis yang usianya Lansia (risiko tinggi).",
-                    "D3 Seni Kuliner": "Tandai otomatis bahan masakan yang sudah mau Expired dengan warna merah biar nggak bikin keracunan pelanggan!",
-                    "D4 Pengelolaan Perhotelan": "Warnai otomatis daftar kamar yang statusnya 'Out of Order' (rusak) biar resepsionis nggak salah jual."
+                    "D3 Perjalanan Wisata": "Manajer travel minta Dasbor Keuangan bulanan. Tarik data omset bersyarat ganda, kasih grafik di dalam sel, rekam gerakan klikmu!",
+                    "D3 Seni Kuliner": "Buat Dasbor Food Cost raksasa. Totalkan harga bahan baku berdasarkan supplier DAN bulan expired-nya, pasang kalkulasi hantu di Pivot!",
+                    "D4 Pengelolaan Perhotelan": "Sistem Occupancy FO butuh dasbor analitik. Cari data balik modal (Goal Seek) dan totalkan pendapatan dengan multisyarat waktu dan VIP!"
                 },
                 questions: [
-                    { text: "Menu untuk mengunci baris judul atas agar saat di-scroll ke bawah tidak hilang?", hint: "Dua kata: F_____ P_____", answer: "FREEZE PANES" },
-                    { text: "Fitur canggih untuk mewarnai sel secara otomatis jika ada kondisi tertentu?", hint: "C__________ F_________.", answer: "CONDITIONAL FORMATTING" },
-                    { text: "Simbol khusus (kayak mata uang) untuk 'mengunci' alamat sel (Absolute)?", hint: "Simbol Dolar.", answer: "$" },
-                    { text: "Tombol shortcut function (F berapa) di atas keyboard untuk memunculkan simbol kunci tersebut?", hint: "Tombol F setelah F3.", answer: "F4" },
-                    { text: "Fitur untuk menggabungkan dua kotak sel atau lebih jadi satu?", hint: "M____ & C_____", answer: "MERGE & CENTER" },
-                    { text: "Fitur agar teks yang kepanjangan bisa turun ke bawah di dalam kotak sel yang sama?", hint: "W___ T___", answer: "WRAP TEXT" }
+                    { text: "Fungsi pencari masa depan pengganti VLOOKUP/INDEX?", hint: "Pewaris takhta bermata sakti (X). Memandang ke segala arah tanpa perlu menghitung indeks kolom.", answer: "XLOOKUP" },
+                    { text: "Rumus penjumlah angka dengan lebih dari 1 syarat?", hint: "Sang penadah (Sum) bersyarat jamak (Ifs). Hanya menelan uang jika kriteria A DAN B terpenuhi.", answer: "SUMIFS" },
+                    { text: "Membuat kolom operasi MTK palsu di dalam PivotTable?", hint: "Kolom/Bidang (Field) hantu yang terlahir murni dari hasil Kalkulasi rumus matematika kolom asli Pivot.", answer: "CALCULATED FIELD" },
+                    { text: "Fitur grafik mungil menumpang hidup di dalam 1 sel?", hint: "Garis-garis percikan (Spark) listrik yang menggeliat sesak di dalam satu ruangan sel tunggal.", answer: "SPARKLINES" },
+                    { text: "Fitur dukun pemutar waktu pencari angka modal awal?", hint: "Pencari sasaran akhir. Mengubah angka hasil masa depan untuk mencari akar modal di masa lalu.", answer: "GOAL SEEK" },
+                    { text: "Perekam aktivitas klikmu jadi urutan kode otomatis?", hint: "Kaset pengulang waktu. Lakukan rekaman atas aktivitas klik besarmu (Makro).", answer: "RECORD MACRO" }
                 ]
             },
+            // LEVEL 7: PowerPoint Advanced Animation
             {
-                topic: "Logika Excel", icon: "fa-brain", color: "green", isBoss: false,
-                story: {
-                    "D3 Perjalanan Wisata": "Pakai otak Excel-mu! Tarik data harga paket pakai VLOOKUP. Kalau peserta > 20, kasih status 'Dapat Diskon' pakai rumus IF.",
-                    "D3 Seni Kuliner": "Cari data resep masakan dari sheet master. Jika margin keuntungan < 10%, kasih status peringatan 'RUGI BAndar'.",
-                    "D4 Pengelolaan Perhotelan": "Tarik tipe kamar (Deluxe, Suite). Jika tamu pesan lebih dari 5 hari, kasih catatan 'Upgrade Kamar'."
-                },
+                topic: "PPT: Tarian Bayangan", icon: "fa-film", color: "pink", type: "normal",
+                story: "Transisi asal-asalan itu kuno. Saatnya meramu animasi presisi: tombol disentuh objek meledak, jalur terbang yang bisa digambar tangan.",
                 questions: [
-                    { text: "Rumus untuk mencari data di tabel lain yang susunannya menurun ke bawah (Vertikal)?", hint: "Diawali huruf V.", answer: "VLOOKUP" },
-                    { text: "Rumus pencarian kalau tabelnya memanjang ke samping (Horizontal)?", hint: "Diawali huruf H.", answer: "HLOOKUP" },
-                    { text: "Isian terakhir (parameter ke-4) VLOOKUP agar data yang dicari HANYA yang sama persis?", hint: "Basa inggrisnya Salah.", answer: "FALSE" },
-                    { text: "Rumus logika pengandaian (jika A maka B)?", hint: "Dua huruf, bahasa inggris jika.", answer: "IF" },
-                    { text: "Tanda baca pemisah antar argumen rumus di Excel versi bahasa Indonesia/Eropa?", hint: "Bukan koma, tapi koma yang ada titiknya di atas.", answer: ";" },
-                    { text: "Kode Error kalau rumus VLOOKUP kamu gagal menemukan data yang dicari?", hint: "Ada tanda pagarnya, N/A.", answer: "#N/A" }
+                    { text: "Fitur pemantik: Animasi A jalan HANYA saat Kotak B diklik?", hint: "Pelatuk senjata (Pemicu) yang menahan peluru animasi sampai jarimu menyentuh sasaran yang tepat.", answer: "TRIGGER" },
+                    { text: "Jenis animasi di mana kamu bebas menggambar rutenya?", hint: "Jalur takdir pergerakan (Motion). Menghapus kaku, membiarkan subjek terbang di atas garis coretanmu.", answer: "MOTION PATH" },
+                    { text: "Alat peng-copy seluruh aturan animasi objek A ke objek B?", hint: "Kuas pencuri roh tarian. Menularkan gaya gerak (Animasi) bagai cat tanpa harus mengaturnya ulang.", answer: "ANIMATION PAINTER" },
+                    { text: "Transisi efek portal antar slide, melompat seolah satu kanvas?", hint: "Kaca pembesar raksasa (Zoom) yang melontarkan pandanganmu menembus slide kecil ke dimensi halaman utama.", answer: "SLIDE ZOOM" },
+                    { text: "Alat sakti penghapus otomatis latar belakang gambar?", hint: "Penghapus alam semesta di belakang objek utama (Background). Sisakan sang subjek murni tanpa tepi.", answer: "REMOVE BACKGROUND" },
+                    { text: "Mengubah utuh semua slide menjadi satu file video?", hint: "Kapal laut pembuang barang (Ekspor). Ubah panggung sandiwara fana menjadi gulungan waktu (Video).", answer: "EXPORT" }
                 ]
             },
+            // LEVEL 8: PowerPoint Interactivity
             {
-                topic: "Boss: Pivot", icon: "fa-chart-pie", color: "red", isBoss: true,
-                story: {
-                    "D3 Perjalanan Wisata": "🔥 UJIAN BOSS! Bos besar minta rangkuman pendapatan tiket turis dari 15.000 baris data... dalam 3 menit! Pakai ilmu tertinggi Excel!",
-                    "D3 Seni Kuliner": "🔥 UJIAN BOSS! Rangkum total menu yang terjual dari database kasir setahun penuh jadi satu tabel rekap. Jangan hitung manual!",
-                    "D4 Pengelolaan Perhotelan": "🔥 UJIAN BOSS! Bikin laporan performa bulanan Front Office (Occupancy Rate) dari tumpukan data mentah. Gunakan senjatamu!"
-                },
+                topic: "PPT: Interaksi Batin", icon: "fa-hand-pointer", color: "pink", type: "normal",
+                story: "Audiens benci slide pasif! Buat mereka bisa menyentuh dan berinteraksi. Tanamkan font ke akar sistem agar tak rusak saat di PC lain.",
                 questions: [
-                    { text: "Fitur dewa di Excel untuk merangkum dan memutar ribuan data tanpa ngetik rumus?", hint: "Dua kata: P____ T____", answer: "PIVOT TABLE" },
-                    { text: "Ke kotak area mana di Pivot untuk melempar kolom 'Harga' agar otomatis dijumlah?", hint: "Bahasa Inggrisnya nilai.", answer: "VALUES" },
-                    { text: "Kotak area untuk menyusun data berjejer ke arah bawah?", hint: "Bahasa inggrisnya baris.", answer: "ROWS" },
-                    { text: "Jenis grafik spesial yang bergerak otomatis ngikutin Pivot Table?", hint: "P____ C____", answer: "PIVOT CHART" },
-                    { text: "Tombol filter visual kotak-kotak lucu untuk mengontrol laporan Pivot?", hint: "Satu kata, awalan S.", answer: "SLICER" },
-                    { text: "Jika data awal berubah, tombol apa yang harus ditekan di Pivot biar laporannya ter-update?", hint: "Artinya menyegarkan.", answer: "REFRESH" }
+                    { text: "Action Setting: Cukup dilintasi mouse, aksi akan terpicu?", hint: "Sihir pasif. Tak butuh kekuatan klik, cukup belai di atasnya dengan panah tetikus (Mouse).", answer: "MOUSE OVER" },
+                    { text: "Menyembunyikan slide tertentu jadi sub-presentasi rahasia?", hint: "Pertunjukan khusus pesanan. Memisahkan rute tayangan untuk klien A dan klien B di satu file yang sama.", answer: "CUSTOM SLIDE SHOW" },
+                    { text: "Kode nama objek di Selection Pane pemaksa efek Morph?", hint: "Dua palu seruan berteriak (!!) di depan nama objek, memaksa sang Morph mengubah kotak jadi lingkaran.", answer: "!!" },
+                    { text: "Alat penyedot warna persis dari sebuah gambar?", hint: "Pipet tetes mata pencuri darah warna. Menyedot jiwa dari satu piksel kecil ke kanvas barumu.", answer: "EYEDROPPER" },
+                    { text: "Menyuntikkan file Font ke dalam PPT (Biar nggak ilang)?", hint: "Menanamkan (Menyematkan) roh tulisan secara fisik ke dalam dokumen agar tahan banting di negeri asing.", answer: "EMBED FONTS" },
+                    { text: "AI pelatih pribadi penilai cara bicaramu dari mic laptop?", hint: "Sang Guru maya. Berlatihlah bicara, ia akan menegurmu di layar jika kau cuma monoton membaca.", answer: "REHEARSE WITH COACH" }
                 ]
             },
-            // Levels 9-12: PPT
+            // LEVEL 9: STUDI KASUS 3 (PPT Kiosk)
             {
-                topic: "Desain PPT", icon: "fa-desktop", color: "pink", isBoss: false,
+                topic: "Studi Kasus 3: Kios Pintar", icon: "fa-desktop", color: "purple", type: "case",
                 story: {
-                    "D3 Perjalanan Wisata": "Kamu presentasi wisata bahari. Logo travel harus nempel terus di pojok atas pada ke-50 slide tanpa dicopas manual satu-satu.",
-                    "D3 Seni Kuliner": "Desain display e-Menu di TV restoran. Pastikan font harga makanan selalu sama di setiap halaman secara otomatis.",
-                    "D4 Pengelolaan Perhotelan": "Slide presentasi meeting dengan Direksi. Semua slide harus ngikutin template standar hotel bintang lima."
+                    "D3 Perjalanan Wisata": "Ciptakan layar sentuh Katalog Tur Mandiri (Kiosk). Pengunjung klik gambar paket, layar ngomong (audio), video promo ditekan agar ukurannya kecil!",
+                    "D3 Seni Kuliner": "Desain e-Menu Interaktif di restoran. Gambar makanan 3D berputar, klik struktur hierarki menu, tanpa audiens bisa keluar layar sembarangan.",
+                    "D4 Pengelolaan Perhotelan": "Sistem Check-in mandiri FO. Diagram organisasi hotel, suara panduan yang muncul pelan-pelan (Fade), dan layarnya tak bisa di-ESC!"
                 },
                 questions: [
-                    { text: "Fitur rahasia untuk mengatur kerangka desain (template) yang akan otomatis nerap ke semua slide?", hint: "S____ M_____", answer: "SLIDE MASTER" },
-                    { text: "Di menu Tab apa tombol Slide Master itu disembunyikan?", hint: "Tab untuk tampilan layar.", answer: "VIEW" },
-                    { text: "Tombol rahasia keyboard (shortcut) untuk nambah slide baru?", hint: "CTRL + M.", answer: "CTRL+M" },
-                    { text: "Shortcut keyboard buat menggandakan (copas persis) sebuah slide/gambar?", hint: "CTRL + D.", answer: "CTRL+D" },
-                    { text: "Tombol cepat (F berapa) buat mulai presentasi layar penuh dari halaman pertama?", hint: "F5.", answer: "F5" },
-                    { text: "Gimana kalau mau presentasi layar penuh tapi mulainya dari slide yang BUKA SEKARANG?", hint: "SHIFT + F5.", answer: "SHIFT+F5" }
+                    { text: "Mode setting agar slide lumpuh/tak bisa di-klik sembarang tempat?", hint: "Mode etalase toko (Kios). Mengunci seluruh kanvas, memaksa tangan patuh pada tombol buatanmu.", answer: "KIOSK" },
+                    { text: "Memasukkan bentuk objek utuh yang bisa diputar semua sudut?", hint: "Bukan datar dua arah, panggil patung berlapis dimensi ketiga yang bisa dibelakangi.", answer: "3D MODELS" },
+                    { text: "Merekam langsung gerakan layar laptopmu jadi video ke slide?", hint: "Penangkap jiwa layarmu. Merangkum detik pergerakan panah tetikus menjadi cermin masa lalu.", answer: "SCREEN RECORDING" },
+                    { text: "SmartArt pembuat struktur organisasi otomatis?", hint: "Pohon kekuasaan keluarga. Menyusun sang penguasa di atas dan rakyat jelata berakar ke bawah.", answer: "HIERARCHY" },
+                    { text: "Efek animasi Audio yang suaranya membesar/menghilang bertahap?", hint: "Hantu suara. Muncul merayap pelan dari kesunyian, dan larut perlahan ditelan senyap.", answer: "FADE" },
+                    { text: "Fitur memangkas ukuran ratusan MB video di dalam PPT?", hint: "Mesin pres pengecil alam semesta. Menekan erat file media raksasa agar ringan diangkat ke awan.", answer: "COMPRESS MEDIA" }
                 ]
             },
+            // LEVEL 10: Cloud Advanced Storage
             {
-                topic: "Animasi PPT", icon: "fa-wand-magic-sparkles", color: "pink", isBoss: false,
-                story: {
-                    "D3 Perjalanan Wisata": "Animasikan peta pulau Bintan. Bikin ikon pesawat terbang jalan-jalan dari satu pulau ke pulau lain dengan super mulus layaknya video.",
-                    "D3 Seni Kuliner": "Slide proses masak! Gambar daging mentah mengecil dan loncat ke wajan di slide berikutnya pakai efek sihir transisi.",
-                    "D4 Pengelolaan Perhotelan": "Presentasi virtual tour fasilitas hotel. Bikin efek zoom yang nyambung antar foto seolah-olah penonton lagi jalan."
-                },
+                topic: "Cloud: Awan Pejuang", icon: "fa-cloud-bolt", color: "orange", type: "normal",
+                story: "Di ranah profesional, email bukan tempat kirim data! Manipulasi tautan Drive, amankan kepemilikan data tim, dan atur mode darurat tak ber-internet.",
                 questions: [
-                    { text: "Efek transisi canggih terbaru yang bikin objek pindah posisi sehalus sutra ke slide berikutnya?", hint: "Lima huruf aja, awalan M.", answer: "MORPH" },
-                    { text: "Menu Tab yang ngatur pergerakan saat GANTI SLIDE?", hint: "Transitions (Bhs Inggris).", answer: "TRANSITIONS" },
-                    { text: "Menu Tab yang ngatur joget/geraknya GAMBAR atau teks di dalam satu slide yang sama?", hint: "Animations (Bhs Inggris).", answer: "ANIMATIONS" },
-                    { text: "Panel khusus di pinggir layar buat ngatur urutan mana animasi yang jalan duluan?", hint: "A________ P___", answer: "ANIMATION PANE" },
-                    { text: "Pilihan setingan animasi biar dia gerak sendiri barengan sama animasi sebelumnya tanpa diklik?", hint: "W___ P_______", answer: "WITH PREVIOUS" },
-                    { text: "Format andalan kalau slide kerenmu mau disimpan (export) jadi file video biasa?", hint: "Tiga karakter belakang MP.", answer: "MP4" }
+                    { text: "Mengembalikan paragraf yang dihapus teman 2 hari lalu di Docs?", hint: "Mesin waktu pemulih sejarah. Menampilkan jejak langkah masa lalu dari setiap ketikan (Versi).", answer: "VERSION HISTORY" },
+                    { text: "Ubah tulisan '/edit' di link Drive pemaksa orang clone file?", hint: "Ganti ekor mantra tautannya menjadi ujung pisau yang memaksa duplikasi (Salin) mutlak tanpa tanya.", answer: "/COPY" },
+                    { text: "Setting Google Docs agar bisa diketik pas Wi-Fi mati?", hint: "Menyetor oksigen cadangan. Memaksa dokumen hidup di luar jaringan (Luring) saat dunia memutus koneksi.", answer: "OFFLINE" },
+                    { text: "Ruang penyimpanan tim, file tetap ada meski pembuatnya resign?", hint: "Loker perusahaan, bukan ransel pribadi. Ruangan Awan yang dimiliki secara kolektif (Bersama).", answer: "SHARED DRIVES" },
+                    { text: "Fitur melempar tahta kekuasaan mutlak file ke email lain?", hint: "Turun tahta sukarela. Memindahkan mahkota raja (Hak Milik) dokumen secara sah kepada penguasa baru.", answer: "TRANSFER OWNERSHIP" },
+                    { text: "Sistem rumus kode pelacak pengetikan valid (Misal: email asli) di Form?", hint: "Pola bahasa mesin sandi kuno. Ekspresi wajar (Regular) pelacak validitas struktur tulisan alien.", answer: "REGULAR EXPRESSION" }
                 ]
             },
+            // LEVEL 11: Cloud Collab
             {
-                topic: "Interaktif", icon: "fa-hand-pointer", color: "pink", isBoss: false,
-                story: {
-                    "D3 Perjalanan Wisata": "Sulap presentasimu jadi aplikasi menu! Kalau gambar Pantai diklik, layarnya langsung lompat ke slide Pantai, nggak usah di-next.",
-                    "D3 Seni Kuliner": "Bikin daftar menu di iPad pelayan restoran. Klik kategori 'Dessert', langsung nampilin slide es krim.",
-                    "D4 Pengelolaan Perhotelan": "Bikin tes interaktif buat anak magang Housekeeping. Kalau klik jawaban salah, muncul slide suruh nyoba lagi."
-                },
+                topic: "Cloud: Kolaborasi Dewa", icon: "fa-users-gear", color: "orange", type: "normal",
+                story: "Timmu pecah belah ngerjain Sheet! Pasang pembatas, sedot data dari file dimensi lain, dan filter data tanpa merusak pandangan temanmu.",
                 questions: [
-                    { text: "Fitur sakti biar teks/gambar kalau diklik bisa mindahin kita ke slide lain?", hint: "Kata bahasa inggris untuk Tautan.", answer: "LINK" },
-                    { text: "Bentuk kotak dari PPT yang emang kodratnya bisa diklik kayak tombol beneran?", hint: "A_____ B______", answer: "ACTION BUTTONS" },
-                    { text: "Jalan pintas keyboard (shortcut) buat masukin link itu?", hint: "CTRL + K.", answer: "CTRL+K" },
-                    { text: "Kalau pas bikin link kita mau milih slide yang ada di dalem file ini juga, pilih menu apa?", hint: "P____ in T___ D_______", answer: "PLACE IN THIS DOCUMENT" },
-                    { text: "Setingan presentasi biar muter terus ngulang-ngulang sendiri buat dipajang di pameran?", hint: "L___ c___________ u____ E__", answer: "LOOP CONTINUOUSLY UNTIL ESC" },
-                    { text: "Menu buat masukin rekaman suaramu ngejelasin presentasi langsung ke dalam slide?", hint: "R_____ A____", answer: "RECORD AUDIO" }
+                    { text: "Rumus Google Sheets penyedot tabel utuh dari URL file lain?", hint: "Portal cermin gaib (Impor). Menyedot wilayah luas batas cakrawala (Rentang) dari dimensi file yang jauh.", answer: "IMPORTRANGE" },
+                    { text: "Dewa perkalian Google Sheets (1 Rumus untuk 1000 baris ke bawah)?", hint: "Dewa matriks awan. Satu mantra formula di langit atas penakluk seluruh barisan tak berujung (Array).", answer: "ARRAYFORMULA" },
+                    { text: "Kunci sel G3 agar cuma kamu yang bisa ketik, tim lain gak bisa?", hint: "Tameng gaib pelindung tanah. Lindungi rentang (Range) ini dari tangan-tangan asing.", answer: "PROTECT RANGE" },
+                    { text: "Filter data 10 baris di layarmu, tanpa mengubah layar temanmu?", hint: "Kacamata saringan pribadi. Kau melihat lautan tersaring (Tampilan), temanmu melihat samudera lepas.", answer: "FILTER VIEWS" },
+                    { text: "Mode edit Docs di mana ketikanmu berwarna hijau menunggu ACC?", hint: "Tinta hijau keraguan. Mengajukan usulan perbaikan tanpa berani menghapus nyata sejarah asal.", answer: "SUGGESTING" },
+                    { text: "Ketikan lambang '@' di Docs pembuka portal ke kalender/orang/file?", hint: "Kanvas jenius Google. Kanvas batin tempat memanggil segalanya hanya dengan satu spiral keong.", answer: "SMART CANVAS" }
                 ]
             },
+            // LEVEL 12: STUDI KASUS 4 (Cloud Workflow)
             {
-                topic: "Boss: Integrasi", icon: "fa-rocket", color: "red", isBoss: true,
+                topic: "Studi Kasus 4: Awan Bisnis", icon: "fa-server", color: "cyan", type: "case",
                 story: {
-                    "D3 Perjalanan Wisata": "🔥 UJIAN BOSS! Persentasi ke bos besar Travel. Tempel grafik keuntungan dari Excel ke PPT, dan PASTIKAN grafiknya ikut berubah kalau Excel-nya di-update!",
-                    "D3 Seni Kuliner": "🔥 UJIAN BOSS! Pitching konsep restoran baru ke investor. Masukin tabel budget Excel ke PPT tanpa berantakan formatnya.",
-                    "D4 Pengelolaan Perhotelan": "🔥 UJIAN BOSS! Rapat dewan direksi evaluasi hotel. Gabungkan data real-time ke dalam slide presentasimu!"
+                    "D3 Perjalanan Wisata": "Form pendaftaran tur! Lempar jawabannya otomatis ke Sheets, ubah format halaman Docs jadi tanpa batas (scroll terus), tancapkan ke Web!",
+                    "D3 Seni Kuliner": "Order bahan masuk via Form. Ikat datanya ke buku besar, pasang status 'Selesai' dengan cip dropdown hias, pasang naskah pesanan Javascript!",
+                    "D4 Pengelolaan Perhotelan": "Sistem komplain tamu. Jawaban form terbang ke Sheets, Docs SOP tanpa batas kertas, pasang ekstensi robot pembantu di sidebar!"
                 },
                 questions: [
-                    { text: "Waktu nge-paste grafik dari Excel ke PPT biar format bentuknya nggak berubah, pilih apa?", hint: "K___ S_____ F_________", answer: "KEEP SOURCE FORMATTING" },
-                    { text: "Kalau nge-paste pakai opsi Embed/Picture biasa, apa tabel itu bakal otomatis berubah kalau file aslinya diubah (Ya/Tidak)?", hint: "Pilih Ya atau Tidak.", answer: "TIDAK" },
-                    { text: "Mode liat slide yang bikin semua slidenya jadi kotak-kotak kecil banyak buat diurutin ulang?", hint: "S____ S_____", answer: "SLIDE SORTER" },
-                    { text: "Menu ganti warna/bentuk yang cuma muncul kalau kita ngeklik gambarnya?", hint: "S____ F_____", answer: "SHAPE FORMAT" },
-                    { text: "Layar rahasia pembicara (di laptop) buat nyontek catatan kecil waktu presentasi nyala di proyektor?", hint: "P________ V___", answer: "PRESENTER VIEW" },
-                    { text: "Fitur robot cerdas di PPT yang suka tiba-tiba ngasih saran desain keren buat slidenya?", hint: "Bahasa Inggrisnya Perancang.", answer: "DESIGNER" }
+                    { text: "Membuka segel privasi, mengubah file Cloud jadi halaman URL Web publik?", hint: "Ritual penerbitan. Serahkan ia pada lautan dunia maya penjelajah sarang laba-laba global.", answer: "PUBLISH TO WEB" },
+                    { text: "Ruang bahasa penyihir koding Google (JavaScript) pemanipulasi Cloud?", hint: "Lorong rahasia pembuat jampi-jampi (Skrip) pengendali aplikasi raksasa.", answer: "APPS SCRIPT" },
+                    { text: "Pasar toko tambahan yang mendongkrak kemampuan Google Workspace?", hint: "Lengan robot pasang surut. Tambahan kekuatan lengan (Ekstensi) luar sistem bawaan pabrik.", answer: "EXTENSIONS" },
+                    { text: "Tab penarik tali pusar form langsung ke buku besar Sheets?", hint: "Tali ari-ari pengikat jiwa jawaban. Hubungkan langsung darah daging ini ke lautan sel Spreadsheets.", answer: "LINK TO SHEETS" },
+                    { text: "Format Google Docs terbaru penghancur batas kertas A4 (Scroll abadi)?", hint: "Dunia tanpa batas tepi. Lembaran kulit kayu yang tak pernah dipotong palu mesin (Tanpa Halaman).", answer: "PAGELESS" },
+                    { text: "Tombol oval status (Misal: ToDo/Done) yang bisa diklik ganti warna di Docs?", hint: "Cip kapsul berongga. Diklik akan menjatuhkan diri (Dropdown) mengungkap nasib warna-warni pilihan.", answer: "DROPDOWN" }
                 ]
             },
-            // Levels 13-16: Cloud & AI
+            // LEVEL 13: AI Concepts (Heavy logic)
             {
-                topic: "Cloud Awan", icon: "fa-cloud", color: "orange", isBoss: false,
-                story: {
-                    "D3 Perjalanan Wisata": "Jangan simpan paspor bule di Flashdisk, nanti hilang! Pindahkan ke awan (Cloud) dan share link-nya.",
-                    "D3 Seni Kuliner": "Upload video cara masak yang file-nya bergiga-giga ke Cloud, terus kasih link ke karyawan baru cuma buat ditonton (nggak boleh diedit).",
-                    "D4 Pengelolaan Perhotelan": "Pindahkan semua SOP cetak ke penyimpanan online OneDrive biar bisa diakses manajer dari rumahnya."
-                },
+                topic: "AI: Jantung Mesin", icon: "fa-brain", color: "purple", type: "normal",
+                story: "AI bukan pesulap, tapi mesin hitung kata (LLM). Pahami batas ingatannya, halusinasi bahayanya, dan cara memaksa kepribadiannya dengan Prompt.",
                 questions: [
-                    { text: "Tempat nyimpan file sakti (Cloud) punyanya Mbah Google?", hint: "G_____ D____", answer: "GOOGLE DRIVE" },
-                    { text: "Kalau yang punya Microsoft, namanya apa?", hint: "O_______", answer: "ONEDRIVE" },
-                    { text: "Level keamanan pas nge-share link biar orang cuma bisa ngeliat doang nggak bisa ngotak-ngatik?", hint: "Bahasa Inggris Pelihat.", answer: "VIEWER" },
-                    { text: "Level keamanan biar teman kelompokmu bisa ikut ngetik/hapus di file yang sama?", hint: "Bahasa Inggris Penyunting.", answer: "EDITOR" },
-                    { text: "Level tanggung, cuma bisa nambahin komen atau coretan saran tanpa ngerubah teks aslinya?", hint: "Bahasa Inggris Pemberi Komentar.", answer: "COMMENTER" },
-                    { text: "Setingan link paling pelit, HANYA email tertentu yang dikasih akses yang bisa buka?", hint: "Bahasa Inggris Dibatasi.", answer: "RESTRICTED" }
+                    { text: "Instruksi rahasia tersembunyi yang membentuk karakter AI sejak awal?", hint: "Titah penciptaan sang sistem. Mantra awal pembentuk kepribadian sebelum ia menyapamu.", answer: "SYSTEM PROMPT" },
+                    { text: "Mata uang satuan kata AI. Jika ini habis, memori obrolannya amnesia?", hint: "Kepingan koin ingatan sang mesin. Semakin panjang cerita, semakin cepat koin batasnya terkuras.", answer: "TOKEN" },
+                    { text: "Penyakit di mana AI berbohong ngarang fakta dengan sangat meyakinkan?", hint: "Delusi tingkat tinggi mesin sadar. Berbual mimpi indah di siang bolong sebagai fakta mutlak.", answer: "HALLUCINATION" },
+                    { text: "Teknik melatih AI dengan memberikan 2-3 contoh terlebih dahulu?", hint: "Tembakan beberapa peluru sampel, melempar sedikit remahan pola agar AI belajar gaya mematuknya.", answer: "FEW-SHOT" },
+                    { text: "Memaksa mesin tak terburu-buru: 'Berpikirlah langkah demi langkah'?", hint: "Rantai logam yang mengikat arus deras pemikiran, memaksanya diurai cincin demi cincin.", answer: "CHAIN OF THOUGHT" },
+                    { text: "Singkatan LLM (Mesin raksasa seperti ChatGPT/Gemini)?", hint: "Raksasa penenun bahasa (L... L... M...). Model linguistik berskala masif alam semesta.", answer: "LARGE LANGUAGE MODEL" }
                 ]
             },
+            // LEVEL 14: AI Advanced Tactics
             {
-                topic: "Kolaborasi", icon: "fa-user-group", color: "orange", isBoss: false,
-                story: {
-                    "D3 Perjalanan Wisata": "Kerjain tugas laporan trip bareng-bareng secara Live dari rumah masing-masing pakai Google Docs.",
-                    "D3 Seni Kuliner": "Hitung harga pokok makanan bareng kasir di satu file Google Sheets barengan biar kelar malem ini juga.",
-                    "D4 Pengelolaan Perhotelan": "Bikin jadwal jaga Front Office (Shift) rame-rame se-tim biar nggak ada jadwal jaga yang bentrok ketumpuk."
-                },
+                topic: "AI: Taktik Elite", icon: "fa-microchip", color: "purple", type: "normal",
+                story: "Kamu tidak lagi cuma chat. Atur tingkat 'kesintingan' AI, paksakan tabel format kode murni, dan suruh AI memperbaiki error Excelmu.",
                 questions: [
-                    { text: "Aplikasi ngetik surat (mirip Word) gratisan online dari Google?", hint: "G_____ D___", answer: "GOOGLE DOCS" },
-                    { text: "Aplikasi hitung-hitungan (mirip Excel) online dari Google?", hint: "G_____ S_____", answer: "GOOGLE SHEETS" },
-                    { text: "Istilah gaul buat ngerjain file bareng-bareng di waktu detik itu juga?", hint: "R___-T___", answer: "REAL-TIME" },
-                    { text: "Karakter/simbol yang diketik di kolom komen buat nyolek temen biar dapet email notifikasi?", hint: "Simbol keong email.", answer: "@" },
-                    { text: "Fitur sakti buat balikin file kalau temanmu nggak sengaja ngapus tulisan penting semalam?", hint: "V______ H______", answer: "VERSION HISTORY" },
-                    { text: "Format file angka paling enteng dan polos (biasanya dipisah koma) yang sering dipakai pindah data?", hint: "Tiga huruf: C, S, V.", answer: "CSV" }
+                    { text: "Parameter (0.0 s/d 1.0) penentu seberapa kreatif/liar jawaban AI?", hint: "Termometer kewarasan. Nilai nol ia membeku kaku bagai es, nilai satu ia liar terbakar (Suhu).", answer: "TEMPERATURE" },
+                    { text: "Sistem (3 huruf) AI melacak fakta eksternal dulu sebelum menenun teks?", hint: "Kain lap pengumpul debu fakta. Mencari jurnal nyata, menambah wawasan, baru melahirkan kata.", answer: "RAG" },
+                    { text: "Menuntut AI mengerjakan pola hal baru tanpa contoh sama sekali?", hint: "Tembakan hampa dari pistol kosong. Mengharap keajaiban tanpa memberinya modal remahan peluru pola.", answer: "ZERO-SHOT" },
+                    { text: "Memaksa AI merangkum data menjadi kurung kurawal berlapis (Kode)?", hint: "Format pertukaran data bahasa dewa web berlambang 4 huruf. Favorit peretas penyusun array bersarang.", answer: "JSON" },
+                    { text: "Memaksa AI membuat tabel kasar HANYA dari simbol garis pipa (|) & (-)?", hint: "Kode kasar sang penulis cepat. Menjatuhkan paku-paku simbol tanpa CSS pemoles wajah.", answer: "MARKDOWN" },
+                    { text: "Teknik ngobrol ngotot, terus merevisi jawaban AI sampai sempurna?", hint: "Siklus roda pahatan tak berujung. Kau menuntut, ia menjawab, kau merevisi, ia menambal (Berulang).", answer: "ITERATIVE" }
                 ]
             },
+            // LEVEL 15: STUDI KASUS 5 (AI + Cloud + Office)
             {
-                topic: "AI Cerdas", icon: "fa-robot", color: "orange", isBoss: false,
+                topic: "Studi Kasus 5: Nexus AI", icon: "fa-robot", color: "yellow", type: "case",
                 story: {
-                    "D3 Perjalanan Wisata": "Minta tolong robot AI buatin contoh jadwal tur 3 hari di Bali. Kasih instruksi ke AI-nya biar bahasanya kekinian.",
-                    "D3 Seni Kuliner": "Buntu mau bikin masakan apa? Masukin daftar bahan sisa di kulkas ke AI, minta dibikinin ide resep ala Italia.",
-                    "D4 Pengelolaan Perhotelan": "Ada tamu bule komplain marah-marah via email. Suruh AI buatin draf balasan bahasa Inggris yang super sopan dan profesional."
+                    "D3 Perjalanan Wisata": "Bos Tour marah Excel error. Copy rumusnya, suruh AI basmi serangganya (debug). Sintesis 2 jurnal wisata panjang, awas serangan hacker Prompt!",
+                    "D3 Seni Kuliner": "AI pembuat resep dipanggil ke Google Workspace (Gemini). Olah data teks regex, gabungkan 2 ulasan makanan panjang jadi intisari super ringkas!",
+                    "D4 Pengelolaan Perhotelan": "Suntik AI Copilot ke presentasi Microsoftmu. Pakai prompt perbaikan bug Excel Occupancy, rangkum jurnal perhotelan, waspada injeksi peretas!"
                 },
                 questions: [
-                    { text: "Istilah keren untuk kalimat perintah/instruksi yang kita ketik buat si AI?", hint: "Awalan P.", answer: "PROMPT" },
-                    { text: "Trik ngasih perintah AI dengan nyuruh dia jadi peran tertentu (Contoh: 'Berpura-puralah kamu Chef...')?", hint: "A__ A_", answer: "ACT AS" },
-                    { text: "Nama robot chat AI populer bikinan perusahaan OpenAI?", hint: "Belakangnya GPT.", answer: "CHATGPT" },
-                    { text: "Nama robot chat AI andalan terbaru dari perusahaan Google?", hint: "Nama zodiak.", answer: "GEMINI" },
-                    { text: "Kata sandi bahasa Inggris buat nyuruh AI ngeringkas teks yang kepanjangan?", hint: "S_______", answer: "SUMMARIZE" },
-                    { text: "Istilah buat nada bahasa AI (contoh: Formal, Santai, Emosi)?", hint: "T_N_", answer: "TONE" }
+                    { text: "Nama AI kembar bawaan Google Workspace yang merasuk ke Docs/Sheets?", hint: "Rasi bintang sepasang anak kembar penguasa langit malam, pelayan abadi setia ruang kerjamu.", answer: "GEMINI" },
+                    { text: "Perintah pada AI untuk membersihkan serangga (Error) di rumus kasarmu?", hint: "Membasmi kutu busuk pengunyah logika sistem. Cabut parasitnya dari dahan kodemu.", answer: "DEBUG" },
+                    { text: "Peleburan AI dari 2 jurnal panjang berbeda menjadi satu paragraf benang merah?", hint: "Reaksi kimia pencampuran dua elemen terpisah. Mengolahnya di reaktor pikiran menjadi satu kesatuan baru.", answer: "SYNTHESIS" },
+                    { text: "AI menyuruh mesin mencari pola email pakai kode 5 huruf alien?", hint: "Gunakan AI menerjemahkan otak pengenal pola (Reg...) agar kita tak gila menyusun kode kurung cacingnya.", answer: "REGEX" },
+                    { text: "Nama asisten AI bawaan Microsoft Office 365 (Word/PPT/Excel)?", hint: "Sang asisten penerbang pendamping nakhoda (Pilot), duduk manis di kokpit menunggumu mengetik perintah.", answer: "COPILOT" },
+                    { text: "Serangan Hacker memanipulasi celah teks agar AI melanggar aturannya sendiri?", hint: "Suntikan racun jarum tajam. Memasukkan perintah jahat di dalam perintah baik, memancing mesin berkhianat.", answer: "INJECTION" }
                 ]
             },
+            // LEVEL 16: FINAL BOSS (All Combined)
             {
-                topic: "Final Boss", icon: "fa-crown", color: "red", isBoss: true,
-                story: {
-                    "D3 Perjalanan Wisata": "💥 BOSS TERAKHIR! Ujian kelulusan. Analisa data tur pakai Excel, minta AI rapiin kalimat laporannya, gabungin pakai Word, pindahin ke presentasi PPT awan!",
-                    "D3 Seni Kuliner": "💥 BOSS TERAKHIR! Buka katering sendiri! Kelola stok Excel, generate resep AI, otomatisasi surat penawaran, presentasi di depan investor!",
-                    "D4 Pengelolaan Perhotelan": "💥 BOSS TERAKHIR! Kamu jadi GM! Evaluasi ribuan laporan tamu di Excel, buatin SOP baru dengan AI di Word, presentasi Morph di hadapan Owner!"
-                },
+                topic: "Final Boss: UJIAN MAHA SULIT", icon: "fa-skull", color: "red", type: "boss",
+                story: "Buktikan kamu mahasiswa tingkat Dewa! Selesaikan teka-teki integrasi brutal dari Excel tumpah, filter rahasia, makro gaib, mesin awan tanpa henti!",
                 questions: [
-                    { text: "Kemampuan aplikasi-aplikasi ini buat nyambung satu sama lain disebut bergabung dalam satu E________?", hint: "E K O S I S T E M (Inggris)", answer: "ECOSYSTEM" },
-                    { text: "Bikin sistem komputer jalan otomatis sendiri ngerjain tugas berulang tanpa kita klik-klik manual disebut?", hint: "A U T O M A S I (Inggris)", answer: "AUTOMATION" },
-                    { text: "Semua tugas kampusmu sekarang harus dibackup ke server internet (Cloud), jangan pakai benda fisik apa lagi?", hint: "F L A S H D I S K", answer: "FLASHDISK" },
-                    { text: "Kepanjangan dari robot cerdas buatan AI adalah Artificial I___________?", hint: "I N T E L L I G E N C E", answer: "INTELLIGENCE" },
-                    { text: "Gelar Diploma Tiga yang kamu idam-idamkan bentar lagi?", hint: "A.Md", answer: "A.MD" },
-                    { text: "Sebagai bukti kamu pantes lulus petualangan ini, ketik kode akses ini: SIAP LULUS TECHQUEST", hint: "Ketik sama persis huruf besarnya.", answer: "SIAP LULUS TECHQUEST" }
+                    { text: "Tanda Error Excel (Dinamis) saat ruangan rumusmu tumpah menabrak data lain?", hint: "Jeritan lautan angka yang banjir bandang. Ruangannya disumbat batu, air datanya 'Tumpah' berserakan. (#...!)", answer: "#SPILL!" },
+                    { text: "Filter level Dewa Excel yang tak pakai panah, tapi pakai rentang kriteria luar?", hint: "Saringan penyaring arwah tingkat ahli. Tak perlu mengklik ujung kepala tabel, cukup siapkan altar sesajen kriterianya.", answer: "ADVANCED FILTER" },
+                    { text: "Bahasa gaib setara VBA Macro penggerak otot Google Sheets? (3 Kata)", hint: "Jika Excel punya Visual Basic, si Awan punya mantra pengeksekusi jampi-jampi Aplikasi besutan mesin pencari.", answer: "GOOGLE APPS SCRIPT" },
+                    { text: "Mesin otomasi Microsoft awan penyambung tugas antar aplikasi tanpa coding?", hint: "Tukang pipa mesin uap. Sang Kekuatan pembuat segalanya berjalan Otomatis di langit Windows. (2 kata)", answer: "POWER AUTOMATE" },
+                    { text: "Mata pencerna file raksasa di ChatGPT Plus pemakan CSV penelur grafik?", hint: "Mata tajam penganalisis angka milik OpenAI. Pembedah data mutakhir tingkat lanjut. (3 Kata)", answer: "ADVANCED DATA ANALYSIS" },
+                    { text: "Sandi pamungkas kelulusan (Ketik mutlak bahasa Inggris 6 kata)?", hint: "Sandi Kebanggaan: Saya adalah sang Penguasa dari TechQuest. (Huruf besar semua tanpa tanda kutip)", answer: "I AM THE MASTER OF TECHQUEST" }
                 ]
             }
         ];
 
-        // Handling Logic Login
         document.getElementById('loginForm').addEventListener('submit', (e) => {
             e.preventDefault();
             const email = document.getElementById('emailInput').value.trim();
@@ -679,15 +609,10 @@
 
             document.getElementById('startBtn').classList.add('hidden');
             document.getElementById('loginStatus').classList.remove('hidden');
+            state.email = email; state.prodi = prodi;
 
-            state.email = email;
-            state.prodi = prodi;
-
-            if (isFirebaseReady) {
-                processDashboardLogin();
-            } else {
-                setTimeout(() => { if(!isFirebaseReady) processDashboardLogin(true); }, 2000);
-            }
+            if (isFirebaseReady) { processDashboardLogin(); } 
+            else { setTimeout(() => { if(!isFirebaseReady) processDashboardLogin(true); }, 2000); }
         });
 
         async function processDashboardLogin(useLocal = false) {
@@ -697,246 +622,87 @@
                     const docSnap = await getDoc(docRef);
                     if (docSnap.exists()) { state.currentLevel = docSnap.data().level || 1; } 
                     else { state.currentLevel = 1; await saveProgressToCloud(); }
-                } catch (err) {
-                    console.error("Firestore error, fallback local:", err);
-                    useLocal = true;
-                }
+                } catch (err) { console.error("Firestore fallback", err); useLocal = true; }
             }
             if (useLocal) {
-                const localData = localStorage.getItem(`fun_tq_${state.email}`);
-                if (localData) state.currentLevel = parseInt(localData);
+                const loc = localStorage.getItem(`bq_tq_${state.email}`);
+                if (loc) state.currentLevel = parseInt(loc);
             }
 
-            // Setup UI
             document.getElementById('loginScreen').classList.add('hidden');
-            generateFloatingBackground(); // re-generate with prodi specific icons
+            generateFloatingBackground(); 
             document.getElementById('gameScreen').classList.remove('hidden');
             
-            // Format name nicely
-            const nameParts = state.email.split('@')[0].split(/[._]/);
-            const formatted = nameParts.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
-            
-            document.getElementById('playerName').innerText = formatted;
+            const nameF = state.email.split('@')[0].split(/[._]/).map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
+            document.getElementById('playerName').innerText = nameF;
             document.getElementById('playerProdi').innerText = state.prodi;
             
-            // Set Dynamic Mascot
-            const mascotContainer = document.getElementById('dashboardMascot');
-            if (state.prodi.includes('Wisata')) mascotContainer.innerHTML = `<i class="fa-solid fa-plane-departure text-3xl text-blue-500 animate-bounce"></i>`;
-            else if (state.prodi.includes('Kuliner')) mascotContainer.innerHTML = `<i class="fa-solid fa-utensils text-3xl text-orange-500 animate-wiggle"></i>`;
-            else mascotContainer.innerHTML = `<i class="fa-solid fa-bell-concierge text-3xl text-purple-500 animate-pulse"></i>`;
+            const mascot = document.getElementById('dashboardMascot');
+            if (state.prodi.includes('Wisata')) mascot.innerHTML = `<i class="fa-solid fa-plane-departure text-4xl text-blue-500 animate-pulse"></i>`;
+            else if (state.prodi.includes('Kuliner')) mascot.innerHTML = `<i class="fa-solid fa-fire-burner text-4xl text-orange-500 animate-pulse"></i>`;
+            else mascot.innerHTML = `<i class="fa-solid fa-bell-concierge text-4xl text-purple-500 animate-pulse"></i>`;
             
-            updateLevelCounter();
-            renderMap();
-
+            updateLevelCounter(); renderMap();
             if (state.currentLevel > 16) showCertificate();
         }
 
         async function saveProgressToCloud() {
-            localStorage.setItem(`fun_tq_${state.email}`, state.currentLevel);
+            localStorage.setItem(`bq_tq_${state.email}`, state.currentLevel);
             if (db && currentUserUid) {
                 const ind = document.getElementById('saveIndicator');
                 ind.style.opacity = '1';
                 try {
-                    const docRef = doc(db, 'artifacts', appId, 'users', currentUserUid, 'progress', state.email);
-                    await setDoc(docRef, {
-                        email: state.email, prodi: state.prodi, level: state.currentLevel, lastSync: new Date().toISOString()
-                    });
-                } catch (e) { console.error("Sync Error", e); } 
-                finally { setTimeout(() => { ind.style.opacity = '0'; }, 2000); }
+                    const dRef = doc(db, 'artifacts', appId, 'users', currentUserUid, 'progress', state.email);
+                    await setDoc(dRef, { email: state.email, prodi: state.prodi, level: state.currentLevel, syncAt: new Date().toISOString() });
+                } catch (e) {} finally { setTimeout(() => { ind.style.opacity = '0'; }, 2000); }
             }
         }
 
-        // Render Map Function
+        function generateFloatingBackground() {
+            const container = document.getElementById('floating-bg');
+            container.innerHTML = '';
+            let icons = ['fa-star', 'fa-cloud', 'fa-meteor', 'fa-bolt'];
+            if (state.prodi.includes('Wisata')) icons.push('fa-plane', 'fa-globe', 'fa-passport', 'fa-suitcase-rolling');
+            else if (state.prodi.includes('Kuliner')) icons.push('fa-utensils', 'fa-burger', 'fa-mug-hot', 'fa-bowl-food');
+            else icons.push('fa-bell-concierge', 'fa-bed', 'fa-key', 'fa-door-open');
+
+            const colors = ['text-pink-300', 'text-indigo-300', 'text-yellow-300', 'text-emerald-300', 'text-purple-300'];
+
+            for (let i = 0; i < 25; i++) {
+                const iC = icons[Math.floor(Math.random() * icons.length)];
+                const cC = colors[Math.floor(Math.random() * colors.length)];
+                const el = document.createElement('i');
+                el.className = `fa-solid ${iC} float-icon ${cC} text-3xl md:text-5xl opacity-40`;
+                el.style.left = `${Math.random() * 100}vw`;
+                el.style.animationDuration = `${12 + Math.random() * 20}s`;
+                el.style.animationDelay = `${Math.random() * 8}s`;
+                container.appendChild(el);
+            }
+        }
+
         window.renderMap = function() {
             const container = document.getElementById('levelMap');
             container.innerHTML = '';
 
             curriculum.forEach((lvl, i) => {
-                const indexNum = i + 1;
-                const isUnlocked = indexNum <= state.currentLevel;
-                const isCompleted = indexNum < state.currentLevel;
-                const isCurrent = indexNum === state.currentLevel;
+                const num = i + 1;
+                const isUnlocked = num <= state.currentLevel;
+                const isCompleted = num < state.currentLevel;
+                const isCurrent = num === state.currentLevel;
                 
                 const card = document.createElement('div');
-                let baseClasses = `level-card bg-white p-4 rounded-3xl border-4 flex flex-col items-center justify-center text-center overflow-hidden min-h-[160px] relative `;
+                let css = `level-card bg-white p-5 rounded-3xl border-4 flex flex-col items-center justify-center text-center overflow-hidden min-h-[170px] relative `;
                 
-                if (isUnlocked && lvl.isBoss) {
-                    baseClasses += 'boss-card border-yellow-300 cursor-pointer shadow-lg ';
-                } else if (isUnlocked && !lvl.isBoss) {
-                    const borders = ['border-blue-300', 'border-pink-300', 'border-green-300', 'border-orange-300', 'border-purple-300'];
-                    baseClasses += `${borders[i % borders.length]} cursor-pointer shadow-md `;
-                } else {
-                    baseClasses += 'border-gray-200 bg-gray-50 locked ';
-                }
+                if (isUnlocked && lvl.type === 'boss') css += 'final-boss cursor-pointer shadow-lg border-b-8 ';
+                else if (isUnlocked && lvl.type === 'case') css += 'bg-gradient-to-br from-cyan-50 to-blue-50 border-cyan-300 cursor-pointer shadow-md case-study border-b-8 ';
+                else if (isUnlocked && lvl.type === 'normal') {
+                    const br = ['border-indigo-300', 'border-pink-300', 'border-green-300', 'border-orange-300', 'border-purple-300'];
+                    css += `${br[i % br.length]} cursor-pointer shadow-md border-b-8 `;
+                } else css += 'border-gray-200 bg-gray-50 locked ';
 
-                if (isCurrent) baseClasses += 'ring-4 ring-offset-2 ring-pink-400 animate-[pulse_2s_infinite] ';
-                
-                card.className = baseClasses;
+                if (isCurrent) css += 'ring-4 ring-offset-2 ring-pink-400 ';
+                card.className = css;
                 if (isUnlocked) card.onclick = () => window.openLevel(i);
 
                 let badge = '';
-                if (isCompleted) badge = `<div class="absolute top-2 right-2 bg-green-100 text-green-500 w-8 h-8 rounded-full flex items-center justify-center font-bold border-2 border-green-300 z-10 shadow-sm"><i class="fa-solid fa-check"></i></div>`;
-                else if (isCurrent) badge = `<div class="absolute top-2 right-2 bg-pink-500 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm z-10 animate-bounce">Aktif!</div>`;
-
-                let titleColor = isUnlocked && lvl.isBoss ? 'text-white' : (isUnlocked ? 'text-purple-700' : 'text-gray-400');
-                let subColor = isUnlocked && lvl.isBoss ? 'text-yellow-100' : (isUnlocked ? 'text-pink-500' : 'text-gray-400');
-                let iconColor = isUnlocked && lvl.isBoss ? 'text-yellow-200' : (isUnlocked ? `text-${lvl.color}-400` : 'text-gray-300');
-                
-                card.innerHTML = `
-                    ${badge}
-                    ${isUnlocked && lvl.isBoss ? '<div class="absolute -top-2 left-1/2 transform -translate-x-1/2 text-yellow-300 opacity-50 text-6xl"><i class="fa-solid fa-crown"></i></div>' : ''}
-                    <div class="w-16 h-16 rounded-full bg-white/30 flex items-center justify-center mb-3 border-2 border-white/50 backdrop-blur-sm z-10">
-                        <i class="fa-solid ${isUnlocked ? lvl.icon : 'fa-lock'} text-3xl ${iconColor}"></i>
-                    </div>
-                    <h3 class="font-bubbly font-bold text-lg leading-tight z-10 ${titleColor}">Level ${indexNum}</h3>
-                    <p class="text-xs font-bold uppercase tracking-wider z-10 ${subColor} mt-1">${isUnlocked ? lvl.topic : 'Rahasia'}</p>
-                `;
-                container.appendChild(card);
-            });
-        };
-
-        // Open Quest Level
-        window.openLevel = function(index) {
-            activeLevelIndex = index;
-            const data = curriculum[index];
-            
-            let storyText = typeof data.story === 'object' 
-                ? (data.story[state.prodi] || data.story["D3 Perjalanan Wisata"]) 
-                : data.story;
-
-            document.getElementById('questTitle').innerText = `Level ${index+1} 🚀`;
-            document.getElementById('questTopic').innerText = data.topic;
-            document.getElementById('questStory').innerText = storyText;
-            document.getElementById('questIcon').className = `fa-solid ${data.icon} text-3xl text-pink-500`;
-            document.getElementById('questIconBg').className = `w-16 h-16 bg-pink-50 rounded-2xl flex items-center justify-center shadow-sm border-2 border-pink-200`;
-            document.getElementById('globalError').classList.add('hidden');
-            
-            const btn = document.getElementById('submitQuestBtn');
-            const isCompleted = index < state.currentLevel - 1;
-            
-            if (isCompleted) btn.classList.add('hidden');
-            else {
-                btn.classList.remove('hidden');
-                btn.disabled = false;
-                btn.innerHTML = 'Kirim Jawaban! <i class="fa-solid fa-paper-plane"></i>';
-            }
-
-            const qContainer = document.getElementById('questionsContainer');
-            qContainer.innerHTML = '';
-            
-            data.questions.forEach((q, i) => {
-                const block = document.createElement('div');
-                block.className = `p-4 bg-white rounded-2xl border-4 border-purple-50 shadow-sm relative input-wrapper-${i}`;
-                
-                block.innerHTML = `
-                    <div class="flex justify-between items-start mb-3 gap-2">
-                        <p class="text-xs text-purple-800 font-bold leading-relaxed flex-1"><span class="bg-purple-100 text-purple-600 px-2 py-0.5 rounded mr-1">#${i+1}</span> ${q.text}</p>
-                        <button type="button" onclick="toggleHint(${i})" class="bg-yellow-100 text-yellow-600 hover:bg-yellow-200 rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 transition-transform hover:scale-110 border-2 border-yellow-200" title="Bantuan">
-                            <i class="fa-solid fa-lightbulb text-sm"></i>
-                        </button>
-                    </div>
-                    
-                    <div id="hintText-${i}" class="hidden mb-3 p-2 bg-yellow-50 border-2 border-dashed border-yellow-300 text-xs text-yellow-700 font-bold rounded-xl animate-popIn">
-                        <i class="fa-solid fa-face-smile-wink mr-1"></i> Hint: ${q.hint}
-                    </div>
-
-                    <div class="relative">
-                        <input type="text" id="ans-${i}" ${isCompleted ? 'disabled' : ''} 
-                            class="w-full bg-purple-50 border-2 border-purple-200 focus:border-pink-400 text-purple-900 px-4 py-3 font-bold text-sm uppercase rounded-xl transition outline-none ${isCompleted ? 'bg-green-50 border-green-300 text-green-700' : ''}" 
-                            placeholder="${isCompleted ? 'SELESAI' : 'JAWAB DI SINI...'}">
-                        ${isCompleted ? `<div class="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-500"><i class="fa-solid fa-circle-check text-xl"></i></div>` : ''}
-                    </div>
-                `;
-                qContainer.appendChild(block);
-                if(isCompleted) document.getElementById(`ans-${i}`).value = q.answer;
-            });
-
-            const modal = document.getElementById('questModal');
-            const content = document.getElementById('questModalContent');
-            modal.classList.remove('hidden');
-            
-            content.classList.add('animate-popIn');
-            setTimeout(() => { content.classList.remove('animate-popIn'); }, 500);
-        };
-
-        window.toggleHint = function(index) { document.getElementById(`hintText-${index}`).classList.toggle('hidden'); };
-
-        window.closeModal = function() { document.getElementById('questModal').classList.add('hidden'); };
-
-        window.submitAnswers = async function() {
-            const data = curriculum[activeLevelIndex];
-            let allCorrect = true;
-            const btn = document.getElementById('submitQuestBtn');
-            const globalErr = document.getElementById('globalError');
-            
-            globalErr.classList.add('hidden');
-            
-            for(let i=0; i<6; i++) {
-                const input = document.getElementById(`ans-${i}`);
-                const wrapper = input.closest('div.input-wrapper-' + i);
-                const val = input.value.trim().toUpperCase();
-                const correct = data.questions[i].answer.toUpperCase();
-                
-                if(val === correct) {
-                    input.classList.remove('border-purple-200', 'border-red-400', 'focus:border-pink-400', 'bg-red-50');
-                    input.classList.add('border-green-400', 'text-green-700', 'bg-green-50');
-                } else {
-                    allCorrect = false;
-                    input.classList.remove('border-purple-200', 'border-green-400', 'bg-green-50', 'bg-purple-50');
-                    input.classList.add('border-red-400', 'bg-red-50', 'text-red-700');
-                    wrapper.classList.remove('animate-shake');
-                    void wrapper.offsetWidth; 
-                    wrapper.classList.add('animate-shake');
-                }
-            }
-
-            if (allCorrect) {
-                btn.disabled = true;
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
-                for(let i=0; i<6; i++) document.getElementById(`ans-${i}`).disabled = true;
-                
-                setTimeout(() => {
-                    closeModal();
-                    const quote = funnyQuotes[Math.floor(Math.random() * funnyQuotes.length)];
-                    document.getElementById('quoteText').innerText = quote;
-                    document.getElementById('successQuoteModal').classList.remove('hidden');
-                }, 800);
-            } else { globalErr.classList.remove('hidden'); }
-        };
-
-        window.closeQuoteAndProceed = async function() {
-            document.getElementById('successQuoteModal').classList.add('hidden');
-            if (activeLevelIndex + 1 === state.currentLevel) {
-                state.currentLevel++;
-                await saveProgressToCloud();
-                updateLevelCounter();
-                renderMap();
-                if (state.currentLevel > 16) setTimeout(() => showCertificate(), 600);
-            } else { renderMap(); }
-        }
-
-        function updateLevelCounter() { document.getElementById('levelCounter').innerText = state.currentLevel > 16 ? 16 : state.currentLevel; }
-
-        window.showCertificate = function() {
-            const nameParts = state.email.split('@')[0].split(/[._]/);
-            document.getElementById('certName').innerText = nameParts.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
-            document.getElementById('certProdi').innerText = state.prodi;
-            document.getElementById('certModal').classList.remove('hidden');
-        };
-
-        window.closeCert = function() { document.getElementById('certModal').classList.add('hidden'); };
-
-        window.logout = function() {
-            state = { email: "", prodi: "", currentLevel: 1 };
-            document.getElementById('gameScreen').classList.add('hidden');
-            document.getElementById('loginScreen').classList.remove('hidden');
-            document.getElementById('startBtn').classList.remove('hidden');
-            document.getElementById('loginStatus').classList.add('hidden');
-            document.getElementById('floating-bg').innerHTML = ''; // reset bg
-            generateFloatingBackground();
-        };
-
-        initFirebase();
-    </script>
-</body>
-</html>
+                if (isCompleted) badge
