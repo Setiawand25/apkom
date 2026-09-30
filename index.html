@@ -97,7 +97,7 @@
                     <tr class="bg-gray-100 text-gray-700 uppercase text-xs">
                         <th class="p-4 rounded-tl-xl">Email Mahasiswa</th>
                         <th class="p-4">Program Studi</th>
-                        <th class="p-4">Modul Terakhir</th>
+                        <th class="p-4">Level Terakhir</th>
                         <th class="p-4">Sisa Nyawa / Nilai</th>
                         <th class="p-4">Status</th>
                         <th class="p-4 rounded-tr-xl">Aksi</th>
@@ -176,8 +176,8 @@
                 <button type="button" onclick="closeMateri()" class="text-white hover:text-blue-200 text-2xl"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="p-6 overflow-y-auto flex-1 bg-gray-50">
-                <div class="mb-6"><h4 class="text-lg font-black text-indigo-800 mb-2">Teori & Konsep Industri</h4><div id="materiTeori" class="text-gray-700 bg-indigo-50 p-4 rounded-xl border border-indigo-100 text-sm md:text-base leading-relaxed"></div></div>
-                <div><h4 class="text-lg font-black text-orange-800 mb-2">Instruksi Praktik Langsung</h4><div id="materiInstruksi" class="text-gray-700 bg-orange-50 p-4 rounded-xl border border-orange-100 text-sm md:text-base leading-relaxed"></div></div>
+                <div class="mb-6"><h4 class="text-lg font-black text-indigo-800 mb-2">Teori & Konsep Industri (Kaya & Lengkap)</h4><div id="materiTeori" class="text-gray-700 bg-indigo-50 p-4 rounded-xl border border-indigo-100 text-sm md:text-base leading-relaxed"></div></div>
+                <div><h4 class="text-lg font-black text-orange-800 mb-2">Instruksi Praktik Step-by-Step</h4><div id="materiInstruksi" class="text-gray-700 bg-orange-50 p-4 rounded-xl border border-orange-100 text-sm md:text-base leading-relaxed"></div></div>
             </div>
             <div class="p-4 bg-gray-100 border-t text-center"><button type="button" onclick="closeMateri()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-8 rounded-full shadow-md">TUTUP MATERI</button></div>
         </div>
@@ -255,136 +255,793 @@
             remove: function(key) { try { localStorage.removeItem(key); } catch(e) {} }
         };
 
-        // KONTEN MAPPING SESUAI RPS DAN CPMK DODI SETIAWAN
+        // KURIKULUM 16 LEVEL DENGAN POLA 2 MATERI + 1 KASUS (BERDASARKAN RPS & CPMK M1-M4)
         const curriculum = [
+            // LEVEL 1
             {
-                type: "normal", title: "BK-01: Tren & Keamanan ICT", icon: "fa-shield-halved", color: "blue",
-                story: "Pemahaman terkait Tren Digital, Etika Komputer, Keamanan Data (seperti manifest penumpang laut), dan peran ICT di operasional Biro Perjalanan Wisata.",
+                type: "normal", title: "Modul 1: BK-01 Tren & Keamanan", icon: "fa-shield-halved", color: "blue",
+                story: "Pembahasan mendalam mengenai Tren Digital Pariwisata, Etika Komputer, Keamanan Data Industri (Manifest Penumpang), dan Peran ICT di Biro Perjalanan.",
                 q: [
                     {
-                        materi: "<b>Keamanan Data Industri:</b> Mengunci dokumen penting (seperti manifest asuransi penumpang) dengan kata sandi agar tidak jatuh ke kompetitor.",
-                        instruksi: "<b>Instruksi:</b> Di MS Word/Excel, klik tab File > Info > Protect Document/Workbook, lalu temukan opsi untuk memberi kata sandi.",
-                        q: "Opsi apa yang digunakan untuk mengamankan file dengan kata sandi?", 
-                        hint: "Tiga kata (Inggris). Kata pertama berarti 'menyandikan'. Kata terakhir berarti 'kata sandi'.", 
+                        materi: "<b>Keamanan Data Industri:</b> Biro perjalanan wajib melindungi data pribadi wisatawan (seperti paspor dan manifes kapal feri) agar tidak disalahgunakan. Penguncian dokumen menggunakan sandi (Encryption) adalah standar operasional wajib.",
+                        instruksi: "<b>Instruksi Praktik:</b> Buka dokumen Word/Excel Anda > Klik tab File > Info > Protect Document > Encrypt with Password. Masukkan sandi aman.",
+                        q: "Opsi keamanan apa yang digunakan untuk mengunci file dengan sandi di Microsoft Office?", 
+                        hint: "Tiga kata bahasa Inggris. Berarti 'Menyandikan dengan Kata Sandi'.", 
                         ans: "ENCRYPT WITH PASSWORD"
                     },
                     {
-                        materi: "<b>Etika Komputer:</b> Sebelum mengirim draft kontrak kerja sama ke biro lain, pastikan tidak ada data tersembunyi (hidden text/author name) peninggalan orang lain di file tersebut.",
-                        instruksi: "<b>Instruksi:</b> Di tab File > Info, cari fitur 'Check for Issues', lalu pilih opsi untuk memeriksa keberadaan metadata tersembunyi.",
-                        q: "Apa nama alat untuk membersihkan metadata dokumen?", 
-                        hint: "Dua kata (Inggris). Memiliki arti 'Memeriksa Dokumen'.", 
+                        materi: "<b>Etika Komputer & Metadata:</b> Saat membagikan file proposal tur ke instansi luar, pastikan nama pembuat asli (Author) dan komentar pribadi terhapus bersih agar menjaga kerahasiaan internal perusahaan.",
+                        instruksi: "<b>Instruksi Praktik:</b> Di MS Word, buka File > Info > Check for Issues > Inspect Document untuk membersihkan data tersembunyi.",
+                        q: "Apa nama alat inspeksi untuk memeriksa metadata dan teks tersembunyi pada dokumen?", 
+                        hint: "Dua kata bahasa Inggris (Memeriksa Dokumen).", 
                         ans: "INSPECT DOCUMENT"
                     },
                     {
-                        materi: "<b>Keamanan Data Lanjut:</b> Jika Itinerary (Jadwal Perjalanan) sudah final dan akan diedarkan, kita perlu melindunginya agar staf lain tidak sengaja mengubah isinya (menjadikannya Read-Only permanen).",
-                        instruksi: "<b>Instruksi:</b> Buka File > Info > Protect Document. Cari opsi yang menandakan bahwa dokumen ini adalah versi terakhir.",
-                        q: "Opsi apa yang digunakan untuk mengunci dokumen sebagai versi terakhir?", 
-                        hint: "Tiga kata. Artinya 'Tandai sebagai Final'.", 
+                        materi: "<b>Finalisasi Dokumen:</b> Jika dokumen Itinerary sudah disetujui pimpinan, posisikan file tersebut ke mode 'Read-Only' permanen agar tidak ada staf lain yang tidak sengaja merubah isinya.",
+                        instruksi: "<b>Instruksi Praktik:</b> Buka File > Info > Protect Document > Klik opsi 'Mark as Final' agar dokumen terkunci dari penyuntingan.",
+                        q: "Fitur untuk mengunci dokumen sebagai hasil akhir operasional disebut?", 
+                        hint: "Tiga kata bahasa Inggris (Tandai sebagai Final).", 
                         ans: "MARK AS FINAL"
                     },
                     {
-                        materi: "<b>Peran ICT:</b> Penggunaan Cloud Storage (Google Drive/OneDrive) telah menggantikan flashdisk yang rawan virus, menjamin data wisata aman di awan.",
-                        instruksi: "<b>Instruksi:</b> Cari tahu istilah umum dalam industri IT untuk media penyimpanan berbasis internet milik Google/Microsoft.",
-                        q: "Istilah teknologi penyimpanan data di internet disebut?", 
-                        hint: "Dua kata (Inggris). Penyimpanan Awan.", 
+                        materi: "<b>Peran ICT di Biro Perjalanan:</b> Penyimpanan lokal di flashdisk rentan terkena virus atau hilang. Penggunaan server awan (Cloud) seperti Google Drive menjamin sinkronisasi data wisata real-time.",
+                        instruksi: "<b>Instruksi Praktik:</b> Pahami konsep infrastruktur penyimpanan data berbasis internet yang disediakan oleh penyedia layanan global.",
+                        q: "Istilah teknologi penyimpanan file berbasis internet di awan disebut?", 
+                        hint: "Dua kata (Inggris): Penyimpanan Awan.", 
                         ans: "CLOUD STORAGE"
                     },
                     {
-                        materi: "<b>Tren Digital Distribusi:</b> File Word rentan berubah format jika dibuka di HP wisatawan. Harus selalu di-ekspor ke format dokumen portabel.",
-                        instruksi: "<b>Instruksi:</b> Di tab File > Export, lihat format apa yang paling direkomendasikan untuk dokumen statis.",
-                        q: "Apa 3 huruf singkatan dari Portable Document Format?", 
-                        hint: "Format standar e-book dan dokumen baku.", 
+                        materi: "<b>Format Portabilitas Dokumen:</b> File promosi harus didistribusikan dalam format universal yang tidak berubah bentuk saat dibuka di smartphone wisatawan manapun.",
+                        instruksi: "<b>Instruksi Praktik:</b> Di MS Word, klik File > Export > Create PDF/XPS Document untuk mengunci format tata letak.",
+                        q: "Apa 3 huruf singkatan format dokumen portabel universal?", 
+                        hint: "Format file standar untuk e-book dan brosur digital.", 
                         ans: "PDF"
                     },
                     {
-                        materi: "<b>Etika Modifikasi:</b> Sebuah dokumen yang dikunci dengan 'Mark as Final' akan menampilkan peringatan kuning di bagian atas saat dibuka, memberitahukan statusnya.",
-                        instruksi: "<b>Instruksi:</b> Pahami konsep status perlindungan dokumen yang hanya mengizinkan pembacaan, tanpa penulisan.",
-                        q: "Status file yang hanya bisa dibaca tanpa bisa diubah disebut?", 
-                        hint: "Dua kata. Hanya Baca (dalam bahasa Inggris).", 
+                        materi: "<b>Status Proteksi:</b> Dokumen yang telah ditandai sebagai final akan menampilkan bilah peringatan berwarna kuning di bagian atas jendela kerja.",
+                        instruksi: "<b>Instruksi Praktik:</b> Amati status proteksi file yang mencegah pengetikan lanjutan.",
+                        q: "Status operasional file yang hanya bisa dilihat tanpa hak tulis disebut?", 
+                        hint: "Dua kata bahasa Inggris (Hanya Membaca).", 
                         ans: "READ ONLY"
                     }
                 ]
             },
+            // LEVEL 2
             {
-                type: "normal", title: "BK-02: Page Layout & Style", icon: "fa-file-word", color: "blue",
-                story: "Mencapai M1: Pembuatan Page Layout, Style & Formatting, Mail Merge Dasar, dan struktur Tabel untuk Itinerary wisata multi-hari.",
+                type: "normal", title: "Modul 2: BK-02 Page Layout & Style", icon: "fa-file-word", color: "blue",
+                story: "Mempelajari Page Layout tingkat lanjut, Style & Formatting, Mail Merge Dasar, dan pembuatan struktur tabel untuk Itinerary wisata multi-hari.",
                 q: [
                     {
-                        materi: "<b>Style & Formatting:</b> Judul bab laporan Itinerary wajib menggunakan fitur Style agar daftar isi bisa otomatis tercipta dan rapi.",
-                        instruksi: "<b>Instruksi:</b> Blok teks judul bab. Buka Tab Home, di grup Styles, klik Heading 1. Perhatikan shortcut keyboardnya.",
-                        q: "Apa shortcut keyboard untuk memberikan style Heading tingkat 1?", 
-                        hint: "Tiga tombol: Tahan Control, Alternatif, dan tekan angka pertama.", 
+                        materi: "<b>Style & Formatting:</b> Penulisan laporan perjalanan wisata multi-hari wajib menggunakan Styles (Heading 1) agar navigasi dokumen dan pembuatan daftar isi otomatis berjalan mulus.",
+                        instruksi: "<b>Instruksi Praktik:</b> Blok judul bab Itinerary > Buka Tab Home > Pilih Heading 1 dari panel styles yang tersedia.",
+                        q: "Apa shortcut keyboard instan untuk mengubah teks menjadi Heading 1?", 
+                        hint: "Tiga tombol: Control + Alternatif + Angka Pertama.", 
                         ans: "CTRL+ALT+1"
                     },
                     {
-                        materi: "<b>Page Layout Dasar:</b> Denah situs sejarah Melayu Kepri terkadang membutuhkan kertas yang melebar ke samping.",
-                        instruksi: "<b>Instruksi:</b> Buka tab Layout, klik Orientation, dan pilih mode kertas mendatar.",
-                        q: "Mode orientasi kertas yang melebar ke samping disebut?", 
-                        hint: "Bahasa Inggris dari pemandangan alam memanjang.", 
+                        materi: "<b>Page Layout Lanskap:</b> Penampang denah situs sejarah atau peta rute perjalanan seringkali membutuhkan orientasi kertas melebar ke samping.",
+                        instruksi: "<b>Instruksi Praktik:</b> Buka Tab Layout > Klik Orientation > Pilih Landscape.",
+                        q: "Mode tata letak orientasi kertas mendatar disebut?", 
+                        hint: "Bahasa Inggris untuk pemandangan bentang alam.", 
                         ans: "LANDSCAPE"
                     },
                     {
-                        materi: "<b>Tabel untuk Itinerary:</b> Itinerary disusun dalam bentuk tabel jam, kegiatan, dan keterangan destinasi alam/bahari.",
-                        instruksi: "<b>Instruksi:</b> Buka tab Insert. Temukan menu untuk menyisipkan sekumpulan baris dan kolom.",
-                        q: "Fitur di Word untuk menyisipkan kolom dan baris disebut?", 
-                        hint: "Bahasa Inggris dari Tabel.", 
+                        materi: "<b>Tabel Itinerary:</b> Rincian waktu kegiatan wisatawan (pagi, siang, malam) disusun secara terstruktur menggunakan grid baris dan kolom.",
+                        instruksi: "<b>Instruksi Praktik:</b> Buka Tab Insert > Pilih Table > Tentukan jumlah kolom dan baris jadwal kegiatan.",
+                        q: "Fitur di Word untuk menyisipkan struktur baris dan kolom disebut?", 
+                        hint: "Bahasa Inggris dari kata 'Tabel'.", 
                         ans: "TABLE"
                     },
                     {
-                        materi: "<b>Pemisah Bagian Kertas:</b> Agar halaman 1 Portrait (berdiri) dan halaman 2 Landscape (mendatar) dalam satu file, gunakan pemutus format.",
-                        instruksi: "<b>Instruksi:</b> Tab Layout > Breaks. Temukan Section Break yang berfungsi melempar bagian baru ke halaman selanjutnya.",
-                        q: "Jenis Section Break apa yang memutus format ke halaman berikutnya?", 
-                        hint: "Dua kata. 'Halaman Selanjutnya' dalam bahasa Inggris.", 
+                        materi: "<b>Section Break Layout:</b> Untuk menggabungkan halaman Portrait dan Landscape dalam satu dokumen Word yang sama, diperlukan pemisah bagian.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab Layout > Breaks > Pilih Next Page untuk memutus format halaman.",
+                        q: "Jenis Section Break apa yang memulai bagian baru di lembar berikutnya?", 
+                        hint: "Dua kata bahasa Inggris (Halaman Berikutnya).", 
                         ans: "NEXT PAGE"
                     },
                     {
-                        materi: "<b>Mail Merge Dasar:</b> Persiapan awal membuat tagihan massal untuk biro perjalanan adalah menghubungkan Word dengan data Excel.",
-                        instruksi: "<b>Instruksi:</b> Buka Tab Mailings. Temukan ikon Start Mail Merge, atau langsung klik tombol dengan ikon dua orang.",
-                        q: "Nama tombol (ikon dua orang) untuk memilih Excel penerima surat?", 
-                        hint: "Pilih Penerima (dalam bahasa Inggris).", 
+                        materi: "<b>Mail Merge Dasar:</b> Menghubungkan template surat konfirmasi pesanan di Word dengan lembar data pelanggan di Excel.",
+                        instruksi: "<b>Instruksi Praktik:</b> Buka Tab Mailings > Klik Select Recipients > Use an Existing List.",
+                        q: "Tombol Mailings untuk mengambil sumber data dari Excel disebut?", 
+                        hint: "Bahasa Inggris (Memilih Penerima).", 
                         ans: "SELECT RECIPIENTS"
                     },
                     {
-                        materi: "<b>Margin Itinerary:</b> Mengatur jarak batas tepi kertas agar tabel jadwal tidak terpotong saat dicetak.",
-                        instruksi: "<b>Instruksi:</b> Buka tab Layout. Klik tombol paling kiri untuk mengatur batas tepi.",
-                        q: "Menu untuk mengatur batas tepi ruang kosong kertas disebut?", 
-                        hint: "Bahasa Inggris dari garis tepi / margin.", 
+                        materi: "<b>Pengaturan Margin:</b> Mengatur jarak batas tepi dokumen agar hasil cetak proposal tidak terpotong oleh mesin printer.",
+                        instruksi: "<b>Instruksi Praktik:</b> Buka Tab Layout > Klik Margins > Pilih ukuran Normal atau Custom.",
+                        q: "Menu untuk mengatur batas ruang kosong tepi kertas disebut?", 
+                        hint: "Bahasa Inggris dari garis batas / margin.", 
                         ans: "MARGINS"
+                    }
+                ]
+            },
+            // LEVEL 3 (KASUS 1 - CPMK M1)
+            {
+                type: "case", title: "Modul 3: KASUS 1 (CPMK M1)", icon: "fa-briefcase", color: "pink",
+                story: "CPMK M1: Mampu mengoperasikan perangkat lunak perkantoran Word untuk pengolahan dokumen operasional biro perjalanan wisata berbasis destinasi nature, marine, dan culture.",
+                q: [
+                    {
+                        materi: "<b>Studi Kasus M1 - Dokumen Alam (Nature):</b> Menyusun proposal ekowisata hutan mangrove di Bintan menggunakan format Section Break dan Heading terstruktur.",
+                        instruksi: "<b>Instruksi Praktik:</b> Buat dokumen proposal mangrove, terapkan Heading 1 pada judul dan orientasi Landscape pada peta lokasi.",
+                        q: "Sandi konfirmasi penyelesaian Kasus M1 dokumen nature:", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Studi Kasus M1 - Dokumen Bahari (Marine):</b> Membuat manifest penumpang speedboat wisata bahari pulau dengan menyisipkan tabel rapi dan Watermark 'CONFIDENTIAL'.",
+                        instruksi: "<b>Instruksi Praktik:</b> Buat tabel manifest dan pasang watermark teks rahasia di tab Design.",
+                        q: "Sandi konfirmasi dokumen marine:", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Studi Kasus M1 - Dokumen Budaya (Culture):</b> Menyusun panduan wisata budaya istana Melayu dengan Mail Merge dasar undangan VIP.",
+                        instruksi: "<b>Instruksi Praktik:</b> Hubungkan surat undangan budaya dengan data tamu di Excel.",
+                        q: "Sandi konfirmasi dokumen culture:", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Validasi Struktur Layout:</b> Memastikan dokumen operasional M1 bersih dari kesalahan format sebelum diserahkan ke manajer.",
+                        instruksi: "<b>Instruksi Praktik:</b> Periksa kembali nomor halaman dan daftar isi otomatis.",
+                        q: "Sandi validasi layout:", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Keamanan Berkas M1:</b> Mengenkripsi dokumen operasional wisata dengan password pengaman.",
+                        instruksi: "<b>Instruksi Praktik:</b> Terapkan Protect Document pada file Word studi kasus.",
+                        q: "Sandi validasi keamanan:", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Finalisasi CPMK M1:</b> Ekspor seluruh dokumen operasional ke format PDF standar industri.",
+                        instruksi: "<b>Instruksi Praktik:</b> Lakukan Export ke PDF.",
+                        q: "Sandi kelulusan Modul 3 (M1):", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    }
+                ]
+            },
+            // LEVEL 4
+            {
+                type: "normal", title: "Modul 4: BK-03 Mail Merge Lanjut", icon: "fa-envelope-open-text", color: "blue",
+                story: "Mempelajari Mail Merge lanjutan, pengelolaan Header & Footer, Page Numbering profesional, dan sistem referensi dokumen tur.",
+                q: [
+                    {
+                        materi: "<b>Mail Merge Lanjut:</b> Menggunakan aturan logika IF-THEN di dalam surat penawaran massal berdasarkan kategori pelanggan (VIP vs Regular).",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab Mailings > Rules > If...Then...Else untuk menyisipkan teks diskon otomatis.",
+                        q: "Apa nama tombol logika bersyarat di tab Mailings?", 
+                        hint: "Bahasa Inggris dari kata 'Aturan-aturan'.", 
+                        ans: "RULES"
+                    },
+                    {
+                        materi: "<b>Header & Footer:</b> Menyematkan kop surat resmi biro perjalanan di bagian atas (Header) dan catatan kaki di bagian bawah (Footer).",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab Insert > Header / Footer > Pilih format desain profesional.",
+                        q: "Area margin atas dokumen untuk menyematkan kop surat disebut?", 
+                        hint: "Bahasa Inggris dari 'Kepala'.", 
+                        ans: "HEADER"
+                    },
+                    {
+                        materi: "<b>Page Numbering:</b> Memberikan nomor halaman dinamis dengan format Romawi untuk halaman pengantar dan angka biasa untuk isi.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab Insert > Page Number > Format Page Numbers.",
+                        q: "Fitur untuk memberikan nomor halaman otomatis disebut?", 
+                        hint: "Dua kata bahasa Inggris (Nomor Halaman).", 
+                        ans: "PAGE NUMBER"
+                    },
+                    {
+                        materi: "<b>Referensi Dokumen:</b> Menyisipkan sumber pustaka atau kutipan peraturan pariwisata resmi pada lampiran proposal.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab References > Insert Citation > Add New Source.",
+                        q: "Tab menu di Word untuk menyisipkan kutipan dan daftar pustaka adalah?", 
+                        hint: "Bahasa Inggris dari 'Referensi'.", 
+                        ans: "REFERENCES"
+                    },
+                    {
+                        materi: "<b>Pratinjau Gabungan:</b> Meneliti hasil penggabungan Mail Merge sebelum dicetak secara massal.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab Mailings > Klik ikon Kaca Pembesar untuk melihat data asli berganti.",
+                        q: "Nama tombol berlogo kaca pembesar untuk melihat hasil Mail Merge?", 
+                        hint: "Dua kata bahasa Inggris (Pratinjau Hasil).", 
+                        ans: "PREVIEW RESULTS"
+                    },
+                    {
+                        materi: "<b>Penyelesaian Merge:</b> Mengubah hasil Mail Merge menjadi file dokumen terpisah yang siap disunting.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab Mailings > Finish & Merge > Edit Individual Documents.",
+                        q: "Opsi teratas pada tombol Finish & Merge untuk memecah dokumen?", 
+                        hint: "Tiga kata bahasa Inggris (Edit Dokumen Individu).", 
+                        ans: "EDIT INDIVIDUAL DOCUMENTS"
+                    }
+                ]
+            },
+            // LEVEL 5
+            {
+                type: "normal", title: "Modul 5: BK-04 Advanced Editing", icon: "fa-chart-bar", color: "blue",
+                story: "Mempelajari Advanced Editing, penyisipan Grafik analisis dalam Word, serta pemanfaatan Reviewing Tools untuk kerja tim divisi.",
+                q: [
+                    {
+                        materi: "<b>Grafik dalam Word:</b> Menyisipkan diagram batang atau lingkaran ke dalam laporan proposal untuk menampilkan tren kunjungan wisatawan mancanegara.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab Insert > Chart > Pilih Column atau Pie Chart sesuai kebutuhan data.",
+                        q: "Fitur di Word untuk menyisipkan diagram visual data disebut?", 
+                        hint: "Bahasa Inggris dari Grafik / Diagram.", 
+                        ans: "CHART"
+                    },
+                    {
+                        materi: "<b>Reviewing Tools (Track Changes):</b> Mengaktifkan pelacakan perubahan naskah saat manajer mengoreksi draf proposal tur buatan staf.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab Review > Track Changes > Aktifkan agar setiap ketikan baru diberi tanda warna.",
+                        q: "Nama fitur di tab Review untuk melacak koreksi suntingan teks?", 
+                        hint: "Dua kata bahasa Inggris (Lacak Perubahan).", 
+                        ans: "TRACK CHANGES"
+                    },
+                    {
+                        materi: "<b>Komentar Divisi:</b> Memberikan catatan tempel (Comment) digital di margin dokumen tanpa merusak isi teks utama.",
+                        instruksi: "<b>Instruksi Praktik:</b> Blok teks target > Tab Review > New Comment.",
+                        q: "Fitur catatan koreksi di margin dokumen disebut?", 
+                        hint: "Bahasa Inggris dari 'Komentar'.", 
+                        ans: "COMMENT"
+                    },
+                    {
+                        materi: "<b>Menyetujui Koreksi:</b> Menerima atau menolak hasil revisi suntingan dari tim penguji dokumen.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab Review > Gunakan tombol Accept atau Reject.",
+                        q: "Tombol di tab Review untuk menyetujui koreksi teks naskah?", 
+                        hint: "Bahasa Inggris dari 'Menerima'.", 
+                        ans: "ACCEPT"
+                    },
+                    {
+                        materi: "<b>Navigasi Heading Pane:</b> Membuka panel samping penjelajah dokumen untuk melompat antar bab secara instan.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab View > Centang Navigation Pane.",
+                        q: "Panel sisi kiri untuk navigasi cepat dokumen berbasis Heading disebut?", 
+                        hint: "Dua kata bahasa Inggris (Panel Navigasi).", 
+                        ans: "NAVIGATION PANE"
+                    },
+                    {
+                        materi: "<b>Pemeriksaan Ejaan:</b> Menggunakan alat pemeriksa tata bahasa otomatis untuk mencegah salah ketik (typo) pada brosur.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab Review > Spelling & Grammar.",
+                        q: "Alat pemeriksa ejaan dan tata bahasa otomatis disebut?", 
+                        hint: "Dua kata bahasa Inggris (Ejaan dan Tata Bahasa).", 
+                        ans: "SPELLING AND GRAMMAR"
+                    }
+                ]
+            },
+            // LEVEL 6 (KASUS 2 - CPMK M4)
+            {
+                type: "case", title: "Modul 6: KASUS 2 (CPMK M4)", icon: "fa-cloud-arrow-up", color: "pink",
+                story: "CPMK M4: Mampu mengelola arsip digital dokumen perjalanan (manifest penumpang kapal feri, voucher hotel kepulauan, asuransi bahari) dengan sistem cloud storage yang aman dan tertib.",
+                q: [
+                    {
+                        materi: "<b>Studi Kasus M4 - Arsip Manifest Feri:</b> Mengunggah dan menata struktur folder manifest penyeberangan di Cloud Storage dengan sistem penamaan kode file standar.",
+                        instruksi: "<b>Instruksi Praktik:</b> Buat folder arsip di Google Drive, unggah data manifest format PDF.",
+                        q: "Sandi konfirmasi folder manifest cloud:", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Studi Kasus M4 - Voucher Hotel Kepulauan:</b> Mengatur hak akses tautan (Sharing Permission) arsip voucher agar staf front office hanya bisa melihat (Viewer) tanpa bisa menghapus.",
+                        instruksi: "<b>Instruksi Praktik:</b> Atur share link Google Drive menjadi Restricted / Viewer only.",
+                        q: "Sandi konfirmasi hak akses cloud:", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Studi Kasus M4 - Asuransi Bahari:</b> Melakukan sinkronisasi pencadangan (Backup) otomatis dokumen penting agen travel ke penyimpanan awan.",
+                        instruksi: "<b>Instruksi Praktik:</b> Simpan master arsip polis asuransi ke folder cloud terenkripsi.",
+                        q: "Sandi konfirmasi backup asuransi:", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Manajemen Versi Arsip:</b> Melacak riwayat revisi dokumen manifest yang diperbarui secara kolaboratif.",
+                        instruksi: "<b>Instruksi Praktik:</b> Periksa Version History file di Google Drive.",
+                        q: "Sandi validasi versi file:", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Keamanan Tautan Arsip:</b> Menerapkan masa kedaluwarsa akses bagi voucher digital tamu yang telah selesai tur.",
+                        instruksi: "<b>Instruksi Praktik:</b> Kelola batasan waktu tautan berbagi file cloud.",
+                        q: "Sandi validasi keamanan tautan:", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Finalisasi CPMK M4:</b> Seluruh arsip digital operasional tur tertib tersimpan di Cloud.",
+                        instruksi: "<b>Instruksi Praktik:</b> Pastikan struktur folder cloud rapi dan siap dilaporkan ke dosen.",
+                        q: "Sandi kelulusan Modul 6 (M4):", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    }
+                ]
+            },
+            // LEVEL 7
+            {
+                type: "normal", title: "Modul 7: BK-05 Cell Referencing", icon: "fa-table", color: "blue",
+                story: "Mempelajari dasar Spreadsheet Excel meliputi Cell Referencing (Absolute vs Relative), Basic Formulas (+, -, *, /), dan Formatting Cells untuk kalkulasi.",
+                q: [
+                    {
+                        materi: "<b>Cell Referencing (Referensi Sel):</b> Memahami perbedaan alamat sel relatif (A1) dan alamat sel absolut ($A$1) agar rumus tidak berantakan saat disalin ke baris lain.",
+                        instruksi: "<b>Instruksi Praktik:</b> Di Excel, ketik rumus lalu tekan tombol F4 untuk mengunci sel secara mutlak.",
+                        q: "Simbol apa yang digunakan untuk membuat referensi sel menjadi absolut (kunci mati)?", 
+                        hint: "Simbol mata uang dollar ($).", 
+                        ans: "$"
+                    },
+                    {
+                        materi: "<b>Basic Formulas:</b> Melakukan perhitungan matematika dasar untuk menghitung total biaya sewa bus pariwisata (Penjumlahan, Pengurangan, Perkalian, Pembagian).",
+                        instruksi: "<b>Instruksi Praktik:</b> Selalu awali rumus Excel dengan tanda khusus sebelum mengetik operator hitung.",
+                        q: "Simbol apa yang wajib diketik pertama kali sebelum menulis rumus di Excel?", 
+                        hint: "Tanda persamaan (=).", 
+                        ans: "="
+                    },
+                    {
+                        materi: "<b>Formatting Cells:</b> Mengatur format angka pada lembar kerja agar tampil sebagai mata uang Rupiah (Rp) atau persentase (%) pajak tur.",
+                        instruksi: "<b>Instruksi Praktik:</b> Klik kanan sel > Format Cells > Pilih Currency atau Percentage.",
+                        q: "Menu di Excel untuk mengubah tampilan angka menjadi format mata uang disebut?", 
+                        hint: "Bahasa Inggris dari Format Sel.", 
+                        ans: "FORMAT CELLS"
+                    },
+                    {
+                        materi: "<b>Operator Perkalian:</b> Mengalikan jumlah peserta dengan harga tiket masuk objek wisata menggunakan simbol bintang.",
+                        instruksi: "<b>Instruksi Praktik:</b> Ketik <code>=A1*B1</code> pada sel hasil kalkulasi.",
+                        q: "Simbol operator matematika apa di Excel yang digunakan untuk perkalian?", 
+                        hint: "Simbol bintang (*).", 
+                        ans: "*"
+                    },
+                    {
+                        materi: "<b>Operator Pembagian:</b> Membagi total biaya operasional dengan jumlah total peserta tur.",
+                        instruksi: "<b>Instruksi Praktik:</b> Ketik <code>=A1/B1</code> pada sel target.",
+                        q: "Simbol operator matematika apa di Excel yang digunakan untuk pembagian?", 
+                        hint: "Garis miring / slash (/).", 
+                        ans: "/"
+                    },
+                    {
+                        materi: "<b>AutoSum (Penjumlahan Cepat):</b> Menjumlahkan seluruh kolom rincian biaya pengeluaran hotel secara instan.",
+                        instruksi: "<b>Instruksi Praktik:</b> Klik tombol Sigma (∑) di tab Home grup Editing.",
+                        q: "Nama fungsi otomatis berikon huruf Yunani Sigma untuk menjumlahkan angka:", 
+                        hint: "Bahasa Inggris dari Jumlah / Total.", 
+                        ans: "SUM"
+                    }
+                ]
+            },
+            // LEVEL 8
+            {
+                type: "normal", title: "Modul 8: BK-06 VLOOKUP & Validasi", icon: "fa-magnifying-glass", color: "blue",
+                story: "Mempelajari fungsi pencarian lanjutan VLOOKUP, SUMIF, COUNTIF, serta Data Validation untuk mengontrol input data spreadsheet.",
+                q: [
+                    {
+                        materi: "<b>Fungsi VLOOKUP:</b> Menarik data harga kamar hotel atau tarif sewa bus secara otomatis dari tabel master terpisah berdasarkan kode referensi.",
+                        instruksi: "<b>Instruksi Praktik:</b> Ketik <code>=VLOOKUP(lookup_value, table_array, col_index_num, FALSE)</code> di sel target.",
+                        q: "Fungsi Excel untuk mencari data secara vertikal dari tabel referensi adalah?", 
+                        hint: "Awalan huruf V diikuti kata lookup.", 
+                        ans: "VLOOKUP"
+                    },
+                    {
+                        materi: "<b>Fungsi SUMIF:</b> Menjumlahkan total pendapatan paket tur khusus dari kategori destinasi nature tertentu saja.",
+                        instruksi: "<b>Instruksi Praktik:</b> Ketik <code>=SUMIF(range, criteria, [sum_range])</code>.",
+                        q: "Fungsi Excel untuk menjumlahkan data berdasarkan kriteria tertentu disebut?", 
+                        hint: "SUM ditambah kata IF.", 
+                        ans: "SUMIF"
+                    },
+                    {
+                        materi: "<b>Fungsi COUNTIF:</b> Menghitung jumlah berapa kali destinasi bahari tertentu dipilih oleh rombongan wisatawan.",
+                        instruksi: "<b>Instruksi Praktik:</b> Ketik <code>=COUNTIF(range, criteria)</code>.",
+                        q: "Fungsi Excel untuk menghitung jumlah sel yang memenuhi kriteria tertentu?", 
+                        hint: "COUNT ditambah kata IF.", 
+                        ans: "COUNTIF"
+                    },
+                    {
+                        materi: "<b>Data Validation:</b> Membatasi input sel di Excel agar staf hanya bisa memilih pilihan paket tur dari daftar drop-down yang sah.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab Data > Data Validation > Allow: List > Masukkan sumber data.",
+                        q: "Fitur Excel untuk membatasi jenis input data pada sel disebut?", 
+                        hint: "Dua kata bahasa Inggris (Validasi Data).", 
+                        ans: "DATA VALIDATION"
+                    },
+                    {
+                        materi: "<b>Pencocokan Persis (Exact Match):</b> Parameter terakhir pada rumus VLOOKUP agar data yang ditarik harus sama persis tanpa toleransi.",
+                        instruksi: "<b>Instruksi Praktik:</b> Ketik nilai <code>FALSE</code> atau <code>0</code> pada argumen terakhir VLOOKUP.",
+                        q: "Kata kunci argumen keempat VLOOKUP untuk pencocokan persis adalah?", 
+                        hint: "Lawan kata dari TRUE.", 
+                        ans: "FALSE"
+                    },
+                    {
+                        materi: "<b>Pemberian Nama Rentang (Named Range):</b> Menamai sekumpulan sel tabel referensi agar rumus VLOOKUP lebih mudah dibaca.",
+                        instruksi: "<b>Instruksi Praktik:</b> Blok tabel > Ketik nama di Name Box sebelah kiri formula bar.",
+                        q: "Kotak penama rentang sel di pojok kiri atas Excel disebut?", 
+                        hint: "Dua kata bahasa Inggris (Kotak Nama).", 
+                        ans: "NAME BOX"
+                    }
+                ]
+            },
+            // LEVEL 9 (KASUS 3 - CPMK M2)
+            {
+                type: "case", title: "Modul 9: KASUS 3 (CPMK M2)", icon: "fa-file-invoice-dollar", color: "pink",
+                story: "CPMK M2 (Tahap 1): Mampu menyusun lembar kerja tabulasi biaya tur (tour costing spreadsheet) menjelajah pesisir, kepulauan, dan situs sejarah Melayu Kepri secara terstruktur.",
+                q: [
+                    {
+                        materi: "<b>Studi Kasus M2 - Tour Costing Spreadsheet:</b> Menyusun rincian anggaran biaya operasional tur 3 hari 2 malam di Bintan menggunakan rumus SUM dan perkalian sel.",
+                        instruksi: "<b>Instruksi Praktik:</b> Buat tabel biaya transport, hotel, dan guide; hitung total dengan formula Excel.",
+                        q: "Sandi konfirmasi lembar Tour Costing:", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Studi Kasus M2 - Tabel Master VLOOKUP:</b> Menautkan tabel harga hotel pulau Penyengat secara otomatis menggunakan fungsi VLOOKUP.",
+                        instruksi: "<b>Instruksi Praktik:</b> Buat sheet master harga hotel dan tarik datanya ke sheet penawaran.",
+                        q: "Sandi konfirmasi VLOOKUP costing:", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Studi Kasus M2 - Validasi Paket Melayu:</b> Menerapkan Data Validation agar input pilihan destinasi sejarah Melayu Kepri tidak salah ketik.",
+                        instruksi: "<b>Instruksi Praktik:</b> Pasang menu drop-down pilihan destinasi pada sheet Excel.",
+                        q: "Sandi konfirmasi validasi tur:", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Kalkulasi SUMIF Pendapatan:</b> Menghitung total omset khusus dari paket wisata bahari pulau.",
+                        instruksi: "<b>Instruksi Praktik:</b> Terapkan rumus SUMIF pada rekapitulasi penjualan tur.",
+                        q: "Sandi validasi SUMIF:", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Format Keuangan Rupiah:</b> Merapikan seluruh sel angka anggaran tur menjadi format mata uang Indonesia.",
+                        instruksi: "<b>Instruksi Praktik:</b> Terapkan format Currency Rp pada tabel costing.",
+                        q: "Sandi validasi format uang:", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Finalisasi CPMK M2 (Tahap 1):</b> Lembar kerja Tour Costing Kepri selesai dan siap diuji.",
+                        instruksi: "<b>Instruksi Praktik:</b> Periksa kelayakan rumus Excel dan simpan file.",
+                        q: "Sandi kelulusan Modul 9 (M2-1):", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    }
+                ]
+            },
+            // LEVEL 10
+            {
+                type: "normal", title: "Modul 10: BK-07 Kondisional & Gantt", icon: "fa-chart-gantt", color: "blue",
+                story: "Mempelajari Kondisional Formatting untuk peringatan otomatis, pengelolaan Time Series Data, dan pembuatan Gantt Chart jadwal tur.",
+                q: [
+                    {
+                        materi: "<b>Conditional Formatting:</b> Membuat sel di Excel berubah warna otomatis (misal: Merah jika kuota peserta melebihi kapasitas bus).",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab Home > Conditional Formatting > Highlight Cells Rules > Greater Than.",
+                        q: "Fitur Excel untuk mewarnai sel secara otomatis berdasarkan kondisi tertentu disebut?", 
+                        hint: "Dua kata bahasa Inggris (Pemformatan Bersyarat).", 
+                        ans: "CONDITIONAL FORMATTING"
+                    },
+                    {
+                        materi: "<b>Gantt Chart Sederhana:</b> Menyusun diagram batang horizontal di Excel untuk memvisualisasikan linimasa jadwal kegiatan tur dari pagi hingga malam.",
+                        instruksi: "<b>Instruksi Praktik:</b> Gunakan jenis Stacked Bar Chart untuk membuat diagram jadwal kegiatan.",
+                        q: "Jenis grafik batang horizontal di Excel untuk jadwal linimasa proyek/tur disebut?", 
+                        hint: "Nama penemu diagram balok linimasa (Gantt Chart).", 
+                        ans: "GANTT CHART"
+                    },
+                    {
+                        materi: "<b>Time Series Data:</b> Mengorganisir data deret waktu kunjungan wisatawan bulanan untuk melihat tren musiman pariwisata.",
+                        instruksi: "<b>Instruksi Praktik:</b> Susun tanggal secara berurutan ke bawah pada kolom A, lalu buat Line Chart.",
+                        q: "Jenis grafik garis untuk menganalisis data deret waktu (tren bulanan) disebut?", 
+                        hint: "Bahasa Inggris dari Grafik Garis.", 
+                        ans: "LINE CHART"
+                    },
+                    {
+                        materi: "<b>Highlight Sel Kosong:</b> Menggunakan Conditional Formatting untuk menandai sel jadwal yang belum terisi staf.",
+                        instruksi: "<b>Instruksi Praktik:</b> Conditional Formatting > Highlight Cells Rules > Blanks.",
+                        q: "Aturan format bersyarat untuk mendeteksi sel tanpa isi disebut?", 
+                        hint: "Bahasa Inggris dari 'Kosong'.", 
+                        ans: "BLANKS"
+                    },
+                    {
+                        materi: "<b>Format Tanggal Excel:</b> Mengatur sel agar menampilkan hari, tanggal, dan bulan secara konsisten.",
+                        instruksi: "<b>Instruksi Praktik:</b> Format Cells > Date > Pilih format lokal Indonesia/Internasional.",
+                        q: "Kategori format sel di Excel untuk data hari dan tanggal adalah?", 
+                        hint: "Bahasa Inggris dari Tanggal.", 
+                        ans: "DATE"
+                    },
+                    {
+                        materi: "<b>Skala Batang Diagram:</b> Menyesuaikan rentang sumbu horizontal pada grafik jadwal kegiatan tur.",
+                        instruksi: "<b>Instruksi Praktik:</b> Klik kanan sumbu grafik > Format Axis.",
+                        q: "Menu pengaturan garis sumbu pada grafik Excel disebut?", 
+                        hint: "Bahasa Inggris dari Sumbu Grafik.", 
+                        ans: "FORMAT AXIS"
+                    }
+                ]
+            },
+            // LEVEL 11
+            {
+                type: "normal", title: "Modul 11: BK-08 Goal Seek & Analisis", icon: "fa-bullseye", color: "blue",
+                story: "Mempelajari simulasi bisnis pariwisata menggunakan Goal Seek, Scenario Manager, dan Grafik Analisis Break-Even Point (BEP).",
+                q: [
+                    {
+                        materi: "<b>Goal Seek (Analisis Target):</b> Menghitung berapa jumlah minimal peserta tur yang harus ikut agar target keuntungan biro perjalanan tercapai.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab Data > What-If Analysis > Goal Seek > Set cell, To value, By changing cell.",
+                        q: "Fitur simulasi Excel untuk mencari target nilai tertentu dengan membalik rumus disebut?", 
+                        hint: "Dua kata bahasa Inggris (Cari Tujuan).", 
+                        ans: "GOAL SEEK"
+                    },
+                    {
+                        materi: "<b>Scenario Manager:</b> Membandingkan skenario anggaran keuangan tur (Skenario Optimis, Normal, dan Pesimis) dalam satu tabel.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab Data > What-If Analysis > Scenario Manager > Add skenario.",
+                        q: "Fitur Excel untuk mengelola berbagai variasi asumsi data keuangan disebut?", 
+                        hint: "Dua kata bahasa Inggris (Manajer Skenario).", 
+                        ans: "SCENARIO MANAGER"
+                    },
+                    {
+                        materi: "<b>Grafik Analisis (Column Chart):</b> Memvisualisasikan perbandingan pendapatan kotor dan pengeluaran bersih biro perjalanan.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab Insert > Column Chart untuk membandingkan angka multi-kategori.",
+                        q: "Jenis grafik kolom tegak untuk perbandingan data finansial disebut?", 
+                        hint: "Bahasa Inggris dari Kolom / Batang Tegak.", 
+                        ans: "COLUMN CHART"
+                    },
+                    {
+                        materi: "<b>Analisis What-If:</b> Menu utama di Excel yang menaungi alat simulasi lanjutan seperti Goal Seek dan Scenario Manager.",
+                        instruksi: "<b>Instruksi Praktik:</b> Buka Tab Data, temukan grup alat perkiraan data di sebelah kanan.",
+                        q: "Nama grup menu simulasi di tab Data yang berisi Goal Seek disebut?", 
+                        hint: "Analisis 'Bagaimana-Jika' dalam bahasa Inggris.", 
+                        ans: "WHAT-IF ANALYSIS"
+                    },
+                    {
+                        materi: "<b>Titik Impas (BEP):</b> Kondisi di mana total biaya operasional tur sama persis dengan total pendapatan tiket.",
+                        instruksi: "<b>Instruksi Praktik:</b> Pahami konsep laba nol menggunakan simulasi Goal Seek.",
+                        q: "Singkatan 3 huruf untuk Titik Impas (pendapatan sama dengan modal) dalam bisnis adalah?", 
+                        hint: "Break-Even Point.", 
+                        ans: "BEP"
+                    },
+                    {
+                        materi: "<b>Label Data Grafik:</b> Menampilkan angka nominal rupiah secara langsung di atas batang grafik analisis.",
+                        instruksi: "<b>Instruksi Praktik:</b> Klik tanda (+) di sebelah grafik Excel > Centang Data Labels.",
+                        q: "Fitur grafik untuk menampilkan angka nilai secara langsung pada batang diagram disebut?", 
+                        hint: "Dua kata bahasa Inggris (Label Data).", 
+                        ans: "DATA LABELS"
+                    }
+                ]
+            },
+            // LEVEL 12 (KASUS 4 - CPMK M2 LANJUT)
+            {
+                type: "case", title: "Modul 12: KASUS 4 (CPMK M2 Lanjut)", icon: "fa-calendar-days", color: "pink",
+                story: "CPMK M2 (Tahap 2): Mampu menyelesaikan jadwal perjalanan wisata multi-hari (Gantt Chart Itinerary) penjelajahan pesisir, kepulauan, dan situs sejarah Melayu Kepri.",
+                q: [
+                    {
+                        materi: "<b>Studi Kasus M2 - Gantt Chart Itinerary Kepri:</b> Menyusun jadwal rinci multi-hari penjelajahan situs sejarah pulau Penyengat dan pesisir Bintan menggunakan grafik linimasa.",
+                        instruksi: "<b>Instruksi Praktik:</b> Buat tabel waktu kegiatan tur Kepri, ubah menjadi diagram Gantt chart di Excel.",
+                        q: "Sandi konfirmasi Gantt chart Kepri:", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Studi Kasus M2 - Conditional Alert Jadwal:</b> Menerapkan warna otomatis pada sel kegiatan tur yang melewati batas waktu operasional.",
+                        instruksi: "<b>Instruksi Praktik:</b> Pasang Conditional Formatting pada kolom durasi jadwal.",
+                        q: "Sandi konfirmasi alert jadwal:", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Studi Kasus M2 - Simulasi Goal Seek Biaya:</b> Menghitung penyesuaian harga tiket agar paket tur sejarah Melayu mencapai target laba bersih.",
+                        instruksi: "<b>Instruksi Praktik:</b> Gunakan Goal Seek untuk menetapkan margin profit tur.",
+                        q: "Sandi konfirmasi Goal Seek tur:", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Analisis Time Series Kunjungan:</b> Memetakan grafik tren kunjungan wisatawan musiman ke Kepri.",
+                        instruksi: "<b>Instruksi Praktik:</b> Buat Line Chart kunjungan bulanan pariwisata.",
+                        q: "Sandi validasi time series:", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Manajemen Skenario Paket Tur:</b> Membandingkan skenario anggaran normal vs pesimis pada spreadsheet.",
+                        instruksi: "<b>Instruksi Praktik:</b> Terapkan Scenario Manager untuk variasi biaya sewa kapal.",
+                        q: "Sandi validasi skenario:", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Finalisasi CPMK M2 (Tahap 2):</b> Seluruh lembar kerja tabulasi biaya dan jadwal multi-hari Kepri tuntas.",
+                        instruksi: "<b>Instruksi Praktik:</b> Verifikasi keakuratan rumus spreadsheet tur.",
+                        q: "Sandi kelulusan Modul 12 (M2-2):", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    }
+                ]
+            },
+            // LEVEL 13
+            {
+                type: "normal", title: "Modul 13: BK-09 Slide Master & Animasi", icon: "fa-desktop", color: "blue",
+                story: "Mempelajari manajemen Slide Master presentasi, pengaturan Transisi slide, dan Animasi objek visual daya tarik wisata.",
+                q: [
+                    {
+                        materi: "<b>Slide Master:</b> Mengatur kerangka dasar presentasi PowerPoint (posisi logo biro dan jenis font seragam) agar tidak bergeser di semua halaman slide.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab View > Slide Master > Edit tata letak utama template perusahaan.",
+                        q: "Fitur PowerPoint untuk mengedit kerangka master layout presentasi secara global disebut?", 
+                        hint: "Dua kata bahasa Inggris (Master Slide).", 
+                        ans: "SLIDE MASTER"
+                    },
+                    {
+                        materi: "<b>Transisi Slide (Transitions):</b> Memberikan efek perpindahan visual yang halus antar slide saat presentasi promosi destinasi wisata diputar.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab Transitions > Pilih efek animasi perpindahan halaman (misal: Morph atau Fade).",
+                        q: "Tab menu di PowerPoint untuk mengatur efek pergantian antar slide disebut?", 
+                        hint: "Bahasa Inggris dari Transisi.", 
+                        ans: "TRANSITIONS"
+                    },
+                    {
+                        materi: "<b>Animasi Objek Wisata (Animations):</b> Membuat teks judul dan foto destinasi alam/bahari muncul bergerak masuk secara estetik di layar.",
+                        instruksi: "<b>Instruksi Praktik:</b> Klik objek gambar > Tab Animations > Pilih efek Entrance (misal: Fly In).",
+                        q: "Tab menu di PowerPoint untuk memberi gerakan pada objek teks atau foto disebut?", 
+                        hint: "Bahasa Inggris dari Animasi.", 
+                        ans: "ANIMATIONS"
+                    },
+                    {
+                        materi: "<b>Durasi Waktu Animasi:</b> Mengatur kecepatan tempo kemunculan objek agar selaras dengan narasi pemandu wisata.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab Animations > Atur kotak Duration menjadi 1.50 seconds.",
+                        q: "Kotak pengaturan kecepatan tempo gerakan animasi di tab Animations disebut?", 
+                        hint: "Bahasa Inggris dari Durasi waktu.", 
+                        ans: "DURATION"
+                    },
+                    {
+                        materi: "<b>Duplikasi Slide Cepat:</b> Memperbanyak slide presentasi secara instan menggunakan kombinasi tombol pintas keyboard.",
+                        instruksi: "<b>Instruksi Praktik:</b> Pilih slide di panel kiri > Tekan CTRL + D.",
+                        q: "Shortcut keyboard untuk menduplikasi slide presentasi secara cepat adalah?", 
+                        hint: "CTRL + Huruf D (Duplicate).", 
+                        ans: "CTRL+D"
+                    },
+                    {
+                        materi: "<b>Format Widescreen:</b> Menyesuaikan rasio ukuran layar presentasi modern berukuran 16:9 untuk proyektor LCD.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab Design > Slide Size > Widescreen (16:9).",
+                        q: "Rasio ukuran standar layar presentasi modern di proyektor saat ini adalah?", 
+                        hint: "Angka rasio 16 berbanding 9.", 
+                        ans: "16:9"
+                    }
+                ]
+            },
+            // LEVEL 14
+            {
+                type: "normal", title: "Modul 14: BK-10 Layout Grafis & Warna", icon: "fa-palette", color: "blue",
+                story: "Mempelajari prinsip layout grafis dasar, pemilihan tipografi font yang profesional, dan teori komposisi warna visual promosi tur.",
+                q: [
+                    {
+                        materi: "<b>Layout Grafis Dasar:</b> Menyusun tata letak elemen visual (poster promosi wisata) menggunakan prinsip keseimbangan (balance) dan hirarki visual.",
+                        instruksi: "<b>Instruksi Praktik:</b> Posisikan elemen utama (foto pantai) sebagai titik fokus (focal point) di sepertiga bagian atas.",
+                        q: "Prinsip desain tata letak untuk mengarahkan pandangan mata audiens disebut?", 
+                        hint: "Dua kata bahasa Inggris (Hirarki Visual).", 
+                        ans: "VISUAL HIERARCHY"
+                    },
+                    {
+                        materi: "<b>Pemilihan Font (Tipografi):</b> Menghindari penggunaan font yang terlalu rumit; memilih jenis font bersih (sans-serif) untuk kemudahan membaca teks brosur.",
+                        instruksi: "<b>Instruksi Praktik:</b> Gunakan font standar profesional seperti Arial, Calibri, atau Montserrat.",
+                        q: "Kelompok jenis huruf tanpa sirip yang bersih dan mudah dibaca di layar disebut?", 
+                        hint: "Istilah Sans-Serif.", 
+                        ans: "SANS-SERIF"
+                    },
+                    {
+                        materi: "<b>Komposisi Warna Visual:</b> Menggunakan psikologi warna bahari (biru laut dan hijau Toska) untuk membangkitkan suasana relaksasi wisata pantai.",
+                        instruksi: "<b>Instruksi Praktik:</b> Batasi palet warna desain maksimal 3 warna utama agar tidak terlihat mencolok.",
+                        q: "Ilmu padu padan keselarasan warna dalam desain visual disebut skema?", 
+                        hint: "Bahasa Inggris dari Skema Warna.", 
+                        ans: "COLOR SCHEME"
+                    },
+                    {
+                        materi: "<b>Kontras Warna Teks:</b> Memastikan warna huruf teks (misal putih) sangat kontras dengan warna latar belakang gelap agar mudah terbaca.",
+                        instruksi: "<b>Instruksi Praktik:</b> Periksa tingkat keterbacaan (readability) teks pada poster.",
+                        q: "Tingkat perbedaan ketajaman antara teks dan latar belakang disebut?", 
+                        hint: "Bahasa Inggris dari Kontras.", 
+                        ans: "CONTRAST"
+                    },
+                    {
+                        materi: "<b>Ruang Kosong (Negative Space):</b> Memberikan area kosong di sekeliling teks agar desain brosur tidak terlihat sesak dan sumpek.",
+                        instruksi: "<b>Instruksi Praktik:</b> Sisakan jarak aman (padding) pada tepi bingkai brosur.",
+                        q: "Istilah desain untuk area kosong lapang di sekitar objek visual adalah?", 
+                        hint: "Dua kata bahasa Inggris (Ruang Negatif).", 
+                        ans: "NEGATIVE SPACE"
+                    },
+                    {
+                        materi: "<b>Penyelarasan Objek (Alignment):</b> Merapikan posisi teks agar rata kiri-kanan atau sejajar presisi menggunakan alat bantu grid.",
+                        instruksi: "<b>Instruksi Praktik:</b> Gunakan fitur Align Objects pada aplikasi desain.",
+                        q: "Fitur untuk menyejajarkan posisi objek grafis agar rapi presisi disebut?", 
+                        hint: "Bahasa Inggris dari Perataan (Align).", 
+                        ans: "ALIGN"
+                    }
+                ]
+            },
+            // LEVEL 15 (KASUS 5 - CPMK M3)
+            {
+                type: "case", title: "Modul 15: KASUS 5 (CPMK M3)", icon: "fa-images", color: "pink",
+                story: "CPMK M3: Mampu mendesain materi presentasi digital dan brosur visual promosi daya tarik wisata alam (nature), bahari (marine), dan budaya lokal (culture) menggunakan aplikasi grafis dasar.",
+                q: [
+                    {
+                        materi: "<b>Studi Kasus M3 - Desain Presentasi Alam (Nature):</b> Mendesain slide presentasi ekowisata hutan hujan tropis menerapkan Slide Master, transisi halus, dan skema warna hijau alami.",
+                        instruksi: "<b>Instruksi Praktik:</b> Buat 3 slide presentasi alam dengan tipografi Sans-serif dan animasi Fly In.",
+                        q: "Sandi konfirmasi presentasi nature:", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Studi Kasus M3 - Brosur Visual Bahari (Marine):</b> Merancang tata letak brosur promosi snorkeling pulau terluar Kepri menggunakan komposisi warna biru bahari dan hirarki visual yang kuat.",
+                        instruksi: "<b>Instruksi Praktik:</b> Atur layout brosur marine dengan negative space yang lapang.",
+                        q: "Sandi konfirmasi brosur marine:", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Studi Kasus M3 - Promosi Budaya (Culture):</b> Menyusun materi visual pementasan tarian tradisional Melayu dengan pemilihan font elegan dan kontras teks optimal.",
+                        instruksi: "<b>Instruksi Praktik:</b> Buat slide budaya lokal dengan palet warna khas kesenian daerah.",
+                        q: "Sandi konfirmasi promosi culture:", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Validasi Slide Master M3:</b> Memastikan seluruh slide presentasi promosi pariwisata memiliki konsistensi logo biro.",
+                        instruksi: "<b>Instruksi Praktik:</b> Periksa konsistensi Slide Master presentasi.",
+                        q: "Sandi validasi Master Slide:", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Eksekusi Finishing Desain:</b> Menyimpan seluruh materi promosi digital ke format resolusi tinggi siap cetak/tayang.",
+                        instruksi: "<b>Instruksi Praktik:</b> Ekspor presentasi dan brosur visual ke format digital.",
+                        q: "Sandi validasi finishing grafis:", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Finalisasi CPMK M3:</b> Portofolio desain materi promosi pariwisata M3 tuntas dan memenuhi standar estetika.",
+                        instruksi: "<b>Instruksi Praktik:</b> Kumpulkan hasil karya desain grafis pariwisata.",
+                        q: "Sandi kelulusan Modul 15 (M3):", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    }
+                ]
+            },
+            // LEVEL 16 (FINAL BOSS - CPL-7)
+            {
+                type: "boss", title: "Modul 16: FINAL BOSS (CPL-7)", icon: "fa-crown", color: "purple",
+                story: "Ujian Akhir Komprehensif (CPL-7): Integrasi penuh pengoperasian Word, Excel, PowerPoint, dan Cloud untuk operasional digital Biro Perjalanan Wisata.",
+                q: [
+                    {
+                        materi: "<b>Ujian Integrasi M1 (Word Operasional):</b> Menyusun dokumen kontrak kerja sama dan manifest penumpang kapal feri secara profesional dengan enkripsi keamanan.",
+                        instruksi: "<b>Instruksi Praktik:</b> Selesaikan validasi akhir dokumen Word perkantoran biro.",
+                        q: "Sandi otorisasi ujian Word:", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Ujian Integrasi M2 (Excel Costing & Jadwal):</b> Menghitung rincian anggaran biaya tur dan linimasa Gantt Chart perjalanan multi-hari Kepri tanpa selisih hitung.",
+                        instruksi: "<b>Instruksi Praktik:</b> Verifikasi keakuratan rumus spreadsheet anggaran tur.",
+                        q: "Sandi otorisasi ujian Excel:", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Ujian Integrasi M3 (PPT & Desain Promosi):</b> Menampilkan hasil karya presentasi digital visual daya tarik wisata alam dan budaya kepada dewan penguji.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tayangkan slide presentasi master promosi wisata.",
+                        q: "Sandi otorisasi ujian PPT:", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Ujian Integrasi M4 (Cloud Storage & Arsip):</b> Membuktikan tata kelola arsip digital voucher dan asuransi bahari tersimpan rapi di Cloud dengan hak akses aman.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tunjukkan tautan arsip cloud kepada sistem.",
+                        q: "Sandi otorisasi ujian Cloud:", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Standar Kompetensi CPL-7:</b> Mahasiswa dinyatakan menguasai seluruh kecakapan teknologi informasi perkantoran untuk industri pariwisata modern.",
+                        instruksi: "<b>Instruksi Praktik:</b> Validasi akhir seluruh rangkaian praktikum semester.",
+                        q: "Sandi verifikasi standar CPL-7:", 
+                        hint: "Ketik kata LULUS", 
+                        ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Grand Final Kelulusan:</b> Sistem menghitung sisa nyawa Anda sebagai predikat nilai akhir pada Sertifikat Kelulusan Utama.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tekan tombol kirim jawaban terakhir untuk mencetak Sertifikat Kelulusan Cumlaude.",
+                        q: "Ketik kalimat pamungkas: SAYA SIAP LULUS", 
+                        hint: "SAYA SIAP LULUS", 
+                        ans: "SAYA SIAP LULUS"
                     }
                 ]
             }
         ];
-
-        // MAPPING BK-03 hingga BK-10 dan CPMK M1 - M4 (Levels 3 - 16)
-        const advancedTopics = [
-            { t: "KASUS 1: Dokumen Operasional (M1)", i: "fa-briefcase", type: "case", st: "CPMK M1: Merancang dokumen operasional biro (nature, marine, culture) secara tertib." },
-            { t: "BK-03: Mail Merge Lanjut", i: "fa-envelope-open-text", type: "normal", st: "Mail Merge lanjutan, Page Numbering, Header/Footer, dan Referensi dokumen tur." },
-            { t: "BK-04: Advanced Editing & Grafik", i: "fa-chart-bar", type: "normal", st: "Menyisipkan Grafik dalam Word dan penggunaan Reviewing Tools antar divisi." },
-            { t: "KASUS 2: Arsip Digital Cloud (M4)", i: "fa-cloud-arrow-up", type: "case", st: "CPMK M4: Mengelola arsip digital (manifest & voucher hotel) via Cloud Storage yang aman." },
-            { t: "BK-05: Cell Referencing", i: "fa-table", type: "normal", st: "Cell Referencing, Basic Formulas (+,-,*,/), dan Formatting Cells untuk kalkulasi awal." },
-            { t: "BK-06: VLOOKUP & Data Validation", i: "fa-magnifying-glass", type: "normal", st: "Penggunaan VLOOKUP, SUMIF, COUNTIF, dan Validasi Data untuk otomasi Excel." },
-            { t: "KASUS 3: Tour Costing (M2)", i: "fa-file-invoice-dollar", type: "case", st: "CPMK M2: Menyusun lembar kerja tabulasi biaya (Tour Costing) wisata Kepri." },
-            { t: "BK-07: Kondisional & Gantt Chart", i: "fa-chart-gantt", type: "normal", st: "Penerapan Kondisional Formatting, Time series data, dan Gantt Chart jadwal tur." },
-            { t: "BK-08: Goal Seek & Scenario", i: "fa-bullseye", type: "normal", st: "Analisis Target BEP Biaya Tur menggunakan Goal Seek, Scenario Manager, dan Grafik." },
-            { t: "KASUS 4: Analisis Jadwal (M2 Lanjut)", i: "fa-calendar-days", type: "case", st: "CPMK M2: Menyelesaikan jadwal perjalanan wisata multi-hari penjelajahan pesisir Melayu." },
-            { t: "BK-09: Slide Master & Animasi", i: "fa-desktop", type: "normal", st: "Manajemen Slide Master, Transisi, dan Animasi objek wisata untuk presentasi digital." },
-            { t: "BK-10: Layout Grafis & Warna", i: "fa-palette", type: "normal", st: "Penguasaan layout grafis dasar, pemilihan font, dan komposisi warna visual." },
-            { t: "KASUS 5: Desain Promosi (M3)", i: "fa-images", type: "case", st: "CPMK M3: Mendesain presentasi digital & brosur promosi daya tarik wisata alam/budaya." },
-            { t: "FINAL BOSS: Integrasi CPL-7", i: "fa-crown", type: "boss", st: "Ujian Akhir: Evaluasi integrasi Word, Excel, PPT, dan Cloud untuk operasional Biro Perjalanan." }
-        ];
-
-        advancedTopics.forEach((config, i) => {
-            let color = config.type === 'boss' ? 'purple' : (config.type === 'case' ? 'pink' : 'blue');
-            curriculum.push({
-                type: config.type, title: config.t, icon: config.i, color: color,
-                story: config.st,
-                q: Array.from({length: 6}).map((_, qIndex) => ({
-                    materi: `<b>Materi Modul ${config.t}:</b> Sesuai dengan Rencana Pembelajaran Semester (RPS), topik ini ditargetkan untuk melengkapi kompetensi operasional digital biro Anda.`,
-                    instruksi: `<b>Langkah Analisis:</b> Silakan buka aplikasi Office terkait (Word/Excel/PPT/Cloud) dan uji fitur yang dipelajari pada tatap muka ini.`,
-                    q: `Sebagai bukti pemahaman Anda pada CPMK pertemuan ini, ketik sandi otorisasi.`, hint: "Ketik kata LULUS", ans: "LULUS"
-                }))
-            });
-        });
 
         let currentUser = "";
         let currentProdi = "";
