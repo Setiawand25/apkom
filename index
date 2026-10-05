@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechQuest: LMS Multi-Prodi Terpadu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;800&family=Nunito:wght@400;700&display=swap');
+        
+        body { font-family: 'Nunito', sans-serif; background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%); color: #2d3748; min-height: 100vh; overflow-x: hidden; }
+        h1, h2, h3, .bubbly-font { font-family: 'Baloo 2', cursive; }
+        
+        .bubbly-card { background: rgba(255, 255, 255, 0.95); border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.1), inset 0 -4px 0 rgba(0,0,0,0.05); border: 3px solid #fff; transition: transform 0.2s, box-shadow 0.2s; }
+        .bubbly-button { border-radius: 999px; box-shadow: 0 6px 0 rgba(0,0,0,0.15); transition: all 0.1s; }
+        .bubbly-button:active { transform: translateY(6px); box-shadow: 0 0 0 rgba(0,0,0,0.15); }
+        .btn-disabled { filter: grayscale(100%); cursor: not-allowed !important; opacity: 0.6; pointer-events: none; }
+        
+        .level-card { cursor: pointer; }
+        .level-card:hover:not(.locked) { transform: translateY(-8px) scale(1.02); }
+        .locked { filter: grayscale(100%); opacity: 0.6; cursor: not-allowed; }
+        .boss-level { border: 4px solid #f6e05e; background: linear-gradient(to bottom right, #fff, #fefcbf); }
+        .case-study { border: 4px solid #f687b3; background: linear-gradient(to bottom right, #fff, #fed7e2); }
+
+        @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 80% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+        .animate-pop { animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes float { 0% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-20px) rotate(10deg); } 100% { transform: translateY(0px) rotate(0deg); } }
+        .bg-shape { animation: float 6s ease-in-out infinite; opacity: 0.4; position: absolute; }
+
+        .cert-bg { background: #fff; border: 12px solid #2b6cb0; outline: 4px solid #ecc94b; outline-offset: -16px; position: relative; }
+        .signature-line { border-top: 2px solid #2d3748; width: 250px; margin: 0 auto; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <!-- Latar Belakang -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <i class="fa-solid fa-plane text-6xl text-white bg-shape" style="top: 10%; left: 10%; animation-delay: 0s;"></i>
+        <i class="fa-solid fa-utensils text-6xl text-white bg-shape" style="top: 70%; left: 15%; animation-delay: 1s;"></i>
+        <i class="fa-solid fa-laptop-code text-8xl text-white bg-shape" style="bottom: 10%; right: 20%; animation-delay: 3s;"></i>
+    </div>
+
+    <!-- LOGIN SCREEN -->
+    <div id="loginScreen" class="max-w-md mx-auto bubbly-card p-8 mt-10 animate-pop relative z-10">
+        <div class="text-center mb-6">
+            <div class="inline-block p-4 bg-blue-100 rounded-full mb-4">
+                <i class="fa-solid fa-graduation-cap text-5xl text-blue-500"></i>
+            </div>
+            <h1 class="text-4xl text-blue-600 font-extrabold tracking-wide drop-shadow-sm">TechQuest</h1>
+            <p class="text-gray-500 font-bold mt-1">Sistem Praktikum Terpadu (CPL-7)</p>
+        </div>
+        
+        <div class="space-y-5">
+            <div>
+                <label class="block font-bold text-gray-700 mb-2">Email Mahasiswa</label>
+                <input type="email" id="emailInput" class="w-full border-2 border-gray-300 rounded-xl p-3 focus:border-blue-500 outline-none" placeholder="nama@mahasiswa.edu">
+            </div>
+            <div>
+                <label class="block font-bold text-gray-700 mb-2">Program Studi</label>
+                <select id="prodiInput" class="w-full border-2 border-gray-300 rounded-xl p-3 focus:border-blue-500 outline-none">
+                    <option value="D3 Perjalanan Wisata">D3 Perjalanan Wisata</option>
+                    <option value="D3 Seni Kuliner">D3 Seni Kuliner</option>
+                    <option value="D4 Pengelolaan Perhotelan">D4 Pengelolaan Perhotelan</option>
+                </select>
+            </div>
+            <button type="button" onclick="handleLogin()" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold text-lg py-4 bubbly-button mt-4 cursor-pointer">MULAI BELAJAR</button>
+            
+            <div class="text-center pt-4 border-t border-gray-200 mt-4">
+                <button type="button" onclick="openDosenLogin()" class="text-sm font-bold text-gray-500 hover:text-blue-600 transition"><i class="fa-solid fa-chalkboard-user mr-1"></i> Masuk Area Dosen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DOSEN DASHBOARD SCREEN -->
+    <div id="dosenScreen" class="hidden max-w-6xl mx-auto flex flex-col gap-6 relative z-10">
+        <div class="bubbly-card p-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-4">
+                <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-500 text-3xl">
+                    <i class="fa-solid fa-chalkboard-user"></i>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800">Dashboard Kaprodi / Dosen</h2>
+                    <p class="text-indigo-600 font-bold">Pemantauan Progres & Nyawa Mahasiswa</p>
+                </div>
+            </div>
+            <button type="button" onclick="logoutDosen()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded-full text-sm"><i class="fa-solid fa-arrow-left"></i> Kembali ke Login</button>
+        </div>
+
+        <div class="bubbly-card p-6 bg-white overflow-x-auto">
+            <div class="mb-4 flex justify-between items-center">
+                <p class="text-sm text-red-500 font-bold italic"><i class="fa-solid fa-triangle-exclamation"></i> Versi Prototype Lokal.</p>
+                <button onclick="renderDosenTable()" class="bg-blue-100 text-blue-700 px-4 py-2 rounded font-bold text-sm hover:bg-blue-200"><i class="fa-solid fa-rotate-right"></i> Refresh Data</button>
+            </div>
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gray-100 text-gray-700 uppercase text-xs">
+                        <th class="p-4 rounded-tl-xl">Email Mahasiswa</th>
+                        <th class="p-4">Program Studi</th>
+                        <th class="p-4">Level Terakhir</th>
+                        <th class="p-4">Sisa Nyawa / Nilai</th>
+                        <th class="p-4">Status</th>
+                        <th class="p-4 rounded-tr-xl">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="studentTableBody" class="text-gray-700 text-sm">
+                    <!-- Diisi lewat JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- MAIN STUDENT DASHBOARD -->
+    <div id="gameScreen" class="hidden max-w-6xl mx-auto flex flex-col gap-6 relative z-10">
+        <div class="bubbly-card p-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-4">
+                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-blue-500 text-3xl">
+                    <i class="fa-solid fa-user-astronaut"></i>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800" id="playerName">Player Name</h2>
+                    <p class="text-blue-600 font-bold" id="playerProdi">Prodi</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4 md:gap-8">
+                <div class="text-center bg-red-50 px-4 py-2 rounded-xl border-2 border-red-100">
+                    <p class="text-xs font-bold text-red-500 uppercase">Sisa Nyawa</p>
+                    <p class="text-3xl font-extrabold bubbly-font text-red-600"><i class="fa-solid fa-heart animate-pulse"></i> <span id="livesCounter">100</span></p>
+                </div>
+                <div class="text-center">
+                    <p class="text-xs font-bold text-gray-500 uppercase">Progress</p>
+                    <p class="text-3xl font-extrabold bubbly-font text-purple-600"><span id="levelCounter">1</span> / 16</p>
+                </div>
+                <button type="button" onclick="logout()" class="bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-4 bubbly-button text-xs"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
+            </div>
+        </div>
+
+        <div id="levelMap" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pb-10">
+            <!-- Level cards di-generate Javascript -->
+        </div>
+    </div>
+
+    <!-- QUEST MODAL -->
+    <div id="questModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-70 backdrop-blur-sm flex items-center justify-center p-4 z-40">
+        <div class="bubbly-card w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden relative">
+            <div class="bg-blue-500 p-5 flex justify-between items-center text-white">
+                <div><span id="questBadge" class="bg-yellow-400 text-yellow-900 text-xs font-black px-3 py-1 rounded-full uppercase mb-1 inline-block">Modul Praktik</span><h3 id="questTitle" class="text-2xl font-bold bubbly-font">Misi #1</h3></div>
+                <button type="button" onclick="closeModal()" class="text-white hover:text-gray-200 text-3xl"><i class="fa-solid fa-circle-xmark"></i></button>
+            </div>
+            <div class="p-6 overflow-y-auto bg-slate-50 flex-1 relative">
+                <div class="bg-white p-5 rounded-xl border-2 border-blue-100 mb-6">
+                    <h4 class="font-bold text-blue-800 mb-2"><i class="fa-solid fa-compass"></i> Skenario Industri / CPMK:</h4><p id="questStory" class="text-gray-700 text-sm font-semibold"></p>
+                </div>
+                
+                <div class="text-sm font-bold text-red-600 mb-6 bg-red-50 p-4 rounded-lg border border-red-200 shadow-sm flex items-start gap-3">
+                    <i class="fa-solid fa-heart-crack text-2xl animate-pulse"></i> 
+                    <p><b>PERINGATAN:</b> Kamu hanya punya 100 Nyawa (Skor Akhir). Setiap kamu memvalidasi dan ada jawaban yang salah, <b>nyawamu akan dikurangi!</b> Hati-hati dan periksa sebelum submit.</p>
+                </div>
+
+                <div id="questionsContainer" class="space-y-6"></div>
+                <div id="errorMessage" class="hidden mt-6 bg-red-100 border-2 border-red-400 text-red-700 p-4 rounded-xl font-bold text-center"><i class="fa-solid fa-bomb"></i> WADUH! Ada jawaban salah. Nyawamu berkurang!</div>
+            </div>
+            <div class="bg-gray-100 p-5 border-t border-gray-200 flex justify-end" id="submitBtnContainer">
+                <button id="submitBtn" type="button" onclick="checkAllAnswers()" class="bg-green-500 hover:bg-green-600 text-white font-black text-lg py-3 px-8 bubbly-button">VALIDASI JAWABAN <i class="fa-solid fa-paper-plane ml-2"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MATERI POPUP -->
+    <div id="materiModal" class="hidden fixed inset-0 bg-black bg-opacity-60 backdrop-blur-md flex items-center justify-center p-4 z-50">
+        <div class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden border-4 border-blue-400 flex flex-col max-h-[85vh]">
+            <div class="bg-gradient-to-r from-blue-600 to-blue-400 p-5 flex justify-between items-center">
+                <h3 id="materiTitle" class="text-xl font-bold text-white"><i class="fa-solid fa-book-open mr-2"></i> Topik Pembelajaran RPS</h3>
+                <button type="button" onclick="closeMateri()" class="text-white hover:text-blue-200 text-2xl"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-6 overflow-y-auto flex-1 bg-gray-50">
+                <div class="mb-6"><h4 class="text-lg font-black text-indigo-800 mb-2">Teori & Konsep Industri</h4><div id="materiTeori" class="text-gray-700 bg-indigo-50 p-4 rounded-xl border border-indigo-100 text-sm md:text-base leading-relaxed"></div></div>
+                <div><h4 class="text-lg font-black text-orange-800 mb-2">Instruksi Praktik Step-by-Step</h4><div id="materiInstruksi" class="text-gray-700 bg-orange-50 p-4 rounded-xl border border-orange-100 text-sm md:text-base leading-relaxed"></div></div>
+            </div>
+            <div class="p-4 bg-gray-100 border-t text-center"><button type="button" onclick="closeMateri()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-8 rounded-full shadow-md">TUTUP MATERI</button></div>
+        </div>
+    </div>
+
+    <!-- GAME OVER MODAL -->
+    <div id="gameOverModal" class="hidden fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center p-4 z-[80]">
+        <div class="bubbly-card p-8 max-w-md w-full text-center animate-pop bg-gradient-to-b from-gray-900 to-red-900 border-4 border-red-500 text-white">
+            <i class="fa-solid fa-skull-crossbones text-7xl text-red-500 mb-4 animate-pulse"></i>
+            <h2 class="text-4xl font-bold bubbly-font text-red-400 mb-2">GAME OVER!</h2>
+            <p class="text-lg font-bold text-gray-300 my-4">Nyawa kamu telah habis (0/100). Kamu gagal mencapai CPMK.</p>
+            <p class="text-sm text-gray-400 mb-8 border-t border-red-700 pt-4">Silakan lapor ke Dosen Pengampu (Pjs. Dodi Setiawan) untuk mereset akun agar kamu bisa mengulang dari awal.</p>
+            <button type="button" onclick="logout()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 bubbly-button w-full cursor-pointer">KEMBALI KE HALAMAN UTAMA</button>
+        </div>
+    </div>
+
+    <!-- SUCCESS MODAL -->
+    <div id="successModal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center p-4 z-[60]">
+        <div class="bubbly-card p-8 max-w-md w-full text-center animate-pop bg-gradient-to-b from-white to-green-50 border-4 border-green-400">
+            <i class="fa-solid fa-face-laugh-squint text-7xl text-green-500 mb-4 animate-bounce"></i>
+            <h2 class="text-3xl font-bold bubbly-font text-green-600 mb-2">MODUL SELESAI!</h2>
+            <p id="quoteText" class="text-lg font-bold text-gray-700 italic my-6 leading-relaxed">"Quote"</p>
+            <button type="button" onclick="nextLevel()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 bubbly-button w-full cursor-pointer">MODUL SELANJUTNYA <i class="fa-solid fa-forward-step"></i></button>
+        </div>
+    </div>
+
+    <!-- CERTIFICATE MODAL -->
+    <div id="certModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-90 flex items-center justify-center p-4 z-[70]">
+        <div class="cert-bg p-8 md:p-12 max-w-4xl w-full text-center shadow-2xl animate-pop overflow-y-auto max-h-[95vh]">
+            <div class="absolute top-0 left-0 w-32 h-32 border-t-8 border-l-8 border-blue-800 m-4"></div>
+            <div class="absolute bottom-0 right-0 w-32 h-32 border-b-8 border-r-8 border-blue-800 m-4"></div>
+            
+            <i id="certIcon" class="fa-solid fa-award text-7xl text-yellow-500 mb-4 drop-shadow-md"></i>
+            <h1 id="certMainTitle" class="text-4xl md:text-5xl font-black text-blue-900 mb-2 uppercase tracking-widest bubbly-font">Sertifikat Kompetensi</h1>
+            <h2 id="certSubTitle" class="text-xl text-gray-600 mb-6 font-bold tracking-widest">APLIKASI KOMPUTER LANJUTAN & AI</h2>
+            
+            <p class="text-lg text-gray-500 mb-2">Diberikan dengan bangga kepada:</p>
+            <h3 id="certName" class="text-4xl font-black text-gray-800 mb-2 uppercase tracking-wide">STUDENT NAME</h3>
+            <h4 id="certProdi" class="text-xl font-bold text-blue-600 mb-6">PROGRAM STUDI</h4>
+            
+            <p id="certDesc" class="text-gray-600 max-w-2xl mx-auto text-sm md:text-base leading-relaxed font-semibold mb-6">Telah menyelesaikan...</p>
+
+            <div id="scoreContainer" class="hidden mb-4 p-4 bg-blue-50 border-2 border-blue-200 rounded-xl max-w-sm mx-auto shadow-inner">
+                <p class="text-sm text-blue-600 uppercase font-bold tracking-widest mb-1">Nilai Praktikum Akhir (Sisa Nyawa):</p>
+                <span id="certScore" class="text-4xl font-black text-blue-800">100 / 100</span>
+            </div>
+
+            <div class="mb-10">
+                <p class="text-sm text-gray-500 uppercase font-bold tracking-widest">PREDIKAT KELULUSAN CPMK:</p>
+                <span id="certPredikat" class="bg-green-100 text-green-800 border-2 border-green-500 text-xl font-black px-6 py-2 rounded-full mt-2 inline-block shadow-sm">SANGAT MEMUASKAN</span>
+            </div>
+            
+            <div class="flex justify-between items-end mt-4 max-w-lg mx-auto">
+                <div class="text-center w-full">
+                    <p class="text-sm text-gray-500 font-bold mb-10">Bintan, <span id="certDate"></span></p>
+                    <div class="signature-line mb-2"></div>
+                    <p class="font-black text-gray-800">Pjs. Dodi Setiawan, M.S.I.</p>
+                    <p class="text-xs text-gray-500 font-bold">Kaprodi D3 Perjalanan Wisata / Dosen Pengampu</p>
+                </div>
+            </div>
+
+            <div class="mt-8 flex justify-center gap-4 no-print">
+                <button onclick="window.print()" type="button" class="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-bold"><i class="fa-solid fa-print"></i> Cetak PDF</button>
+                <button onclick="closeCert()" type="button" class="bg-gray-300 hover:bg-gray-400 text-gray-800 py-3 px-6 rounded-lg font-bold">Tutup Jendela</button>
+            </div>
+        </div>
+    </div>
+    
+    <style> @media print { body * { visibility: hidden; } #certModal, #certModal * { visibility: visible; } #certModal { position: absolute; left: 0; top: 0; width: 100%; height: 100%; padding: 0; margin: 0; background: none; } .no-print { display: none !important; } } </style>
+
+    <script>
+        const safeStorage = {
+            set: function(key, val) { try { localStorage.setItem(key, val); } catch(e) {} },
+            get: function(key) { try { return localStorage.getItem(key); } catch(e) { return null; } },
+            remove: function(key) { try { localStorage.removeItem(key); } catch(e) {} }
+        };
+
+        // ==========================================
+        // DATABASE SOAL LENGKAP 16 LEVEL (FULL)
+        // ==========================================
+        const curriculum = [
+            // LEVEL 1
+            {
+                type: "normal", title: "Modul 1: BK-01 Tren & Keamanan", icon: "fa-shield-halved", color: "blue",
+                story: "Pembahasan mendalam mengenai Tren Digital Pariwisata, Etika Komputer, Keamanan Data Industri (Manifest Penumpang), dan Peran ICT.",
+                q: [
+                    {
+                        materi: "<b>Keamanan Data Industri:</b> Dokumen penting (seperti manifes kapal atau laporan laba) harus dikunci agar tidak disalahgunakan. Penguncian dokumen menggunakan sandi (Encryption) adalah standar operasional wajib.",
+                        instruksi: "<b>Instruksi Praktik:</b> Buka dokumen Word/Excel > Klik tab File > Info > Protect Document > Encrypt with Password. Masukkan sandi aman.",
+                        q: "Opsi keamanan apa yang digunakan untuk mengunci file dengan sandi di Microsoft Office?", 
+                        hint: "Tiga kata bahasa Inggris. Berarti 'Menyandikan dengan Kata Sandi'.", 
+                        ans: "ENCRYPT WITH PASSWORD"
+                    },
+                    {
+                        materi: "<b>Etika Komputer & Metadata:</b> Saat membagikan file proposal ke eksternal, pastikan nama pembuat asli (Author) dan komentar pribadi terhapus bersih untuk menjaga kerahasiaan.",
+                        instruksi: "<b>Instruksi Praktik:</b> Di MS Word, buka File > Info > Check for Issues > Inspect Document untuk membersihkan data tersembunyi.",
+                        q: "Apa nama alat inspeksi untuk memeriksa metadata dan teks tersembunyi pada dokumen?", 
+                        hint: "Dua kata bahasa Inggris (Memeriksa Dokumen).", 
+                        ans: "INSPECT DOCUMENT"
+                    },
+                    {
+                        materi: "<b>Finalisasi Dokumen:</b> Jika dokumen sudah final dan disetujui, posisikan file tersebut ke mode 'Read-Only' permanen agar tidak ada staf lain yang tidak sengaja merubah isinya.",
+                        instruksi: "<b>Instruksi Praktik:</b> Buka File > Info > Protect Document > Klik opsi 'Mark as Final' agar dokumen terkunci dari penyuntingan.",
+                        q: "Fitur untuk mengunci dokumen sebagai hasil akhir operasional disebut?", 
+                        hint: "Tiga kata bahasa Inggris (Tandai sebagai Final).", 
+                        ans: "MARK AS FINAL"
+                    },
+                    {
+                        materi: "<b>Peran ICT:</b> Penyimpanan lokal di flashdisk rentan terkena virus. Penggunaan server awan (Cloud) seperti Google Drive menjamin sinkronisasi data real-time.",
+                        instruksi: "<b>Instruksi Praktik:</b> Pahami konsep infrastruktur penyimpanan data berbasis internet yang disediakan oleh penyedia layanan global.",
+                        q: "Istilah teknologi penyimpanan file berbasis internet di awan disebut?", 
+                        hint: "Dua kata (Inggris): Penyimpanan Awan.", 
+                        ans: "CLOUD STORAGE"
+                    },
+                    {
+                        materi: "<b>Format Portabilitas Dokumen:</b> File promosi harus didistribusikan dalam format universal yang tidak berubah bentuk saat dibuka di perangkat apapun.",
+                        instruksi: "<b>Instruksi Praktik:</b> Di MS Word, klik File > Export > Create PDF/XPS Document untuk mengunci format tata letak.",
+                        q: "Apa 3 huruf singkatan format dokumen portabel universal?", 
+                        hint: "Format file standar untuk e-book dan brosur digital.", 
+                        ans: "PDF"
+                    },
+                    {
+                        materi: "<b>Status Proteksi:</b> Dokumen yang telah ditandai sebagai final akan menampilkan bilah peringatan berwarna kuning di bagian atas jendela kerja.",
+                        instruksi: "<b>Instruksi Praktik:</b> Amati status proteksi file yang mencegah pengetikan lanjutan.",
+                        q: "Status operasional file yang hanya bisa dilihat tanpa hak tulis disebut?", 
+                        hint: "Dua kata bahasa Inggris (Hanya Membaca).", 
+                        ans: "READ ONLY"
+                    }
+                ]
+            },
+            // LEVEL 2
+            {
+                type: "normal", title: "Modul 2: BK-02 Page Layout & Style", icon: "fa-file-word", color: "blue",
+                story: "Mempelajari Page Layout tingkat lanjut, Style & Formatting, Mail Merge Dasar, dan pembuatan struktur tabel.",
+                q: [
+                    {
+                        materi: "<b>Style & Formatting:</b> Penulisan laporan panjang wajib menggunakan Styles (Heading 1) agar navigasi dokumen dan daftar isi otomatis berjalan mulus.",
+                        instruksi: "<b>Instruksi Praktik:</b> Blok judul bab > Buka Tab Home > Pilih Heading 1 dari panel styles.",
+                        q: "Apa shortcut keyboard instan untuk mengubah teks menjadi Heading 1?", 
+                        hint: "Tiga tombol: Control + Alternatif + Angka Pertama.", 
+                        ans: "CTRL+ALT+1"
+                    },
+                    {
+                        materi: "<b>Page Layout Lanskap:</b> Penampang denah situs sejarah atau tabel data lebar seringkali membutuhkan orientasi kertas melebar ke samping.",
+                        instruksi: "<b>Instruksi Praktik:</b> Buka Tab Layout > Klik Orientation > Pilih Landscape.",
+                        q: "Mode tata letak orientasi kertas mendatar disebut?", 
+                        hint: "Bahasa Inggris untuk pemandangan bentang alam.", 
+                        ans: "LANDSCAPE"
+                    },
+                    {
+                        materi: "<b>Tabel Operasional:</b> Rincian waktu kegiatan atau bahan produksi disusun secara terstruktur menggunakan grid baris dan kolom.",
+                        instruksi: "<b>Instruksi Praktik:</b> Buka Tab Insert > Pilih Table > Tentukan jumlah kolom dan baris jadwal kegiatan.",
+                        q: "Fitur di Word untuk menyisipkan struktur baris dan kolom disebut?", 
+                        hint: "Bahasa Inggris dari kata 'Tabel'.", 
+                        ans: "TABLE"
+                    },
+                    {
+                        materi: "<b>Section Break Layout:</b> Untuk menggabungkan halaman Portrait dan Landscape dalam satu dokumen yang sama, diperlukan pemisah bagian.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab Layout > Breaks > Pilih Next Page untuk memutus format halaman.",
+                        q: "Jenis Section Break apa yang memulai bagian baru di lembar berikutnya?", 
+                        hint: "Dua kata bahasa Inggris (Halaman Berikutnya).", 
+                        ans: "NEXT PAGE"
+                    },
+                    {
+                        materi: "<b>Mail Merge Dasar:</b> Menghubungkan template surat konfirmasi pesanan di Word dengan lembar data pelanggan di Excel.",
+                        instruksi: "<b>Instruksi Praktik:</b> Buka Tab Mailings > Klik Select Recipients > Use an Existing List.",
+                        q: "Tombol Mailings untuk mengambil sumber data dari Excel disebut?", 
+                        hint: "Bahasa Inggris (Memilih Penerima).", 
+                        ans: "SELECT RECIPIENTS"
+                    },
+                    {
+                        materi: "<b>Pengaturan Margin:</b> Mengatur jarak batas tepi dokumen agar hasil cetak laporan tidak terpotong oleh mesin printer.",
+                        instruksi: "<b>Instruksi Praktik:</b> Buka Tab Layout > Klik Margins > Pilih ukuran Normal atau Custom.",
+                        q: "Menu untuk mengatur batas ruang kosong tepi kertas disebut?", 
+                        hint: "Bahasa Inggris dari garis batas / margin.", 
+                        ans: "MARGINS"
+                    }
+                ]
+            },
+            // LEVEL 3 (CASE 1)
+            {
+                type: "case", title: "Modul 3: KASUS 1 (CPMK M1)", icon: "fa-briefcase", color: "pink",
+                story: {
+                    "D3 Perjalanan Wisata": { 3: "Studi Kasus Pariwisata M1: Buatlah dokumen operasional proposal ekowisata mangrove di Bintan dan manifest penumpang kapal feri menggunakan Word terstruktur." },
+                    "D3 Seni Kuliner": { 3: "Studi Kasus Kuliner M1: Susun Buku Resep Standar (SOP Dapur) dan format pemesanan bahan baku mentah menggunakan Word yang tertib." },
+                    "D4 Pengelolaan Perhotelan": { 3: "Studi Kasus Perhotelan M1: Susun Dokumen SOP Front Office dan surat konfirmasi pemesanan kamar tipe Suite berbasis Word profesional." }
+                },
+                q: [
+                    {
+                        materi: "<b>Penyusunan Dokumen Terstruktur:</b> Membuat kerangka kerja proposal operasional menggunakan fitur Section Break untuk memisahkan halaman muka dan isi laporan.",
+                        instruksi: "<b>Instruksi Praktik:</b> Buat dokumen operasional. Terapkan Heading 1 pada judul dan orientasi Landscape pada halaman tabel/denah.",
+                        q: "Untuk melengkapi simulasi struktur dokumen operasional tahap 1, ketik kode konfirmasi.", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Manajemen Tabel & Watermark:</b> Membuat tabel operasional (manifest/resep/komplain) yang rapi dengan Watermark bertuliskan 'CONFIDENTIAL'.",
+                        instruksi: "<b>Instruksi Praktik:</b> Buat tabel data dan pasang watermark teks rahasia di tab Design.",
+                        q: "Untuk melengkapi simulasi tata letak keamanan data tahap 2, ketik kode konfirmasi.", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Automasi Persuratan:</b> Menyusun surat massal resmi (undangan VIP/penawaran tur/konfirmasi reservasi) menggunakan Mail Merge yang tertaut ke Excel.",
+                        instruksi: "<b>Instruksi Praktik:</b> Hubungkan surat operasional Anda dengan data klien/tamu di Excel.",
+                        q: "Untuk melengkapi simulasi mail merge industri tahap 3, ketik kode konfirmasi.", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Validasi Struktur Layout:</b> Memastikan dokumen operasional M1 bersih dari kesalahan format, daftar isi otomatis bekerja, dan margin presisi sebelum diserahkan ke manajer.",
+                        instruksi: "<b>Instruksi Praktik:</b> Periksa kembali nomor halaman dan klik update pada Table of Contents.",
+                        q: "Untuk melengkapi simulasi pemeriksaan kualitas layout, ketik kode konfirmasi.", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Keamanan Berkas File:</b> Mengenkripsi dokumen operasional departemen dengan password pengaman agar tidak bocor ke publik.",
+                        instruksi: "<b>Instruksi Praktik:</b> Terapkan Protect Document (Encrypt with Password) pada file Word studi kasus.",
+                        q: "Untuk memvalidasi pemahaman enkripsi dokumen, ketik kode konfirmasi.", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Finalisasi CPMK M1:</b> Mengubah seluruh dokumen operasional departemen menjadi format portabel yang tidak bisa diedit secara bebas.",
+                        instruksi: "<b>Instruksi Praktik:</b> Lakukan Export dokumen akhir menjadi file PDF.",
+                        q: "Sandi kelulusan Modul 3 (M1):", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    }
+                ]
+            },
+            // LEVEL 4
+            {
+                type: "normal", title: "Modul 4: BK-03 Mail Merge Lanjut", icon: "fa-envelope-open-text", color: "blue",
+                story: "Mempelajari Mail Merge lanjutan, pengelolaan Header & Footer, Page Numbering profesional, dan sistem referensi dokumen.",
+                q: [
+                    {
+                        materi: "<b>Mail Merge Lanjut:</b> Menggunakan aturan logika IF-THEN di dalam surat massal berdasarkan kategori data pelanggan (VIP vs Regular).",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab Mailings > Rules > If...Then...Else untuk menyisipkan teks dinamis otomatis.",
+                        q: "Apa nama tombol logika bersyarat di tab Mailings?", 
+                        hint: "Bahasa Inggris dari kata 'Aturan-aturan'.", ans: "RULES"
+                    },
+                    {
+                        materi: "<b>Header & Footer:</b> Menyematkan kop surat resmi perusahaan di bagian atas (Header) dan catatan kaki di bagian bawah (Footer).",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab Insert > Header / Footer > Pilih format desain profesional.",
+                        q: "Area margin atas dokumen untuk menyematkan kop surat disebut?", 
+                        hint: "Bahasa Inggris dari 'Kepala'.", ans: "HEADER"
+                    },
+                    {
+                        materi: "<b>Page Numbering:</b> Memberikan nomor halaman dinamis dengan format Romawi untuk halaman pengantar dan angka biasa untuk isi.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab Insert > Page Number > Format Page Numbers.",
+                        q: "Fitur untuk memberikan nomor halaman otomatis disebut?", 
+                        hint: "Dua kata bahasa Inggris (Nomor Halaman).", ans: "PAGE NUMBER"
+                    },
+                    {
+                        materi: "<b>Referensi Dokumen:</b> Menyisipkan sumber pustaka atau kutipan peraturan industri resmi pada lampiran dokumen.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab References > Insert Citation > Add New Source.",
+                        q: "Tab menu di Word untuk menyisipkan kutipan dan daftar pustaka adalah?", 
+                        hint: "Bahasa Inggris dari 'Referensi'.", ans: "REFERENCES"
+                    },
+                    {
+                        materi: "<b>Pratinjau Gabungan:</b> Meneliti hasil penggabungan data Mail Merge sebelum dicetak secara massal.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab Mailings > Klik ikon Kaca Pembesar untuk melihat data asli berganti.",
+                        q: "Nama tombol berlogo kaca pembesar untuk melihat hasil Mail Merge?", 
+                        hint: "Dua kata bahasa Inggris (Pratinjau Hasil).", ans: "PREVIEW RESULTS"
+                    },
+                    {
+                        materi: "<b>Penyelesaian Merge:</b> Mengubah hasil Mail Merge menjadi file dokumen Word baru yang terpisah dan siap disunting manual.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab Mailings > Finish & Merge > Edit Individual Documents.",
+                        q: "Opsi teratas pada tombol Finish & Merge untuk memecah dokumen?", 
+                        hint: "Tiga kata bahasa Inggris (Edit Dokumen Individu).", ans: "EDIT INDIVIDUAL DOCUMENTS"
+                    }
+                ]
+            },
+            // LEVEL 5
+            {
+                type: "normal", title: "Modul 5: BK-04 Advanced Editing", icon: "fa-chart-bar", color: "blue",
+                story: "Mempelajari Advanced Editing, penyisipan Grafik analisis dalam Word, serta pemanfaatan Reviewing Tools untuk kerja tim divisi.",
+                q: [
+                    {
+                        materi: "<b>Grafik dalam Word:</b> Menyisipkan diagram batang atau lingkaran ke dalam laporan proposal untuk menampilkan tren operasional industri.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab Insert > Chart > Pilih Column atau Pie Chart sesuai kebutuhan data.",
+                        q: "Fitur di Word untuk menyisipkan diagram visual data disebut?", 
+                        hint: "Bahasa Inggris dari Grafik / Diagram.", ans: "CHART"
+                    },
+                    {
+                        materi: "<b>Reviewing Tools (Track Changes):</b> Mengaktifkan pelacakan perubahan naskah saat manajer mengoreksi draf dokumen buatan staf.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab Review > Track Changes > Aktifkan agar setiap ketikan baru diberi tanda coretan/warna.",
+                        q: "Nama fitur di tab Review untuk melacak koreksi suntingan teks?", 
+                        hint: "Dua kata bahasa Inggris (Lacak Perubahan).", ans: "TRACK CHANGES"
+                    },
+                    {
+                        materi: "<b>Komentar Divisi:</b> Memberikan catatan tempel (Comment) digital di margin dokumen tanpa merusak isi teks utama.",
+                        instruksi: "<b>Instruksi Praktik:</b> Blok teks target > Tab Review > New Comment.",
+                        q: "Fitur catatan koreksi di margin dokumen disebut?", 
+                        hint: "Bahasa Inggris dari 'Komentar'.", ans: "COMMENT"
+                    },
+                    {
+                        materi: "<b>Menyetujui Koreksi:</b> Menerima atau menolak hasil revisi suntingan dari anggota tim pada dokumen kerja bersama.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab Review > Gunakan tombol Accept atau Reject.",
+                        q: "Tombol di tab Review untuk menyetujui koreksi teks naskah?", 
+                        hint: "Bahasa Inggris dari 'Menerima'.", ans: "ACCEPT"
+                    },
+                    {
+                        materi: "<b>Navigasi Heading Pane:</b> Membuka panel samping penjelajah dokumen untuk melompat antar bab secara instan tanpa perlu scrolling panjang.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab View > Centang Navigation Pane.",
+                        q: "Panel sisi kiri untuk navigasi cepat dokumen berbasis Heading disebut?", 
+                        hint: "Dua kata bahasa Inggris (Panel Navigasi).", ans: "NAVIGATION PANE"
+                    },
+                    {
+                        materi: "<b>Pemeriksaan Ejaan:</b> Menggunakan alat pemeriksa tata bahasa otomatis untuk mencegah salah ketik (typo) pada dokumen resmi.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab Review > Spelling & Grammar.",
+                        q: "Alat pemeriksa ejaan dan tata bahasa otomatis disebut?", 
+                        hint: "Dua kata bahasa Inggris (Ejaan dan Tata Bahasa).", ans: "SPELLING AND GRAMMAR"
+                    }
+                ]
+            },
+            // LEVEL 6 (CASE 2)
+            {
+                type: "case", title: "Modul 6: KASUS 2 (CPMK M4)", icon: "fa-cloud-arrow-up", color: "pink",
+                story: {
+                    "D3 Perjalanan Wisata": { 6: "Studi Kasus Pariwisata M4: Kelola arsip digital voucher hotel kepulauan dan manifest speedboat ke folder Cloud Storage yang aman." },
+                    "D3 Seni Kuliner": { 6: "Studi Kasus Kuliner M4: Kelola arsip digital resep rahasia dan sertifikat halal supplier ke dalam Cloud Storage yang terenkripsi." },
+                    "D4 Pengelolaan Perhotelan": { 6: "Studi Kasus Perhotelan M4: Kelola arsip digital logbook komplain tamu dan tagihan korporat (Invoice) dengan sistem Cloud Storage." }
+                },
+                q: [
+                    {
+                        materi: "<b>Manajemen Arsip Cloud:</b> Mengunggah dan menata struktur folder dokumen penting departemen ke dalam Google Drive/OneDrive dengan sistem penamaan kode file standar ISO.",
+                        instruksi: "<b>Instruksi Praktik:</b> Buat folder arsip terstruktur di platform Cloud Anda, unggah data dokumen dalam format PDF final.",
+                        q: "Untuk mengonfirmasi tata kelola folder arsip awan tahap 1, ketik kode konfirmasi:", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Manajemen Akses (Sharing Permission):</b> Mengatur hak akses tautan arsip agar staf divisi lain hanya bisa melihat dokumen (Viewer mode) dan tidak memiliki hak menghapus/mengedit file.",
+                        instruksi: "<b>Instruksi Praktik:</b> Atur share link Google Drive file Anda menjadi Restricted atau Viewer only.",
+                        q: "Untuk mengonfirmasi pengaturan izin akses tahap 2, ketik kode konfirmasi:", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Sinkronisasi Pencadangan (Backup):</b> Melakukan sinkronisasi pencadangan otomatis dokumen penting (polis asuransi, data vendor, invoice) ke ruang penyimpanan awan yang terenkripsi.",
+                        instruksi: "<b>Instruksi Praktik:</b> Simpan file master ke folder cloud tersinkronisasi di komputer/web.",
+                        q: "Untuk mengonfirmasi praktik sinkronisasi backup tahap 3, ketik kode konfirmasi:", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Pelacakan Riwayat Arsip:</b> Memeriksa dan melacak riwayat revisi dokumen laporan yang diperbarui secara kolaboratif oleh tim melalui fitur Version History.",
+                        instruksi: "<b>Instruksi Praktik:</b> Klik kanan file di Google Drive > Manage Versions / Version History.",
+                        q: "Untuk memvalidasi pemahaman manajemen versi, ketik kode konfirmasi:", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Keamanan Tautan Berbatas Waktu:</b> Memahami pengelolaan masa berlaku tautan arsip yang diberikan ke pihak ketiga (tamu/vendor) agar akses otomatis tertutup jika kegiatan telah selesai.",
+                        instruksi: "<b>Instruksi Praktik:</b> Eksplorasi fitur pembatasan masa berlaku link pada platform Cloud premium.",
+                        q: "Untuk memvalidasi pemahaman tautan aman, ketik kode konfirmasi:", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Finalisasi CPMK M4:</b> Seluruh arsip digital operasional departemen telah tertib tersimpan di Cloud dengan klasifikasi keamanan yang diakui standar industri.",
+                        instruksi: "<b>Instruksi Praktik:</b> Pastikan seluruh tautan folder cloud dapat diakses dengan aman oleh dosen penguji.",
+                        q: "Sandi kelulusan Modul 6 (M4):", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    }
+                ]
+            },
+            // LEVEL 7
+            {
+                type: "normal", title: "Modul 7: BK-05 Cell Referencing", icon: "fa-table", color: "blue",
+                story: "Mempelajari dasar Spreadsheet Excel meliputi Cell Referencing (Absolute vs Relative), Basic Formulas (+, -, *, /), dan Formatting Cells untuk kalkulasi industri.",
+                q: [
+                    {
+                        materi: "<b>Cell Referencing (Referensi Sel):</b> Memahami perbedaan alamat sel relatif (berpindah otomatis saat di-copy) dan sel absolut (terkunci mutlak) agar perhitungan rumus tidak berantakan.",
+                        instruksi: "<b>Instruksi Praktik:</b> Di Excel, ketik sebuah sel, lalu tekan tombol F4 di keyboard untuk menguncinya secara mutlak.",
+                        q: "Simbol apa yang digunakan untuk membuat referensi sel menjadi absolut (kunci mati)?", 
+                        hint: "Simbol mata uang dollar ($).", ans: "$"
+                    },
+                    {
+                        materi: "<b>Basic Formulas:</b> Melakukan perhitungan matematika dasar untuk menghitung total biaya operasional (Penjumlahan, Pengurangan, Perkalian, Pembagian).",
+                        instruksi: "<b>Instruksi Praktik:</b> Selalu awali perhitungan/rumus di Excel dengan tanda khusus sebelum mengetik angka atau mengeklik sel.",
+                        q: "Simbol apa yang wajib diketik pertama kali sebelum menulis rumus matematika di Excel?", 
+                        hint: "Tanda persamaan (=).", ans: "="
+                    },
+                    {
+                        materi: "<b>Formatting Cells:</b> Mengatur format sel angka pada lembar kerja spreadsheet agar otomatis tampil sebagai mata uang (Rupiah) atau persentase (%).",
+                        instruksi: "<b>Instruksi Praktik:</b> Blok sel angka > Klik kanan > Format Cells > Pilih Currency atau Percentage.",
+                        q: "Menu jendela utama di Excel untuk merubah tampilan angka dan batas garis (border) disebut?", 
+                        hint: "Bahasa Inggris dari 'Format Sel'.", ans: "FORMAT CELLS"
+                    },
+                    {
+                        materi: "<b>Operator Perkalian:</b> Mengalikan jumlah barang/tamu dengan harga satuan (unit price) menggunakan simbol standar internasional komputasi.",
+                        instruksi: "<b>Instruksi Praktik:</b> Ketik <code>=A1*B1</code> pada sel hasil kalkulasi Anda.",
+                        q: "Simbol operator matematika apa di Excel yang digunakan untuk perkalian?", 
+                        hint: "Simbol bintang (Asterisk).", ans: "*"
+                    },
+                    {
+                        materi: "<b>Operator Pembagian:</b> Membagi total biaya pengeluaran divisi dengan jumlah total unit untuk mendapatkan harga pokok rata-rata.",
+                        instruksi: "<b>Instruksi Praktik:</b> Ketik <code>=A1/B1</code> pada sel target Anda.",
+                        q: "Simbol operator matematika apa di Excel yang digunakan untuk pembagian?", 
+                        hint: "Garis miring / slash (/).", ans: "/"
+                    },
+                    {
+                        materi: "<b>AutoSum (Penjumlahan Cepat):</b> Menjumlahkan secara instan seluruh deret vertikal rincian biaya (sum) tanpa perlu mengetik manual satu per satu.",
+                        instruksi: "<b>Instruksi Praktik:</b> Klik tombol berlogo huruf Yunani Sigma (∑) di tab Home (grup Editing) setelah mengeklik sel kosong di bawah deret angka.",
+                        q: "Nama fungsi formula otomatis untuk menjumlahkan total keseluruhan angka adalah?", 
+                        hint: "Tiga huruf bahasa Inggris dari kata 'Jumlah'.", ans: "SUM"
+                    }
+                ]
+            },
+            // LEVEL 8
+            {
+                type: "normal", title: "Modul 8: BK-06 VLOOKUP & Validasi", icon: "fa-magnifying-glass", color: "blue",
+                story: "Mempelajari fungsi pencarian database tingkat lanjut (VLOOKUP), kalkulasi bersyarat (SUMIF, COUNTIF), dan Data Validation.",
+                q: [
+                    {
+                        materi: "<b>Fungsi VLOOKUP:</b> Menarik data harga barang, nama karyawan, atau tarif sewa secara otomatis dari tabel master referensi berdasarkan kode pemanggilan (lookup value).",
+                        instruksi: "<b>Instruksi Praktik:</b> Ketik <code>=VLOOKUP(nilai_dicari, tabel_sumber, nomor_kolom, FALSE)</code> di sel target.",
+                        q: "Fungsi utama Excel untuk mencari data secara vertikal dari tabel referensi adalah?", 
+                        hint: "Awalan huruf V diikuti kata lookup.", ans: "VLOOKUP"
+                    },
+                    {
+                        materi: "<b>Fungsi SUMIF:</b> Menjumlahkan total nominal pendapatan departemen khusus dari satu kategori produk/layanan tertentu saja (misal: hanya pendapatan kamar Deluxe).",
+                        instruksi: "<b>Instruksi Praktik:</b> Ketik <code>=SUMIF(kolom_kriteria, \"Deluxe\", kolom_angka)</code>.",
+                        q: "Fungsi perhitungan Excel untuk menjumlahkan data berdasarkan kriteria tertentu disebut?", 
+                        hint: "SUM ditambah kata bersyarat (IF).", ans: "SUMIF"
+                    },
+                    {
+                        materi: "<b>Fungsi COUNTIF:</b> Menghitung jumlah (berapa kali) sebuah transaksi atau reservasi nama layanan muncul di dalam basis data operasional harian.",
+                        instruksi: "<b>Instruksi Praktik:</b> Ketik <code>=COUNTIF(kolom_data, \"Nama_Layanan\")</code>.",
+                        q: "Fungsi Excel untuk menghitung banyaknya sel yang memenuhi satu syarat spesifik?", 
+                        hint: "COUNT ditambah kata bersyarat (IF).", ans: "COUNTIF"
+                    },
+                    {
+                        materi: "<b>Data Validation:</b> Membatasi masukan data di Excel agar staf admin hanya bisa memasukkan nilai dari daftar drop-down (pilihan) yang sah dan mencegah salah ketik.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab Data > Data Validation > Pilih Allow: List > Masukkan sumber opsi data pilihan.",
+                        q: "Fitur Excel untuk membatasi atau mengontrol jenis input data pada sebuah sel disebut?", 
+                        hint: "Dua kata bahasa Inggris (Validasi Data).", ans: "DATA VALIDATION"
+                    },
+                    {
+                        materi: "<b>Pencocokan Persis (Exact Match):</b> Pada rumus VLOOKUP, parameter terakhir sangat penting. Jika kita mencari NIK karyawan, kita mewajibkan Excel mencari data yang 100% sama.",
+                        instruksi: "<b>Instruksi Praktik:</b> Selalu gunakan argumen angka <code>0</code> atau kata <code>FALSE</code> pada akhir rumus VLOOKUP Anda.",
+                        q: "Kata logika argumen keempat VLOOKUP untuk pencocokan yang persis/pasti adalah?", 
+                        hint: "Lawan kata dari kebenaran (TRUE).", ans: "FALSE"
+                    },
+                    {
+                        materi: "<b>Pemberian Nama Rentang (Named Range):</b> Menamai sekumpulan sel tabel referensi master (misal area A1:D100 menjadi 'TabelHarga') agar penulisan VLOOKUP lebih mudah dibaca dan anti-geser.",
+                        instruksi: "<b>Instruksi Praktik:</b> Blok sebuah tabel > Perhatikan kotak kecil di ujung kiri formula bar > Ketik nama dan tekan Enter.",
+                        q: "Kotak kecil penama rentang sel yang terletak di sudut kiri atas Excel tersebut dinamakan?", 
+                        hint: "Dua kata bahasa Inggris (Kotak Nama).", ans: "NAME BOX"
+                    }
+                ]
+            },
+            // LEVEL 9 (CASE 3)
+            {
+                type: "case", title: "Modul 9: KASUS 3 (CPMK M2)", icon: "fa-file-invoice-dollar", color: "pink",
+                story: {
+                    "D3 Perjalanan Wisata": { 9: "Studi Kasus Pariwisata M2 (1): Susun tabulasi biaya tur (Tour Costing Spreadsheet) 3 hari 2 malam di Bintan dengan formula Excel dan VLOOKUP." },
+                    "D3 Seni Kuliner": { 9: "Studi Kasus Kuliner M2 (1): Buat lembar kerja tabulasi Food Costing & Margin Menu Nusantara menggunakan rumus Excel dan SUMIF." },
+                    "D4 Pengelolaan Perhotelan": { 9: "Studi Kasus Perhotelan M2 (1): Susun lembar tabulasi Gaji Karyawan Payroll dan kalkulasi Room Revenue bulanan hotel dengan VLOOKUP." }
+                },
+                q: [
+                    {
+                        materi: "<b>Kalkulasi Lembar Kerja Dasar:</b> Menyusun kerangka spreadsheet tabulasi keuangan operasional departemen dengan menerapkan formula matematika dasar dan fungsi agregasi (SUM) yang solid.",
+                        instruksi: "<b>Instruksi Praktik:</b> Buat tabel rincian biaya (Costing) atau rincian Gaji (Payroll), kalikan sub-total item dengan kuantitas, lalu totalkan.",
+                        q: "Sandi konfirmasi penuntasan kalkulasi tabulasi tahap 1:", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Integrasi Tabel Master (VLOOKUP):</b> Mencegah kesalahan ketik harga manual dengan cara menautkan lembar transaksi harian secara otomatis ke lembar Tabel Master Harga/Gaji menggunakan fungsi pencarian vertikal.",
+                        instruksi: "<b>Instruksi Praktik:</b> Buat Sheet 'Master Data', lalu gunakan fungsi VLOOKUP di Sheet 'Transaksi' untuk menarik nominal harga/gaji.",
+                        q: "Sandi konfirmasi keberhasilan injeksi fungsi VLOOKUP:", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Otomatisasi Pilihan Input:</b> Menerapkan mekanisme validasi data pada spreadsheet agar operator staf administrasi hanya dapat memilih opsi dari menu dropdown yang sudah didefinisikan (misal: Pilihan Menu/Kamar/Tur).",
+                        instruksi: "<b>Instruksi Praktik:</b> Sorot kolom input kategori produk, lalu pasang Data Validation berbasis 'List'.",
+                        q: "Sandi konfirmasi pemasangan sistem dropdown menu validasi:", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Pemrosesan Logika Agregasi:</b> Menghitung total rekapitulasi pendapatan kotor khusus dari satu tipe layanan/produk andalan menggunakan kalkulasi bersyarat.",
+                        instruksi: "<b>Instruksi Praktik:</b> Gunakan fungsi SUMIF pada tabel rekap akhir untuk memfilter jumlah penjualan produk tertentu.",
+                        q: "Sandi verifikasi perhitungan agregrasi SUMIF:", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Standarisasi Format Finansial:</b> Merapikan visualisasi lembar kerja tabulasi dengan menerapkan format tata letak laporan akuntansi (simbol Rupiah rata kiri, angka rata kanan) dan menghilangkan desimal yang tidak perlu.",
+                        instruksi: "<b>Instruksi Praktik:</b> Blok seluruh angka, ubah format Number menjadi Accounting atau Currency IDR.",
+                        q: "Sandi verifikasi kerapian format finansial laporan:", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Finalisasi CPMK M2 (Tahap 1):</b> Lembar kerja tabulasi (Costing/Payroll) operasional telah teruji secara sistematis dan rumusnya saling terkunci dengan benar tanpa menghasilkan error #N/A.",
+                        instruksi: "<b>Instruksi Praktik:</b> Lakukan uji tes input angka bebas untuk melihat bahwa hasil akhir berubah otomatis secara akurat.",
+                        q: "Sandi kelulusan Modul 9 (M2-1):", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    }
+                ]
+            },
+            // LEVEL 10
+            {
+                type: "normal", title: "Modul 10: BK-07 Kondisional & Gantt", icon: "fa-chart-gantt", color: "blue",
+                story: "Mempelajari Kondisional Formatting untuk peringatan visual otomatis, pengelolaan Time Series Data, dan pembuatan Gantt Chart jadwal industri.",
+                q: [
+                    {
+                        materi: "<b>Conditional Formatting:</b> Mengubah warna sel lembar kerja secara dinamis (otomatis) saat nilainya menyentuh ambang batas krisis (contoh: stok bahan baku sisa sedikit sel menjadi Merah).",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab Home > Conditional Formatting > Highlight Cells Rules > Less Than (Kurang Dari).",
+                        q: "Fitur Excel untuk mewarnai sel secara otomatis berdasarkan syarat/kondisi angka tertentu disebut?", 
+                        hint: "Dua kata bahasa Inggris (Pemformatan Bersyarat).", ans: "CONDITIONAL FORMATTING"
+                    },
+                    {
+                        materi: "<b>Gantt Chart Sederhana:</b> Menyusun visualisasi perencanaan jadwal produksi, jadwal kegiatan tur, atau shift karyawan dalam format balok grafis horizontal (linimasa waktu).",
+                        instruksi: "<b>Instruksi Praktik:</b> Sorot tabel jadwal, lalu sisipkan grafik tipe Stacked Bar Chart dan ubah warna batang awal menjadi transparan.",
+                        q: "Jenis grafik linimasa batang horizontal yang digunakan untuk menjadwalkan proyek logistik disebut?", 
+                        hint: "Nama insinyur penemu diagram penjadwalan ini (Gantt Chart).", ans: "GANTT CHART"
+                    },
+                    {
+                        materi: "<b>Time Series Data:</b> Mengorganisir data operasional deret waktu (seperti rekapitulasi penjualan harian atau kunjungan tamu bulanan) untuk dianalisis pola tren grafiknya.",
+                        instruksi: "<b>Instruksi Praktik:</b> Susun tanggal secara vertikal di satu kolom, lalu blok dan buat visualisasi grafiknya.",
+                        q: "Jenis grafik berbasis garis yang paling ideal untuk menganalisis data deret waktu/tren bulanan disebut?", 
+                        hint: "Bahasa Inggris dari Grafik Garis.", ans: "LINE CHART"
+                    },
+                    {
+                        materi: "<b>Highlight Sel Kosong:</b> Membangun sistem pendeteksi celah kelalaian administrasi dengan menggunakan aturan warna untuk memblok merah sel-sel wajib yang belum diisi oleh staf.",
+                        instruksi: "<b>Instruksi Praktik:</b> Conditional Formatting > Highlight Cells Rules > pilih opsi pendeteksi sel hampa.",
+                        q: "Aturan format bersyarat khusus untuk mendeteksi sel yang belum memiliki isi data disebut?", 
+                        hint: "Bahasa Inggris dari kata 'Kosong/Hampa'.", ans: "BLANKS"
+                    },
+                    {
+                        materi: "<b>Format Tanggal Excel (Date Formatting):</b> Standarisasi format penulisan waktu di Excel. Excel menganggap setiap tanggal sebagai nomor urut angka matematis, bukan teks biasa.",
+                        instruksi: "<b>Instruksi Praktik:</b> Klik kanan sel > Format Cells > Pilih opsi yang berkaitan dengan format kalender internasional.",
+                        q: "Kategori spesifik format sel di Excel untuk mengakomodasi penulisan hari dan kalender adalah?", 
+                        hint: "Bahasa Inggris dari kata 'Tanggal'.", ans: "DATE"
+                    },
+                    {
+                        materi: "<b>Skala Sumbu Grafik (Axis Setting):</b> Menyesuaikan rentang garis waktu di Gantt chart agar tanggal grafiknya tidak melenceng terlalu jauh ke tahun lampau yang kosong.",
+                        instruksi: "<b>Instruksi Praktik:</b> Klik kanan pada garis sumbu tanggal horizontal grafis > pilih opsi Format Axis untuk mengatur batas minimal angka.",
+                        q: "Menu pengaturan batas minimum dan maksimum garis sumbu pada grafik Excel dinamakan?", 
+                        hint: "Bahasa Inggris dari pengaturan 'Sumbu' Grafik.", ans: "FORMAT AXIS"
+                    }
+                ]
+            },
+            // LEVEL 11
+            {
+                type: "normal", title: "Modul 11: BK-08 Goal Seek & Analisis", icon: "fa-bullseye", color: "blue",
+                story: "Mempelajari simulasi proyeksi bisnis pariwisata/hospitality menggunakan Goal Seek, Scenario Manager, dan Grafik Analisis Break-Even Point.",
+                q: [
+                    {
+                        materi: "<b>Goal Seek (Analisis Target):</b> Fitur cerdas pembalik rumus. Membantu manajer menghitung: 'Berapa tarif kamar/harga jual yang harus saya patok agar laba akhir menyentuh angka 1 Miliar?'.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab Data > What-If Analysis > Goal Seek > Atur 'Set cell' (target laba), 'To value' (angka miliar), 'By changing' (sel harga).",
+                        q: "Fitur simulasi cerdas pencarian target nilai dengan cara membalik algoritma hitungan rumus disebut?", 
+                        hint: "Dua kata bahasa Inggris yang berarti 'Pencari Tujuan'.", ans: "GOAL SEEK"
+                    },
+                    {
+                        materi: "<b>Scenario Manager:</b> Manajemen risiko finansial. Mengizinkan Anda membandingkan skenario anggaran bisnis (Skenario Laris, Normal, Sepi) secara bergantian dalam satu tabel saja.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab Data > What-If Analysis > Scenario Manager > Klik Add untuk mendaftarkan skenario asumsi biaya pesimis dan optimis.",
+                        q: "Fitur lanjutan Excel untuk mengelola dan beralih antar berbagai kelompok asumsi nilai sel adalah?", 
+                        hint: "Dua kata bahasa Inggris (Manajer Skenario).", ans: "SCENARIO MANAGER"
+                    },
+                    {
+                        materi: "<b>Grafik Perbandingan Eksekutif:</b> Memvisualisasikan komparasi pilar antara Total Pengeluaran vs Pendapatan Kotor operasional departemen menggunakan grafik tonggak vertikal.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tab Insert > pilih ikon diagram vertikal berlapis untuk membandingkan angka ganda bersisihan.",
+                        q: "Jenis grafik pilar/tonggak vertikal tegak lurus yang digunakan untuk perbandingan besaran finansial adalah?", 
+                        hint: "Bahasa Inggris dari Bagan Kolom.", ans: "COLUMN CHART"
+                    },
+                    {
+                        materi: "<b>Alat Prediksi What-If Analysis:</b> Markas besar dari seluruh alat pendukung keputusan manajemen di Excel (berisi Goal Seek, Scenario Manager, dan Data Tables).",
+                        instruksi: "<b>Instruksi Praktik:</b> Buka Tab Data di Ribbon atas, cari kelompok alat prediksi dan perkiraan (Forecast/Data tools).",
+                        q: "Nama grup menu induk yang menampung fasilitas simulasi perkiraan data ini disebut?", 
+                        hint: "Analisis simulasi 'Bagaimana-Jika' dalam bahasa Inggris.", ans: "WHAT-IF ANALYSIS"
+                    },
+                    {
+                        materi: "<b>Break-Even Point (Titik Impas):</b> Momen krusial dalam akuntansi usaha di mana kurva pendapatan operasional bertemu dan menutupi pengeluaran modal (tidak rugi, tidak laba).",
+                        instruksi: "<b>Instruksi Praktik:</b> Pahami konsep menetapkan target Laba Bersih di angka nol (0) menggunakan simulasi Goal Seek.",
+                        q: "Singkatan 3 huruf wajib untuk Titik Impas balik modal operasional industri adalah?", 
+                        hint: "Break-Even Point.", ans: "BEP"
+                    },
+                    {
+                        materi: "<b>Data Labels Grafis:</b> Menampilkan stiker angka nominal (seperti 'Rp 5.000.000') tepat di atas puncak batang grafik agar direksi tidak perlu mengira-ngira skala garis sumbu.",
+                        instruksi: "<b>Instruksi Praktik:</b> Klik grafik buatan Anda > tekan ikon plus hijau (+) di sisi kanan kotak > centang Data Labels.",
+                        q: "Fitur estetika grafik untuk memunculkan angka konkret secara persis menempel pada elemen diagram dinamakan?", 
+                        hint: "Dua kata bahasa Inggris (Label Data).", ans: "DATA LABELS"
+                    }
+                ]
+            },
+            // LEVEL 12 (CASE 4)
+            {
+                type: "case", title: "Modul 12: KASUS 4 (CPMK M2 Lanjut)", icon: "fa-calendar-days", color: "pink",
+                story: {
+                    "D3 Perjalanan Wisata": { 12: "Studi Kasus Pariwisata M2 (2): Rancang jadwal perjalanan wisata multi-hari (Gantt Chart Itinerary) penjelajahan pesisir dan situs sejarah Melayu Kepri." },
+                    "D3 Seni Kuliner": { 12: "Studi Kasus Kuliner M2 (2): Rancang jadwal produksi dapur multi-hari (Gantt Chart) untuk persiapan Gala Dinner restoran." },
+                    "D4 Pengelolaan Perhotelan": { 12: "Studi Kasus Perhotelan M2 (2): Rancang jadwal shift staf multi-hari (Gantt Chart) untuk event tahun baru di hotel." }
+                },
+                q: [
+                    {
+                        materi: "<b>Visualisasi Penjadwalan:</b> Menerjemahkan deretan tabel waktu kegiatan operasional menjadi blok-blok visual interaktif (Gantt Chart) berbasis diagram pita horizontal.",
+                        instruksi: "<b>Instruksi Praktik:</b> Konversi tabel tanggal/jam mulai aktivitas ke dalam diagram Stacked Bar Chart, transaparankan balok segmen pertama.",
+                        q: "Untuk memvalidasi perakitan tata letak diagram penjadwalan industri Anda, ketik kode konfirmasi:", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Otomasi Alarm Visual (Conditional Alert):</b> Mengimplementasikan kontrol pengawasan mandiri menggunakan pewarnaan otomatis pada sel durasi yang angkanya melewati *deadline* operasional batas waktu yang ditentukan.",
+                        instruksi: "<b>Instruksi Praktik:</b> Terapan rule 'Highlight Cells Greater Than' pada kolom tenggat waktu kerja.",
+                        q: "Untuk memverifikasi berjalannya fitur peringatan batas waktu (alert), ketik kode konfirmasi:", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Pemecahan Algoritma Profitabilitas (Goal Seek):</b> Melakukan rekayasa simulasi biaya mundur. Misalnya: Memanipulasi angka harga jual agar dapat mencapai ambang Margin Bersih target.",
+                        instruksi: "<b>Instruksi Praktik:</b> Jalankan What-If Analysis > Goal Seek untuk menyeimbangkan nilai impas (BEP) operasional.",
+                        q: "Untuk mengesahkan tahapan penentuan harga jual basis simulasi, ketik kode konfirmasi:", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Pemetaan Puncak Musim Kunjungan (Time Series):</b> Membangun grafik pemantauan analitik (Line Chart) untuk merepresentasikan fluktuasi puncak keramaian data historis bulan ke bulan.",
+                        instruksi: "<b>Instruksi Praktik:</b> Buat grafik garis dari rangkaian agregat data bulanan kinerja industri di sheet analisis Anda.",
+                        q: "Untuk melegitimasi pembentukan tren grafik seri deret waktu, ketik kode konfirmasi:", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Proyeksi Tata Kelola Skenario Risiko:</b> Mengukur ketahanan anggaran operasional perusahaan dalam tiga wajah skenario keadaan (Asumsi Ramai, Normal, Sepi Pemesanan).",
+                        instruksi: "<b>Instruksi Praktik:</b> Operasikan Scenario Manager dan cetak lembar ringkasan perbandingan skenario komparatif (Summary).",
+                        q: "Untuk memvalidasi pendaftaran asumsi skenario krisis dan laba, ketik kode konfirmasi:", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Finalisasi CPMK M2 (Tahap Akhir):</b> Integrasi instrumen penyusunan Lembar Kerja (Spreadsheet) gabungan antara kalkulasi rincian dana logistik dan pemetaan jadwal tata kelola waktu operasional industri.",
+                        instruksi: "<b>Instruksi Praktik:</b> Pastikan relasi antarsheet Master, Costing, dan Charting terjalin solid tanpa tautan rusak.",
+                        q: "Sandi kelulusan Modul 12 (M2-Tahap 2):", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    }
+                ]
+            },
+            // LEVEL 13
+            {
+                type: "normal", title: "Modul 13: BK-09 Slide Master & Animasi", icon: "fa-desktop", color: "blue",
+                story: "Mempelajari fundamental PowerPoint tingkat eksekutif: Manajemen sistem Slide Master presentasi, efek Transisi visual layar, dan Animasi pergerakan objek spesifik.",
+                q: [
+                    {
+                        materi: "<b>Sistem Slide Master:</b> Pondasi arsitektur presentasi. Mengatur letak logo institusi, jenis rupa huruf, dan aksen grafis di 'Belakang Panggung' agar desain tersebut terkunci kuat, seragam, dan mustahil tak sengaja terhapus oleh staf pengetik slide biasa.",
+                        instruksi: "<b>Instruksi Praktik:</b> Buka Tab View > klik Slide Master. Sisipkan logo perusahaan di posisi atas. Tutup Master View. Perhatikan logo kini terkunci permanen di tiap slide baru.",
+                        q: "Ruang kontrol utama tersembunyi PowerPoint untuk membentuk templat presentasi perusahaan yang permanen disebut apa?", 
+                        hint: "Dua kata bahasa Inggris (Slide Tuan/Utama).", ans: "SLIDE MASTER"
+                    },
+                    {
+                        materi: "<b>Efek Transisi Antar Lembar (Transitions):</b> Memberikan nafas visual saat pergantian lembar halaman layar presentasi. Transisi modern (seperti efek Morph) mengubah pergantian kaku menjadi halus layaknya video interaktif promosi pariwisata.",
+                        instruksi: "<b>Instruksi Praktik:</b> Sorot thumbnail slide di panel kiri, kemudian arahkan ke Tab Transitions > Pilih efek visual (Fade/Morph/Push).",
+                        q: "Menu navigasi Ribbon untuk mengontrol pergerakan animasi peralihan keseluruhan SATU layar penuh ke layar berikutnya disebut?", 
+                        hint: "Bahasa Inggris dari kata 'Transisi' (Bentuk jamak).", ans: "TRANSITIONS"
+                    },
+                    {
+                        materi: "<b>Animasi Objek Intra-Layar (Animations):</b> Mengendalikan irama masuknya gambar (foto destiansi/produk masakan) dan kotak teks satu per satu ke dalam panggung layar saat pembicara mengeklik mouse.",
+                        instruksi: "<b>Instruksi Praktik:</b> Seleksi khusus pada salah satu gambar atau kotak teks spesifik di tengah slide > Buka Tab Animations > Terapkan efek (misal: Fly In atau Zoom).",
+                        q: "Menu pengendali pergerakan untuk menyuntikkan efek gerak masuk pada KOMPONEN KECIL individu di dalam slide dinamakan?", 
+                        hint: "Bahasa Inggris dari kata 'Animasi' (Bentuk jamak).", ans: "ANIMATIONS"
+                    },
+                    {
+                        materi: "<b>Pengaturan Durasi Tayang (Duration Control):</b> Elemen kunci estetika. Menentukan seberapa santai atau terburu-buru sebuah animasi foto makanan melayang masuk ke layar presentasi.",
+                        instruksi: "<b>Instruksi Praktik:</b> Setelah objek diberikan efek gerak, lihat ujung kanan Ribbon Animations > Ubah angka kotak 'Duration' menjadi 2.00 agar gerakannya melambat indah.",
+                        q: "Kotak penyesuaian nilai waktu untuk merubah kecepatan lambat-cepatnya laju animasi tersebut disebut?", 
+                        hint: "Bahasa Inggris dari kata 'Durasi'.", ans: "DURATION"
+                    },
+                    {
+                        materi: "<b>Penggandaan Arsitektur Layar Cepat (Duplication):</b> Jalan pintas memproduksi lembar slide yang identik 100% tanpa fitur salin-rekat (copy-paste) yang konvensional.",
+                        instruksi: "<b>Instruksi Praktik:</b> Sorot thumbnail slide di pinggir kiri layar, kemudian manfaatkan pintasan keyboard khusus.",
+                        q: "Aksi kombinasi tombol rahasia apa di keyboard untuk segera memfotokopi/menggandakan keseluruhan slide?", 
+                        hint: "Kombinasi menekan tombol Pengendali (CTRL) disusul abjad D (Duplicate).", ans: "CTRL+D"
+                    },
+                    {
+                        materi: "<b>Rasio Kanvas Lebar (Widescreen Framing):</b> Konvensi industri media visual masa kini mengharuskan rasio bidang datar proyektor atau TV pintar membentang panjang (persegi panjang layar lebar).",
+                        instruksi: "<b>Instruksi Praktik:</b> Navigasi ke Tab Design > ikon ujung kanan Slide Size > pastikan terpilih opsi bentang lebar modern.",
+                        q: "Rasio angka standar industri untuk ukuran tampilan layar monitor/televisi presentasi modern saat ini adalah?", 
+                        hint: "Enam belas berbanding sembilan.", ans: "16:9"
+                    }
+                ]
+            },
+            // LEVEL 14
+            {
+                type: "normal", title: "Modul 14: BK-10 Layout Grafis & Warna", icon: "fa-palette", color: "blue",
+                story: "Mengaplikasikan prinsip estetika layout grafis fundamental komersial, pemilihan tipografi korporat, dan teori komposisi warna materi presentasi pemasaran visual.",
+                q: [
+                    {
+                        materi: "<b>Hirarki Tatanan Visual (Visual Hierarchy):</b> Prinsip psikologi desain grafis untuk memandu kornea mata audiens mengonsumsi informasi berurutan. Judul raksasa harus dilihat pertama, baru gambar, lalu deskripsi harga berukuran kecil.",
+                        instruksi: "<b>Instruksi Praktik:</b> Perbesar skala teks paling krusial (seperti 'Diskon 50%') jauh lebih dominan dibanding badan paragraf teks standar pendukung.",
+                        q: "Ilmu tata letak ukuran untuk menyetir dominasi prioritas pembacaan tata urutan visual audiens dinamakan?", 
+                        hint: "Terdiri dari dua kata bahasa Inggris. (Hirarki Visual).", ans: "VISUAL HIERARCHY"
+                    },
+                    {
+                        materi: "<b>Keluarga Rupa Huruf Moden (Sans-Serif):</b> Untuk presentasi ruang rapat dan brosur komersial internet, pemakaian gaya huruf ketik bertangkai/bersirip kaku (seperti Times New Roman) sangat dihindari. Diperlukan keluarga gaya huruf polos yang bundar, mulus, dan lugas dibaca dari jarak jauh layar proyektor.",
+                        instruksi: "<b>Instruksi Praktik:</b> Ganti tipe font presentasi Anda dengan keluarga rupa huruf kontemporer seperti Calibri, Arial, Helvetica, Lato, atau Montserrat.",
+                        q: "Apa nama kategori famili jenis huruf bersih tidak bersirip yang wajib dipakai dalam desain UI/UX dan presentasi masa kini?", 
+                        hint: "Terminologi tipografi bahasa asing yang bermakna 'Tanpa-Sirip'.", ans: "SANS-SERIF"
+                    },
+                    {
+                        materi: "<b>Orkestrasi Keselarasan Warna (Color Scheme):</b> Menyatukan palet psikologi warna tematik departemen. Kombinasi warna biru dongker dan emas metalik meneriakkan kemewahan fasilitas hotel bintang 5. Penggunaan lebih dari tiga warna serampangan merusak kepercayaan merek.",
+                        instruksi: "<b>Instruksi Praktik:</b> Tetapkan 1 warna dominan latar belakang, 1 warna teks, dan 1 warna aksen tombol (CTA) sorotan pada halaman presentasi desain brosur.",
+                        q: "Rumusan konseptual rancang-bangun kumpulan palet warna yang saling padu (harmonis) diistilahkan sebagai?", 
+                        hint: "Dua kata bahasa Inggris bermakna 'Skema Warna'.", ans: "COLOR SCHEME"
+                    },
+                    {
+                        materi: "<b>Tingkat Keterbacaan & Keterlihatan Teks (Contrast):</b> Syarat mutlak. Teks peringatan hitam pekat yang tertindih foto latar belakang hutan rimba mangrove yang juga gelap akan lenyap tak terbaca mat. Harus ada perlawanan derajat kecerahan yang drastis.",
+                        instruksi: "<b>Instruksi Praktik:</b> Uji keterbacaan dengan mengecilkan (zoom out) layar Anda. Teks putih di atas alas biru tua pasti selalu lebih tajam merobek layar.",
+                        q: "Tingkat perbedaan jarak kecerahan antara teks terang yang berdiri tegak melawan alas latar belakang gulita dinamakan rasio apa?", 
+                        hint: "Bahasa Inggris dari tingkat 'Kontras' penglihatan.", ans: "CONTRAST"
+                    },
+                    {
+                        materi: "<b>Ruang Nafas Hampa (Negative Space):</b> Ketakutan awam terbesar adalah melihat bidang putih kosong di pojok kanvas, lalu memadatkan setiap inci milimeter layar dengan rentetan tulisan sesak napas. Desain kelas kakap menuntut ruang kosong agung (ruang lapang tak bertuan) di sela-sela antar elemen grafis demi menghembuskan eleganitas.",
+                        instruksi: "<b>Instruksi Praktik:</b> Perlebar jarak margin (bingkai luar) kotak teks dan sisakan hamparan wilayah kosong yang dibiarkan bersih membisu dari polusi huruf.",
+                        q: "Penyebutan teknis desain untuk ladang area polos/hampa bernapas yang mengelilingi elemen isi utama dinamakan?", 
+                        hint: "Dua kata bahasa Inggris. (Ruang Negatif).", ans: "NEGATIVE SPACE"
+                    },
+                    {
+                        materi: "<b>Presisi Jajaran Geometris (Alignment):</b> Manusia secara insting mendeteksi kecacatan ketidakseimbangan grafis. Kotak teks baris kedua yang melenceng bengkok miring 2 piksel dari sumbu garis lurus baris pertama akan memancarkan getaran aura amatiran tidak profesional.",
+                        instruksi: "<b>Instruksi Praktik:</b> Seleksi berbarengan semua kotak grafik di layar > navigasi ke opsi Align Objects > perintahkan rata kiri presisi serentak (Align Left) oleh komputer.",
+                        q: "Fasilitas komputasi perataan sistem otomatis untuk meluruskan dan menyejajarkan posisi elemen grafis berbarengan disebut?", 
+                        hint: "Bahasa Inggris perataan yang merujuk pada kata 'Sejajar/Selaras'.", ans: "ALIGN"
+                    }
+                ]
+            },
+            // LEVEL 15 (CASE 5)
+            {
+                type: "case", title: "Modul 15: KASUS 5 (CPMK M3)", icon: "fa-images", color: "pink",
+                story: {
+                    "D3 Perjalanan Wisata": { 15: "Studi Kasus Pariwisata M3: Desain materi presentasi digital dan brosur visual promosi daya tarik wisata alam, bahari, dan budaya Kepri." },
+                    "D3 Seni Kuliner": { 15: "Studi Kasus Kuliner M3: Desain presentasi digital inovasi menu fusion dan brosur promosi kuliner lokal dengan layout grafis yang estetik." },
+                    "D4 Pengelolaan Perhotelan": { 15: "Studi Kasus Perhotelan M3: Desain presentasi digital laporan kinerja tahunan GM Hotel dan brosur fasilitas mewah menggunakan PowerPoint." }
+                },
+                q: [
+                    {
+                        materi: "<b>Manajemen Arsitektur Visual Sentral:</b> Mengonstruksi perakitan master kerangka template grafis promosi yang memuat jejak identitas kelembagaan departemen (corporate branding) anti-geser pada piranti presentasi.",
+                        instruksi: "<b>Instruksi Praktik:</b> Injeksi tata rias estetika warna korporat permanen di balik ruang operasi View > Slide Master presentasi.",
+                        q: "Untuk mendeklarasikan kepatuhan implementasi Slide Master korporat Anda, serahkan kata kunci eksekusi:", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Penerapan Sinematografi Transisi:</b> Meracik urutan aliran grafis antar-halaman visual layaknya perpindahan babak (scene) sinema pemasaran komersial industri kreatif modern melalui transisi berkelanjutan.",
+                        instruksi: "<b>Instruksi Praktik:</b> Suntikkan efek pergerakan mulus antarlayar (Morph/Fade) melintasi struktur presentasi portofolio desain visual.",
+                        q: "Untuk memvalidasi integrasi aliran transisi halaman berantai presentasi, ketik kata sandi eksekusi:", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Dinamisasi Komponen Makro-Estetika:</b> Menata kemunculan komponen gambar unggulan (Hero Image) satu per satu dan rangkaian teks poin penawaran unik (Selling Proposition) menggunakan koreografi intra-layar ritmis terkendali.",
+                        instruksi: "<b>Instruksi Praktik:</b> Berikan perilaku gerak masuk (Entrance Animations) bertempo 1.5 detik per-lapisan visual pada slide.",
+                        q: "Untuk melengkapi pengujian ritme pergerakan komponen layar dinamis presentasi, konfirmasi sandi khusus:", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Pemenuhan Rasio Standar Ketajaman:</b> Mengkalibrasi format resolusi tata letak lembar kerja brosur presentasi untuk kepatuhan bentangan tayang rasio kontemporer mesin proyektor/layar lebar.",
+                        instruksi: "<b>Instruksi Praktik:</b> Atur dan kunci bentang konfigurasi ukuran grafis ke format panoramik bentang Widescreen absolut.",
+                        q: "Untuk memastikan kesesuaian penyesuaian ukuran proyektor bidang layar lebar, ketik kata konfirmasi:", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Verifikasi Kontras dan Ruang Udara:</b> Analisis kritis desain tata letak (Layouting). Menjamin bahwa seluruh muatan naskah brosur visual lolos dari kejahatan grafis sumpek tak berongga dan tidak kontras menimpa alas warna cerah/gelap.",
+                        instruksi: "<b>Instruksi Praktik:</b> Inspeksi ulang hierarki dimensi judul (hierarchy) tipe Sans-Serif presentasi dan pemanfaatan ruang kosong jeda bernapas (Negative Space).",
+                        q: "Untuk menyetujui parameter keterbacaan teks kontras dan ergonomi luasan rongga lapang, tekan sandi validasi:", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Finalisasi Desain Promosi (CPMK M3):</b> Mahakarya publikasi brosur presentasi digital daya pikat sektor departemen operasional masing-masing mahasiswa terselesaikan matang.",
+                        instruksi: "<b>Instruksi Praktik:</b> Pindahkan wujud presentasi portofolio ke ruang penayangan mode penuh (Slide Show) peninjauan akhir visual.",
+                        q: "Sandi kelulusan Modul 15 Evaluasi Akhir (M3 Grafika):", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    }
+                ]
+            },
+            // LEVEL 16 (FINAL BOSS)
+            {
+                type: "boss", title: "Modul 16: FINAL BOSS (CPL-7)", icon: "fa-crown", color: "purple",
+                story: "Ujian Komprehensif Skala Industri (CPL-7): Pembuktian sintesis perakitan integrasi masif instrumen Word Massal, Spreadsheet Tabel Data Silang, Cloud Digital Berkas, dan Arsitektur Visual Presentasi terapan operasional departemen Pariwisata, Perhotelan, & Kuliner.",
+                q: [
+                    {
+                        materi: "<b>Integrasi Basis CPMK M1 (Perkantoran Teks Operasional):</b> Menjahit kumpulan tata naskah persuratan industri tebal ke dalam dokumen tertata (Styles/Section Break) lengkap perlindungan otorisasi sandi akses (Enkripsi).",
+                        instruksi: "<b>Instruksi Penilaian:</b> Selesaikan penuntasan akhir verifikasi keabsahan laporan administratif eksekutif yang membentang sempurna pada piranti pelacak pengubah dokumen.",
+                        q: "Serahkan izin pemanggilan persetujuan verifikasi CPMK pengolahan dokumentasi korporat tingkat 1:", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Integrasi Basis CPMK M4 (Pemberkasan Arsip Awan):</b> Mensinkronisasikan gerbong seluruh kerangka produk luaran file praktikum ke dalam ekosistem brankas ruang awan Google dengan pendelegasian struktur hak kuasa baca-akses digital.",
+                        instruksi: "<b>Instruksi Penilaian:</b> Konstruksikan tata bangunan hierarki folder arsip dan rilis tautan rujukan URL bebas kunci awan rahasia lintas jaringan.",
+                        q: "Buktikan validasi kesiapan peluncuran sirkulasi manajemen penyimpanan awan CPMK tahap 4:", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Integrasi Basis CPMK M2 (Laboratorium Kalkulasi Costing Logistik Khusus):</b> Mensistemasi algoritma fungsi rasional pencarian vertikal antarsheet komputasi dan perekayasaan model jadwal waktu linimasa kegiatan berjalur.",
+                        instruksi: "<b>Instruksi Penilaian:</b> Pastikan mesin spreadsheet menembus lolos pengecekan rumus bersilang penarik harga logistik master tanpa mendeteksi peringatan *Error Reference* di layar.",
+                        q: "Lepaskan stempel otentikasi kecerdasan spreadsheet logika dan waktu penunjang CPMK modul 2:", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Integrasi Basis CPMK M3 (Manipulasi Desain Ruang Rapat Pemasaran Visual):</b> Menelurkan maha presentasi infografis pemasaran media komersial layar bertransisi halus berbasis pola Master desain yang mendominasi panggung proyektor.",
+                        instruksi: "<b>Instruksi Penilaian:</b> Eksekusi format penayangan presentasi Kiosk penuh layar anti cacat layaknya papan media LED korporasi modern.",
+                        q: "Masukan sandi validasi komersialisasi pementasan periklanan grafis proyektor layar tancap M3:", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Validasi Capaian Pemenuhan Standar Lulusan Industri (CPL-7):</b> Meresmikan bahwa partisipan mahasiswa bersangkutan sungguh menguasai integrasi piranti digitalisasi terpadu untuk kebutuhan departemen keprofesian operasional industri Vokasi modern abad 21.",
+                        instruksi: "<b>Instruksi Penilaian Akhir:</b> Lakukan pengecekan kesehatan integritas seluruh artefak produk tugas Anda sebelum penutup tirai panggung.",
+                        q: "Ketuk sandi verifikasi kebulatan standarisasi sumpah kelayakan Capaian Pembelajaran Lulusan:", 
+                        hint: "Ketik kata LULUS", ans: "LULUS"
+                    },
+                    {
+                        materi: "<b>Mahkamah Kelulusan Terakhir (Pemindaian Nyawa Mahasiswa):</b> Komputer meninjau ulang tumpukan nyawa integritas yang masih bersemayam dalam profil pemain. Sisa nyawa Anda akan terkonversi mutlak membentuk medali predikat numerik pada piagam sertifikasi elektronik kelulusan permanen.",
+                        instruksi: "<b>Instruksi Kehormatan:</b> Tekan pelatuk pengiriman sandi penutup pamungkas untuk mengakhiri simulasi secara permanen dan mencetak prasasti sejarah Sertifikat Cumlaude.",
+                        q: "Tarik napas, tulis persetujuan deklarasi kesiapan wisuda akhir sistem ini dengan kalimat agung:", 
+                        hint: "SAYA SIAP LULUS", ans: "SAYA SIAP LULUS"
+                    }
+                ]
+            }
+        ];
+
+        let currentUser = "";
+        let currentProdi = "";
+        let progress = 1;
+        let playerLives = 100;
+        let activeLevel = 0;
+
+        window.onload = () => {
+            const savedEmail = safeStorage.get('techquest_email');
+            const savedProdi = safeStorage.get('techquest_prodi');
+            if (savedEmail && savedEmail !== 'DOSEN') {
+                document.getElementById('emailInput').value = savedEmail;
+                if(savedProdi) document.getElementById('prodiInput').value = savedProdi;
+                startGame(savedEmail, savedProdi || "D3 Perjalanan Wisata");
+            }
+        };
+
+        // DOSEN FITUR
+        function openDosenLogin() {
+            const pin = prompt("Masukkan PIN Dosen:");
+            if (pin === "123456") {
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('dosenScreen').classList.remove('hidden');
+                renderDosenTable();
+            } else { alert("PIN Salah! Akses ditolak."); }
+        }
+        function logoutDosen() { document.getElementById('dosenScreen').classList.add('hidden'); document.getElementById('loginScreen').classList.remove('hidden'); }
+        
+        function renderDosenTable() {
+            const tbody = document.getElementById('studentTableBody');
+            tbody.innerHTML = '';
+            let hasData = false;
+
+            for (let i = 0; i < localStorage.length; i++) {
+                let key = localStorage.key(i);
+                if (key.startsWith('techquest_progress_')) {
+                    hasData = true;
+                    let email = key.replace('techquest_progress_', '');
+                    let studentProgress = parseInt(localStorage.getItem(key));
+                    let prodi = localStorage.getItem('techquest_prodi_' + email) || 'Tidak Diketahui';
+                    let sisaNyawa = parseInt(localStorage.getItem('techquest_lives_' + email));
+                    if(isNaN(sisaNyawa)) sisaNyawa = 100;
+                    
+                    let statusLabel = `<span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-bold">Aktif Kuliah</span>`;
+                    if (studentProgress > 16) { statusLabel = `<span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-bold"><i class="fa-solid fa-check-circle"></i> LULUS CPMK</span>`; }
+                    else if (sisaNyawa <= 0) { statusLabel = `<span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-bold"><i class="fa-solid fa-skull"></i> GAGAL RPS</span>`; }
+
+                    tbody.innerHTML += `
+                        <tr class="border-b border-gray-100 hover:bg-gray-50">
+                            <td class="p-4 font-bold text-gray-800">${email}</td>
+                            <td class="p-4"><span class="bg-purple-50 text-purple-700 px-2 py-1 rounded font-bold text-xs">${prodi}</span></td>
+                            <td class="p-4 font-mono font-bold text-purple-600">${Math.min(studentProgress, 16)} / 16</td>
+                            <td class="p-4 font-bold text-red-500">❤️ ${sisaNyawa} / 100</td>
+                            <td class="p-4">${statusLabel}</td>
+                            <td class="p-4">
+                                <button onclick="resetStudent('${email}')" class="text-red-500 hover:text-red-700 text-xs font-bold bg-red-50 px-3 py-1 rounded border border-red-200"><i class="fa-solid fa-rotate-left"></i> Reset Mahasiswa</button>
+                            </td>
+                        </tr>
+                    `;
+                }
+            }
+            if (!hasData) tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-gray-400 italic">Belum ada data mahasiswa yang terekam.</td></tr>`;
+        }
+
+        function resetStudent(email) {
+            if(confirm(`Yakin mereset seluruh nilai & progress mahasiswa ${email}?`)) {
+                safeStorage.remove('techquest_progress_' + email);
+                safeStorage.remove('techquest_prodi_' + email);
+                safeStorage.remove('techquest_lives_' + email);
+                renderDosenTable();
+            }
+        }
+
+        // MAHASISWA FITUR
+        function handleLogin() {
+            const email = document.getElementById('emailInput').value.trim();
+            const prodi = document.getElementById('prodiInput').value;
+            if(!email) { alert("Email wajib diisi sesuai identitas SIAKAD!"); return; }
+            startGame(email, prodi);
+        }
+
+        function startGame(email, prodi) {
+            currentUser = email;
+            currentProdi = prodi;
+            safeStorage.set('techquest_email', email);
+            safeStorage.set('techquest_prodi', prodi);
+            safeStorage.set('techquest_prodi_' + email, prodi);
+            
+            const savedProgress = safeStorage.get('techquest_progress_' + email);
+            progress = savedProgress ? parseInt(savedProgress) : 1;
+
+            const savedLives = safeStorage.get('techquest_lives_' + email);
+            if (!savedLives && savedLives !== "0") {
+                playerLives = 100;
+                safeStorage.set('techquest_lives_' + email, 100);
+            } else {
+                playerLives = parseInt(savedLives);
+            }
+
+            document.getElementById('loginScreen').classList.add('hidden');
+            
+            if (playerLives <= 0) {
+                document.getElementById('gameOverModal').classList.remove('hidden');
+                return;
+            }
+
+            document.getElementById('gameScreen').classList.remove('hidden');
+            document.getElementById('playerName').innerText = email.split('@')[0];
+            document.getElementById('playerProdi').innerText = prodi;
+            document.getElementById('levelCounter').innerText = Math.min(progress, 16);
+            document.getElementById('livesCounter').innerText = playerLives;
+
+            renderMap();
+        }
+
+        function renderMap() {
+            const map = document.getElementById('levelMap');
+            map.innerHTML = '';
+            curriculum.forEach((lvl, idx) => {
+                const levelNum = idx + 1;
+                const isUnlocked = levelNum <= progress;
+                let cardClass = "bubbly-card p-6 flex flex-col items-center justify-center text-center relative overflow-hidden h-48 level-card ";
+                
+                if (!isUnlocked) cardClass += "locked border-gray-300";
+                else if (lvl.type === 'boss') cardClass += "boss-level";
+                else if (lvl.type === 'case') cardClass += "case-study";
+
+                const badge = lvl.type === 'boss' ? '<div class="absolute top-2 right-2 bg-purple-600 text-white text-[10px] font-black px-2 py-1 rounded-full">UJIAN CPL</div>' : 
+                             (lvl.type === 'case' ? '<div class="absolute top-2 right-2 bg-pink-500 text-white text-[10px] font-black px-2 py-1 rounded-full">KASUS PRODI</div>' : '');
+                const checkmark = levelNum < progress ? '<div class="absolute bottom-3 right-3 text-green-500 text-2xl"><i class="fa-solid fa-circle-check"></i></div>' : '';
+
+                map.innerHTML += `
+                    <div class="${cardClass}" ${isUnlocked ? `onclick="openLevel(${idx})"` : ''}>
+                        ${badge}
+                        <i class="fa-solid ${lvl.icon} text-4xl mb-2 text-${isUnlocked ? lvl.color : 'gray'}-500"></i>
+                        <h3 class="font-bold text-sm leading-tight text-gray-800">${lvl.title}</h3>
+                        ${checkmark}
+                    </div>
+                `;
+            });
+        }
+
+        function openLevel(idx) {
+            activeLevel = idx;
+            const lvl = curriculum[idx];
+            document.getElementById('questTitle').innerText = `${lvl.title}`;
+            
+            // Logika menampilkan cerita spesifik per prodi khusus untuk STUDI KASUS (tipe: case)
+            let storyText = "";
+            if (lvl.type === 'case') {
+                let levelNum = idx + 1;
+                storyText = lvl.story[currentProdi] ? lvl.story[currentProdi][levelNum] : "Studi kasus operasional prodi terkait.";
+            } else {
+                storyText = lvl.story;
+            }
+            document.getElementById('questStory').innerText = storyText;
+            
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+            const isCompleted = (idx < progress - 1); 
+
+            const submitBtn = document.getElementById('submitBtn');
+            if (isCompleted) {
+                submitBtn.innerText = "MODUL RPS TELAH DISELESAIKAN";
+                submitBtn.classList.add('btn-disabled');
+                submitBtn.onclick = null;
+            } else {
+                submitBtn.innerHTML = `VALIDASI JAWABAN <i class="fa-solid fa-paper-plane ml-2"></i>`;
+                submitBtn.classList.remove('btn-disabled');
+                submitBtn.onclick = checkAllAnswers;
+            }
+
+            lvl.q.forEach((qObj, qIdx) => {
+                container.innerHTML += `
+                    <div class="bg-white p-5 rounded-xl border border-gray-300 shadow-sm mb-4">
+                        <div class="flex justify-between items-center mb-2"><h5 class="font-bold text-gray-800"><span class="bg-blue-600 text-white px-2 py-1 rounded text-sm">Topik Bahasan ${qIdx+1}</span></h5></div>
+                        <button type="button" onclick="openMateri(${qIdx})" class="w-full bg-blue-50 p-3 rounded-lg font-bold text-blue-800 border border-blue-200 mb-4 hover:bg-blue-100 transition"><i class="fa-solid fa-book-open-reader mr-2"></i> Buka Materi & Praktik RPS</button>
+                        <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                            <p class="font-bold text-sm mb-2">${qObj.q}</p>
+                            <div class="flex gap-2">
+                                <input type="text" id="ans_${qIdx}" class="flex-1 border-2 border-gray-300 rounded p-2 uppercase font-bold focus:border-blue-500" placeholder="Jawaban..." ${isCompleted ? `value="${qObj.ans}" disabled` : ''}>
+                                <button type="button" onclick="document.getElementById('hint_${qIdx}').classList.toggle('hidden')" class="bg-yellow-400 font-bold px-4 rounded hover:bg-yellow-500">Clue</button>
+                            </div>
+                            <p id="hint_${qIdx}" class="hidden mt-2 text-xs font-bold text-purple-700 bg-purple-100 p-2 rounded">Hint: ${qObj.hint}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('errorMessage').classList.add('hidden');
+            document.getElementById('questModal').classList.remove('hidden');
+        }
+
+        function openMateri(qIdx) {
+            const qObj = curriculum[activeLevel].q[qIdx];
+            document.getElementById('materiTeori').innerHTML = qObj.materi;
+            document.getElementById('materiInstruksi').innerHTML = qObj.instruksi;
+            document.getElementById('materiModal').classList.remove('hidden');
+        }
+        function closeMateri() { document.getElementById('materiModal').classList.add('hidden'); }
+        function closeModal() { document.getElementById('questModal').classList.add('hidden'); }
+
+        function checkAllAnswers() {
+            if (activeLevel < progress - 1) return; 
+            
+            let wrongCount = 0;
+            curriculum[activeLevel].q.forEach((qObj, idx) => {
+                const inputEl = document.getElementById(`ans_${idx}`);
+                if (inputEl.value.trim().toUpperCase() !== qObj.ans.toUpperCase()) {
+                    wrongCount++;
+                    inputEl.classList.add('border-red-500', 'bg-red-50');
+                } else {
+                    inputEl.classList.remove('border-red-500', 'bg-red-50'); inputEl.classList.add('border-green-500', 'bg-green-50');
+                }
+            });
+
+            if (wrongCount > 0) {
+                playerLives -= wrongCount;
+                if (playerLives < 0) playerLives = 0;
+                
+                safeStorage.set('techquest_lives_' + currentUser, playerLives);
+                document.getElementById('livesCounter').innerText = playerLives;
+
+                if (playerLives <= 0) {
+                    closeModal();
+                    document.getElementById('gameOverModal').classList.remove('hidden');
+                } else {
+                    const errEl = document.getElementById('errorMessage');
+                    errEl.innerHTML = `<i class="fa-solid fa-bomb text-2xl mb-2 block"></i> WADUH! Ada ${wrongCount} jawaban yang salah. <br><b>Nilai Nyawa kamu dikurangi ${wrongCount}!</b> (Sisa: ${playerLives} ❤️)`;
+                    errEl.classList.remove('hidden');
+                    document.querySelector('#questModal .overflow-y-auto').scrollTop = 9999;
+                }
+            } else {
+                document.getElementById('errorMessage').classList.add('hidden');
+                closeModal();
+                
+                progress++;
+                safeStorage.set('techquest_progress_' + currentUser, progress);
+                document.getElementById('levelCounter').innerText = Math.min(progress, 16);
+                renderMap();
+                
+                const justCompletedIndex = progress - 2; 
+                const completedLevel = curriculum[justCompletedIndex];
+
+                if (progress > 16) {
+                    showCertificate('FINAL');
+                } else if (completedLevel.type === 'case') {
+                    showCertificate('CASE', justCompletedIndex + 1); 
+                } else {
+                    document.getElementById('quoteText').innerText = `"Bagus! Semua jawaban benar. Poin nyawa aman: ${playerLives} ❤️"`;
+                    document.getElementById('successModal').classList.remove('hidden');
+                }
+            }
+        }
+
+        function showCertificate(type, levelCleared = 16) {
+            document.getElementById('certName').innerText = currentUser.split('@')[0];
+            document.getElementById('certProdi').innerText = currentProdi;
+            document.getElementById('certDate').innerText = new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
+
+            const title = document.getElementById('certMainTitle');
+            const sub = document.getElementById('certSubTitle');
+            const desc = document.getElementById('certDesc');
+            const predikat = document.getElementById('certPredikat');
+            const icon = document.getElementById('certIcon');
+            const scoreContainer = document.getElementById('scoreContainer');
+            const certScore = document.getElementById('certScore');
+
+            if (type === 'CASE') {
+                scoreContainer.classList.add('hidden'); 
+                title.innerText = "Sertifikat Assesment (" + currentProdi + ")";
+                icon.className = "fa-solid fa-medal text-7xl text-blue-500 mb-4 drop-shadow-md";
+                
+                if(levelCleared === 3) {
+                    sub.innerText = "CAPAIAN PEMBELAJARAN (M1)";
+                    desc.innerText = `Dinyatakan KOMPETEN dalam mengoperasikan perkantoran untuk pengolahan dokumen operasional bidang ${currentProdi}.`;
+                    predikat.innerText = "KOMPETEN (M1)";
+                    predikat.className = "bg-blue-100 text-blue-800 border-2 border-blue-500 text-xl font-black px-6 py-2 rounded-full mt-2 inline-block shadow-sm";
+                } 
+                else if(levelCleared === 6) {
+                    sub.innerText = "CAPAIAN PEMBELAJARAN (M4)";
+                    desc.innerText = `Dinyatakan KOMPETEN dalam mengelola arsip digital dokumen operasional bidang ${currentProdi} dengan Cloud Storage.`;
+                    predikat.innerText = "KOMPETEN (M4)";
+                    predikat.className = "bg-teal-100 text-teal-800 border-2 border-teal-500 text-xl font-black px-6 py-2 rounded-full mt-2 inline-block shadow-sm";
+                }
+                else if(levelCleared === 9) {
+                    sub.innerText = "CAPAIAN PEMBELAJARAN (M2 - TAHAP 1)";
+                    desc.innerText = `Dinyatakan KOMPETEN menyusun lembar kerja tabulasi anggaran dan perhitungan operasional spesifik ${currentProdi}.`;
+                    predikat.innerText = "KOMPETEN (M2-1)";
+                    predikat.className = "bg-indigo-100 text-indigo-800 border-2 border-indigo-500 text-xl font-black px-6 py-2 rounded-full mt-2 inline-block shadow-sm";
+                }
+                else if(levelCleared === 12) {
+                    sub.innerText = "CAPAIAN PEMBELAJARAN (M2 - TAHAP 2)";
+                    desc.innerText = `Dinyatakan KOMPETEN mendesain integrasi jadwal kegiatan multi-hari (Gantt Chart) operasional bidang ${currentProdi}.`;
+                    predikat.innerText = "KOMPETEN (M2-2)";
+                    predikat.className = "bg-purple-100 text-purple-800 border-2 border-purple-500 text-xl font-black px-6 py-2 rounded-full mt-2 inline-block shadow-sm";
+                }
+                else if(levelCleared === 15) {
+                    sub.innerText = "CAPAIAN PEMBELAJARAN (M3)";
+                    desc.innerText = `Dinyatakan KOMPETEN mendesain materi presentasi digital visual promosi daya tarik layanan bidang ${currentProdi}.`;
+                    predikat.innerText = "KOMPETEN (M3)";
+                    predikat.className = "bg-orange-100 text-orange-800 border-2 border-orange-500 text-xl font-black px-6 py-2 rounded-full mt-2 inline-block shadow-sm";
+                }
+            } 
+            else if (type === 'FINAL') {
+                title.innerText = "Sertifikat Kelulusan Akhir (CPL-7)";
+                sub.innerText = `MATA KULIAH APLIKASI KOMPUTER - ${currentProdi.toUpperCase()}`;
+                icon.className = "fa-solid fa-trophy text-7xl text-yellow-500 mb-4 drop-shadow-md";
+                desc.innerText = `Telah berhasil menguasai CPMK M1 hingga M4 sesuai spesifikasi kurikulum ${currentProdi} untuk standar kompetensi CPL-7.`;
+                
+                scoreContainer.classList.remove('hidden');
+                certScore.innerText = `${playerLives} / 100`;
+
+                let finalPredikat = "LULUS";
+                let predikatClass = "";
+
+                if (playerLives >= 90) {
+                    finalPredikat = "LULUS DENGAN PUJIAN (CUMLAUDE)";
+                    predikatClass = "bg-green-100 text-green-800 border-2 border-green-500";
+                } else if (playerLives >= 75) {
+                    finalPredikat = "LULUS SANGAT MEMUASKAN";
+                    predikatClass = "bg-blue-100 text-blue-800 border-2 border-blue-500";
+                } else if (playerLives >= 60) {
+                    finalPredikat = "LULUS MEMUASKAN";
+                    predikatClass = "bg-yellow-100 text-yellow-800 border-2 border-yellow-500";
+                } else {
+                    finalPredikat = "LULUS BERSYARAT";
+                    predikatClass = "bg-orange-100 text-orange-800 border-2 border-orange-500";
+                }
+
+                predikat.innerText = finalPredikat;
+                predikat.className = `${predikatClass} text-xl font-black px-6 py-2 rounded-full mt-2 inline-block shadow-sm`;
+            }
+            document.getElementById('certModal').classList.remove('hidden');
+        }
+
+        function closeCert() { document.getElementById('certModal').classList.add('hidden'); }
+        function nextLevel() { document.getElementById('successModal').classList.add('hidden'); }
+        
+        function logout() {
+            document.getElementById('gameOverModal').classList.add('hidden');
+            document.getElementById('gameScreen').classList.add('hidden');
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('emailInput').value = '';
+        }
+    </script>
+</body>
+</html>
